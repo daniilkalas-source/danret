@@ -1,5 +1,13 @@
 <!doctype html><html lang="ru"><head><meta charset="utf-8"><title>Danret</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#000000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Danret">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
 <style>
 :root{--bg:#000;--sf:#1c1c1e;--tx:#fff;--mu:#8e8e93;--ac:#3b82f6;--me:#2b5278;--ln:#2c2c2e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:light){:root:not([data-theme=dark]){--bg:#f2f2f7;--sf:#fff;--tx:#000;--ln:#e5e5ea;--me:#d9e8ff}}
@@ -90,6 +98,7 @@ html.glass .cmv{background:#0b1020}
 .cms{width:44px;height:44px;border-radius:50%;border:0;background:var(--sf);color:var(--mu);font-size:22px;flex:none;display:flex;align-items:center;justify-content:center;transition:.15s;transform:scale(.92)}
 .cms.on{background:var(--ac);color:#fff;transform:scale(1)}
 </style></head><body><div id="app"></div>
+<script>if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("firebase-messaging-sw.js").catch(()=>{}))</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
