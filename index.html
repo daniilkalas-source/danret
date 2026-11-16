@@ -45,6 +45,7 @@ html.glass body{background:radial-gradient(circle at 15% 10%,#5b21b6 0,transpare
 .rpb{display:flex;align-items:center;gap:8px;padding:6px 12px;border-top:1px solid var(--ln)}.b{transition:transform .15s}
 .fld{padding:12px 18px;border-bottom:1px solid var(--ln)}.fld:last-child{border:0}.fld b{display:block;font-size:15px;margin-bottom:2px}.fld span{font-size:20px;word-break:break-word;white-space:pre-wrap}
 .acts button{border-radius:18px;padding:16px 4px}.msgs{background-image:var(--wp,none);background-size:cover;background-position:center}
+.srch{margin:6px 14px 2px;background:var(--sf);color:var(--mu);border-radius:14px;padding:11px 14px;cursor:pointer}.srv{position:fixed;inset:0;z-index:6;background:var(--bg);display:flex;flex-direction:column;max-width:620px;margin:auto;padding-top:env(safe-area-inset-top,0px)}html.glass .srv{background:#0b1020}
 </style></head><body><div id="app"></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -132,7 +133,7 @@ function auth(){const u=((fbAuth.currentUser||{}).email||'').split('@')[0];
 const tg=(k,v,l)=>`<div class="row"><div class="col">${l}</div><button class="sw ${v?'on':''}" data-tg="${k}"></button></div>`;
 function main(){
  const AR=me.arch||[],L=mine().filter(c=>ar?AR.includes(c.id):!AR.includes(c.id)),sg={};stl.forEach(x=>(sg[x.uid]=sg[x.uid]||[]).push(x));let b='';
- const pre=ar?'':`<div class="stp"><div class="stc" id="ms">${sg[uid]?`<div class="ring">${av(me.name,uid,52)}</div>`:av(me.name,uid,56)}<span class="plus" id="mp">＋</span><div class="sub">Моя история</div></div>${Object.keys(sg).filter(u=>u!==uid).map(u=>`<div class="stc" data-su="${u}"><div class="ring ${sg[u].every(i=>i['v_'+uid])?'seen':''}">${av(uname(u),u,52)}</div><div class="sub">${E(uname(u).slice(0,9))}</div></div>`).join('')}</div>`+(mine().some(c=>AR.includes(c.id))?`<div class="row k" id="arow"><span style="font-size:22px">📦</span><div class="col nm">Архив чатов</div><span class="sub">${mine().filter(c=>AR.includes(c.id)).length}</span></div>`:'');
+ const pre=ar?'':`<div class="srch" id="sbtn">🔍 Поиск</div><div class="stp"><div class="stc" id="ms">${sg[uid]?`<div class="ring">${av(me.name,uid,52)}</div>`:av(me.name,uid,56)}<span class="plus" id="mp">＋</span><div class="sub">Моя история</div></div>${Object.keys(sg).filter(u=>u!==uid).map(u=>`<div class="stc" data-su="${u}"><div class="ring ${sg[u].every(i=>i['v_'+uid])?'seen':''}">${av(uname(u),u,52)}</div><div class="sub">${E(uname(u).slice(0,9))}</div></div>`).join('')}</div>`+(mine().some(c=>AR.includes(c.id))?`<div class="row k" id="arow"><span style="font-size:22px">📦</span><div class="col nm">Архив чатов</div><span class="sub">${mine().filter(c=>AR.includes(c.id)).length}</span></div>`:'');
  if(tab==='chats')b=pre+L.map(c=>`<div class="row" data-c="${c.id}">${av(ctitle(c),c.id)}<div class="col"><div class="nm">${icon(c)}${E(ctitle(c))}${(me.muted||[]).includes(c.id)?' 🔕':''}</div><div class="sub">${E(c.last||(c.type==='saved'?'Ваши заметки':'Нет сообщений'))}</div></div><div class="sub">${tm(c.lastTs)}</div></div>`).join('')||(ar?'<div class="empty">Архив пуст</div>':'<div class="empty">Чатов пока нет.</div>');
  if(tab==='calls')b=callsList();
  if(tab==='set')b=`<div class="pad" style="text-align:center"><div id="ap" style="display:flex;justify-content:center;cursor:pointer">${av(me.name,uid,90)}</div><div class="sub" style="margin-top:6px">Нажмите на фото, чтобы изменить</div><h2 style="margin:10px 0 2px">${E(me.name)}</h2><div class="sub">@${E(me.username)}${myPh?' · '+E(myPh):''}</div></div>
@@ -150,7 +151,7 @@ function main(){
  if($('#pv'))$('#pv').onclick=()=>{const w=sheet(hd('Номер телефона')+`<div class="sub">Кто может видеть ваш номер и находить вас по нему:</div><div class="seg"><button data-v="all" class="${me.phoneVis==='all'?'on':''}">Все</button><button data-v="none" class="${me.phoneVis==='all'?'':'on'}">Никто</button></div><div class="sub">${myPh?'':'Сначала укажите номер в профиле. '}Номер хранится в закрытом разделе, другие его не видят, пока вы не разрешите.</div>`);w.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{const v=b.dataset.v;setU({phoneVis:v,phone:v==='all'?myPh:''});w.remove()})};
  A.querySelectorAll('[data-su]').forEach(x=>x.onclick=()=>openStory(x.dataset.su));if($('#ms'))$('#ms').onclick=()=>stl.some(x=>x.uid===uid)?openStory(uid):addStory();if($('#mp'))$('#mp').onclick=e=>{e.stopPropagation();addStory()};if($('#arow'))$('#arow').onclick=()=>{ar=true;main()};if($('#ab'))$('#ab').onclick=()=>{ar=false;main()};
  A.querySelectorAll('[data-s] button').forEach(x=>x.onclick=()=>{const k=x.parentNode.dataset.s;setU({[k]:k==='fs'?+x.dataset.v:x.dataset.v})});
- A.querySelectorAll('[data-kp]').forEach(r=>r.onclick=()=>startCall(r.dataset.kk,r.dataset.kp));if($('#nw'))$('#nw').onclick=newSheet;if($('#ap'))$('#ap').onclick=()=>pickImg(id=>setU({ph:id}));if($('#pm'))$('#pm').onclick=askPerm;if($('#lo'))$('#lo').onclick=()=>ask('Выйти из аккаунта?',()=>fbAuth.signOut(),'Выйти');
+ A.querySelectorAll('[data-kp]').forEach(r=>r.onclick=()=>startCall(r.dataset.kk,r.dataset.kp));if($('#nw'))$('#nw').onclick=newSheet;if($('#sbtn'))$('#sbtn').onclick=openSearch;if($('#ap'))$('#ap').onclick=()=>pickImg(id=>setU({ph:id}));if($('#pm'))$('#pm').onclick=askPerm;if($('#lo'))$('#lo').onclick=()=>ask('Выйти из аккаунта?',()=>fbAuth.signOut(),'Выйти');
  if($('#inv'))$('#inv').onclick=()=>{copy(BASE);$('#inv').lastChild.textContent='Ссылка скопирована ✓'};
  if($('#sv'))$('#sv').onclick=async()=>{const v=$('#sp').value.trim();await db.collection('data/users/'+uid).doc('phone').set({v});myPh=v;setU({name:$('#sn').value.trim()||me.name,bio:$('#sb').value.trim(),phone:me.phoneVis==='all'?v:''})};
  if($('#del'))$('#del').onclick=async()=>{ask('Удалить аккаунт?',async()=>{await db.collection('users').doc(uid).delete();try{await fbAuth.currentUser.delete()}catch(e){await fbAuth.signOut()}})};
@@ -301,7 +302,7 @@ async function rec(kind){
  mr.start(1000);
 }
 function back(){if(unM)unM();unM=null;cur=null;main()}
-function openChat(id){cur=id;msgs=[];pk=null;if(unM)unM();
+function openChat(id){addRec(id);cur=id;msgs=[];pk=null;if(unM)unM();
  unM=mc(id).orderBy('ts').onSnapshot(s=>{msgs=s.docs.map(d=>({id:d.id,...d.data()}));chatView()},()=>{});chatView()}
 const EM=['👍','❤️','🔥','😂','😮','😢'];
 async function react(m,e){const re={...(m.re||{})},a=re[e]||[];re[e]=a.includes(uid)?a.filter(x=>x!==uid):[...a,uid];if(!re[e].length)delete re[e];pk=null;await mc(cur).doc(m.id).update({re})}
@@ -346,6 +347,36 @@ function openCm(mid){const w=sheet(hd('Комментарии')+'<div id="cml" s
   w.querySelectorAll('[data-cd]').forEach(b=>b.onclick=()=>mc(cur).doc(mid).update({cm:L.filter((_,j)=>j!==+b.dataset.cd)}).catch(e=>toast('Ошибка: '+(e.code||e.message))))};
  cmDraw=draw;draw();
  w.querySelector('#cms').onclick=async()=>{const i=w.querySelector('#cmi'),t=i.value.trim();if(!t)return;i.value='';try{await mc(cur).doc(mid).update({cm:firebase.firestore.FieldValue.arrayUnion({u:uid,t,ts:Date.now()})})}catch(e){toast('Не удалось отправить: '+(e.code||e.message))}}}
+function recs(){try{return JSON.parse(localStorage.getItem('rec')||'[]')}catch(e){return[]}}
+function addRec(id){try{const r=recs().filter(x=>x!==id);r.unshift(id);localStorage.setItem('rec',JSON.stringify(r.slice(0,20)))}catch(e){}}
+function openSearch(){let tb='c';
+ const d=document.createElement('div');d.className='srv';
+ d.innerHTML=`<div class="top"><input id="sq" placeholder="Поиск" autocomplete="off" style="margin:0;flex:1"><button class="ib" id="sx2">✕</button></div><div class="seg" id="stb" style="margin:0 14px 6px">${[['c','Чаты'],['h','Каналы'],['p','Люди']].map(([k,v])=>`<button data-v="${k}" class="${k==='c'?'on':''}">${v}</button>`).join('')}</div><div class="main" id="sres"></div>`;
+ document.body.appendChild(d);
+ const q=()=>d.querySelector('#sq').value.toLowerCase().replace(/^@/,'').trim(),close=()=>d.remove();
+ const stat=c=>c.type==='dm'?seenText(c.members.find(x=>x!==uid)):c.type==='saved'?'':c.members.length+(c.type==='channel'?' подписч.':' участн.');
+ const rc=c=>`<div class="row" data-c="${c.id}">${av(ctitle(c),c.id)}<div class="col"><div class="nm">${icon(c)}${E(ctitle(c))}</div><div class="sub">${E(stat(c))}</div></div></div>`;
+ const ru=i=>{const u=users[i];return `<div class="row" data-u="${i}">${av(u.name,i)}<div class="col"><div class="nm">${E(u.name)}</div><div class="sub">@${E(u.username)}</div></div></div>`};
+ const none=m=>`<div class="empty" style="padding:30px">${m}</div>`;
+ const draw=()=>{const s=q(),L=mine(),kn=known(),dg=s.replace(/\D/g,'');let h='';
+  const match=c=>!s||(ctitle(c)+' '+(c.type==='dm'?(users[c.members.find(x=>x!==uid)]?.username||''):'')).toLowerCase().includes(s);
+  if(tb==='c'){
+   if(!s){const dms=L.filter(c=>c.type==='dm').sort((a,b)=>(b.lastTs||0)-(a.lastTs||0)).slice(0,12);
+    if(dms.length)h+=`<div style="display:flex;gap:14px;overflow-x:auto;padding:8px 14px">${dms.map(c=>{const o=c.members.find(x=>x!==uid);return `<div data-c="${c.id}" style="text-align:center;width:64px;flex:none;cursor:pointer">${av(uname(o),o,56)}<div class="sub" style="text-align:center">${E(uname(o).slice(0,9))}</div></div>`}).join('')}</div>`;
+    const R=recs().map(id=>chats.find(c=>c.id===id)).filter(c=>c&&c.members?.includes(uid));
+    h+=R.length?`<div style="display:flex;justify-content:space-between;padding:8px 20px"><span class="lbl" style="padding:0">Недавние</span><span id="rcl" style="color:var(--ac);cursor:pointer">Очистить</span></div>`+R.map(rc).join(''):none('Здесь появятся чаты, группы и каналы, в которые вы заходили.')}
+   else h+=L.filter(c=>c.type!=='channel'&&match(c)).map(rc).join('')||none('Ничего не найдено')}
+  if(tb==='h'){const my=L.filter(c=>c.type==='channel'&&match(c)),pb=!s?[]:chats.filter(c=>c.type==='channel'&&c.pub&&!c.members.includes(uid)&&(c.title.toLowerCase().trim()===s||(c.link||'').toLowerCase()===s.replace(/^.*#c-/,'')));
+   h+=(my.map(rc).join('')+pb.map(c=>`<div class="row" data-j="${c.id}">${av(c.title,c.id)}<div class="col"><div class="nm">📢 ${E(c.title)}</div><div class="sub">${c.members.length} подп. · Подписаться</div></div></div>`).join(''))||none(s?'Канал не найден. Публичный канал находится по точному названию или ссылке.':'Вы пока не подписаны на каналы.')}
+  if(tb==='p'){const ids=s?[...[...kn].filter(i=>users[i]&&(users[i].name+' '+users[i].username).toLowerCase().includes(s)),...Object.keys(users).filter(i=>i!==uid&&!kn.has(i)&&!users[i].hide&&((users[i].username||'').toLowerCase()===s||(dg.length>=4&&!users[i].hidePhone&&(users[i].phone||'').replace(/\D/g,'').includes(dg))))]:[...new Set([...(me.ct||[]),...kn])].filter(i=>users[i]);
+   h+=ids.map(ru).join('')||none(s?'Никого не найдено. Нового человека можно найти по точному @username.':'Здесь появятся ваши контакты и собеседники.')}
+  d.querySelector('#sres').innerHTML=h;
+  d.querySelectorAll('[data-c]').forEach(r=>r.onclick=()=>{close();openChat(r.dataset.c)});
+  d.querySelectorAll('[data-u]').forEach(r=>r.onclick=()=>{close();openDM(r.dataset.u)});
+  d.querySelectorAll('[data-j]').forEach(r=>r.onclick=async()=>{const c=chats.find(x=>x.id===r.dataset.j);await cs(c.id).update({members:[...c.members,uid]});close();openChat(c.id)});
+  const cl=d.querySelector('#rcl');if(cl)cl.onclick=()=>{try{localStorage.removeItem('rec')}catch(e){}draw()}};
+ d.querySelectorAll('#stb button').forEach(b=>b.onclick=()=>{tb=b.dataset.v;d.querySelectorAll('#stb button').forEach(x=>x.classList.toggle('on',x===b));draw()});
+ d.querySelector('#sq').oninput=draw;d.querySelector('#sx2').onclick=close;draw();d.querySelector('#sq').focus()}
 let rp=null,ed=null;
 const tk=(m,c)=>{if(m.from!==uid||c.type==='saved'||c.type==='channel')return '';const r=Object.keys(m).some(k=>k.startsWith('v_')&&k!=='v_'+uid);return `<span class="tk ${r?'on':''}">${r?'✓✓':'✓'}</span>`};
 const qt=r=>`<div class="qt" data-q="${r.id}"><b>${E(r.n)}</b><div>${E(r.t)}</div></div>`;
