@@ -123,7 +123,7 @@ function start(){
  db.collection('chats').where('pub','==',true).onSnapshot(s=>{cp=s.docs.map(d=>({id:d.id,...d.data()}));setChats()},er0);
  window.onhashchange=hash;T0=Date.now();if(window.Notification&&Notification.permission==='granted')setTimeout(()=>setupPush(1),2500);const hb=()=>{if(me)setU({ls:Date.now()}).catch(()=>{})};setInterval(()=>{if(!document.hidden)hb()},120000);setInterval(upSub,30000);document.addEventListener('visibilitychange',hb);setTimeout(hb,3000);
 }
-const VAPID_KEY='';// <<< Firebase Console → Project settings → Cloud Messaging → Web Push certificates → Key pair
+const VAPID_KEY='BJoWiRJ7gVIlm40f2oMnFpYan5CmRTe0t5viFhA79L3a0mPLvsfOaFMhZFQ165QZYMIkTSpP2n26ifnI3DKaZEM';// <<< Firebase Console → Project settings → Cloud Messaging → Web Push certificates → Key pair
 async function setupPush(quiet){try{if(!('serviceWorker' in navigator)||!window.Notification||!firebase.messaging)return quiet||toast('Push не поддерживается. На iPhone: Safari → Поделиться → На экран «Домой», потом откройте оттуда');
  if(!VAPID_KEY)return quiet||toast('Вставьте VAPID-ключ в index.html (VAPID_KEY)');
  if(await Notification.requestPermission()!=='granted')return quiet||toast('Уведомления не разрешены в настройках');
