@@ -324,6 +324,7 @@ function infoPage(){
  A.querySelectorAll('[data-go]').forEach(v=>v.onclick=()=>{inf=null;chatView()});
 }
 async function postMsg(o,last){const ts=Date.now();NTm[cur]=ts;await mc(cur).doc(ts.toString(36)+rid()).set({from:uid,ts,kind:'text',...o});await cs(cur).update({last:last||(o.text||'').slice(0,80),lastTs:ts})}
+async function vfix(v,u,f){if(v.dataset.rt)return f&&f();v.dataset.rt=1;try{const b=await(await fetch(u)).blob(),h=[...new Uint8Array(await b.slice(0,12).arrayBuffer())],ty=h[0]===0x1a&&h[1]===0x45?'video/webm':'video/mp4';v.src=URL.createObjectURL(new Blob([b],{type:ty}));v.load();v.play().catch(()=>{})}catch(e){f&&f()}}
 async function rec(kind){
  const cv=kind==='circle';let st;
  try{st=await navigator.mediaDevices.getUserMedia(cv?{audio:true,video:{facingMode:'user',width:{ideal:480},height:{ideal:480}}}:{audio:true})}catch(e){if(cv){toast('Открываю камеру телефона…');return pickFile('video/*',f=>upMedia(f,'circle'),'user')}return toast('Микрофон заблокирован. Откройте Настройки → Разрешения и разрешите микрофон.')}
@@ -336,7 +337,7 @@ async function rec(kind){
  const lim=cv?8:45;let iv;const stop=()=>{clearInterval(iv);if(mr.state!=='inactive')mr.stop();st.getTracks().forEach(t=>t.stop());s.remove()};
  iv=setInterval(()=>{const d=(Date.now()-t0)/1000;s.querySelector('#tm').textContent=fmt(d)+' · запись';if(d>=lim){send=true;stop()}},300);
  s.querySelector('#rc').onclick=()=>{cancel=true;stop()};s.querySelector('#rs').onclick=()=>{send=true;stop()};
- mr.onstop=async()=>{if(cancel||!send)return;const d=Math.max(1,Math.round((Date.now()-t0)/1000)),b=new Blob(ch,{type:mr.mimeType||mt});
+ mr.onstop=async()=>{if(cancel||!send)return;const d=Math.max(1,Math.round((Date.now()-t0)/1000)),b=new Blob(ch,{type:(mr.mimeType||mt||(cv?'video/mp4':'audio/mp4')).split(';')[0]});
   try{if(cv){const id=await upl(b);await postMsg({kind:'circle',u:id,d,text:''},'⭕ Видеосообщение')}
   else{const du=await new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b)});if(du.length>230000)return toast('Голосовое слишком длинное (до ~40 сек)');await postMsg({kind:'voice',a:du,d,text:''},'🎤 Голосовое сообщение')}}catch(e){toast('Не удалось отправить: '+(e.message||e.code||''))}};
  mr.start(1000);
@@ -364,7 +365,7 @@ function chatView(){
  A.querySelectorAll('[data-ph]').forEach(i=>i.onclick=()=>{sheet(hd('Фото')+`<img src="${i.dataset.ph}" style="width:100%;border-radius:12px">`)});
  markRead(c);
  A.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>react(msgs.find(m=>m.id===b.dataset.r),b.dataset.e));
- A.querySelectorAll('[data-vc]').forEach(v=>v.onclick=()=>{v.muted=!v.muted;v.currentTime=0;v.play()});A.querySelectorAll('[data-cm]').forEach(b=>b.onclick=()=>openCm(b.dataset.cm));A.querySelectorAll('[data-cp]').forEach(b=>b.onclick=e=>{e.stopPropagation();const m=msgs.find(x=>x.id===b.dataset.cp),w=sheet(hd('Видеосообщение')+`<div style="text-align:center"><video class="vc" src="${m.u}" controls autoplay playsinline style="margin:auto;width:min(80vw,320px);height:min(80vw,320px)"></video></div>`),v=w.querySelector('video');v.onerror=()=>toast('Не удаётся воспроизвести кружок на этом устройстве');v.play().catch(()=>{})});
+ A.querySelectorAll('[data-vc]').forEach(v=>{v.onerror=()=>vfix(v,v.getAttribute('src'))});A.querySelectorAll('[data-vc]').forEach(v=>v.onclick=()=>{v.muted=!v.muted;v.currentTime=0;v.play()});A.querySelectorAll('[data-cm]').forEach(b=>b.onclick=()=>openCm(b.dataset.cm));A.querySelectorAll('[data-cp]').forEach(b=>b.onclick=e=>{e.stopPropagation();const m=msgs.find(x=>x.id===b.dataset.cp),w=sheet(hd('Видеосообщение')+`<div style="text-align:center"><video class="vc" src="${m.u}" controls autoplay playsinline style="margin:auto;width:min(80vw,320px);height:min(80vw,320px)"></video></div>`),v=w.querySelector('video');v.onerror=()=>vfix(v,m.u,()=>toast('Не удаётся воспроизвести кружок (код '+(v.error&&v.error.code||'?')+')'));v.play().catch(()=>{})});
  A.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const m=msgs.find(x=>x.id===b.dataset.a),same=auId===m.id;if(au){au.pause();au=null;auId=null;A.querySelectorAll('[data-a]').forEach(x=>x.textContent='▶')}if(same)return;au=new Audio(m.a);auId=m.id;b.textContent='⏸';au.ontimeupdate=()=>{const p=$('#pb'+m.id);if(p)p.style.width=(au.currentTime/(au.duration||m.d||1)*100)+'%'};au.onended=()=>{au=null;auId=null;if(cur&&!inf&&!$('.sheet'))chatView()};au.play().catch(()=>toast('Не удалось воспроизвести'))});
  const send=async()=>{const x=$('#gi').value.trim();if(!x)return;$('#gi').value='';if(ed){const id=ed;ed=null;await mc(cur).doc(id).update({text:x,ed:1}).catch(e=>toast('Ошибка: '+(e.code||e.message)));return chatView()}const o={text:x};if(rp&&rp.c===cur){o.rp={id:rp.id,n:rp.n,t:rp.t};rp=null}await postMsg(o)};
  if($('#sd')){$('#sd').onclick=send;$('#gi').onkeydown=e=>{if(e.key==='Enter')send()};$('#at').onclick=()=>pickFile('image/*,video/*',f=>upMedia(f));$('#mic').onclick=()=>rec('voice');$('#cam').onclick=()=>rec('circle')}
