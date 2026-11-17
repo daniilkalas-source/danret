@@ -5,7 +5,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Danret">
+<meta name="apple-mobile-web-app-title" content="Danret"><meta name="theme-color" content="#f0f2f5" media="(prefers-color-scheme: light)">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icon-192.png">
 <style>
@@ -155,7 +155,12 @@ html.otf[data-theme=dark] .msgs{background-image:url("data:image/svg+xml,%3Csvg 
 .rcbar .rd{width:15px;height:15px;border-radius:50%;background:#e5484d;animation:rbl 1s infinite;flex:none}.rcbar button{background:none;border:0;color:#34c759;font-size:22px;font-weight:600;flex:1;text-align:center}
 .rcs{position:absolute;right:14px;bottom:calc(8px + env(safe-area-inset-bottom,0px));width:76px;height:76px;border-radius:50%;border:0;background:#34c759;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 8px #34c75933}.rcs svg{width:36px;height:36px;stroke-width:2.4}
 @keyframes rbl{50%{opacity:.25}}
-</style></head><body><div id="app"></div>
+
+#spl{position:fixed;inset:0;z-index:99999;background:#f0f2f5;display:flex;align-items:center;justify-content:center;gap:14px;transition:opacity .35s}
+#spl b{font:800 38px/1 -apple-system,system-ui,sans-serif;letter-spacing:1px;color:#1a1a1a}
+#spl.off{opacity:0;pointer-events:none}
+@media(prefers-color-scheme:dark){#spl{background:#000}#spl b{color:#fff}}
+</style></head><body><div id="spl"><svg viewBox="0 0 100 100" width="84" height="84"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b72f7"/><stop offset="1" stop-color="#4f55e3"/></linearGradient></defs><rect width="100" height="100" rx="24" fill="url(#g1)"/><path d="M26 49 L76 27 L58 75 L49 56 Z" fill="#fff"/><path d="M49 56 L76 27 L40 50 Z" fill="#dfe3ff"/></svg><b>DANRET</b></div><script>(function(){var t0=Date.now(),d=false;function hide(){if(d)return;d=true;var e=document.getElementById('spl');if(!e)return;var w=Math.max(0,1300-(Date.now()-t0));setTimeout(function(){e.classList.add('off');setTimeout(function(){e.remove()},400)},w)}addEventListener('load',function(){setTimeout(hide,200)});setTimeout(hide,4000)})()</script><div id="app"></div>
 <script>if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("firebase-messaging-sw.js").catch(()=>{}))</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -197,6 +202,9 @@ function init(){
  fbAuth.onAuthStateChanged(u=>{if(!u){if(started)return location.reload();return authForm()}if(started)return;started=true;uid=u.uid;start()});
 }
 const er0=e=>console.error(e);
+function updBadge(){try{let n=0;(chats||[]).forEach(c=>{if(c.members&&c.members.includes(uid)&&!((me&&me.muted)||[]).includes(c.id))n+=(c['u_'+uid]||0)});if(navigator.setAppBadge){n>0?navigator.setAppBadge(n):navigator.clearAppBadge()}}catch(e){}}
+document.addEventListener('visibilitychange',()=>updBadge());
+
 function start(){
  A.innerHTML='<div class="empty">Загрузка…</div>';
  room={emit:(e,d)=>{const o=JSON.parse(JSON.stringify(d));o.ts=Date.now();o.n=Date.now()*1000+(sgn++%1000);return db.collection('sigs').add(o).catch(er0)}};
@@ -207,7 +215,7 @@ function start(){
  db.collection('calls').where('to','==',uid).onSnapshot(q=>{c2=q.docs.map(d=>d.data());setCl()},er0);
  const t=setTimeout(()=>{if(!me)A.innerHTML='<div class="empty">Не удалось загрузить. Обновите страницу.</div>'},10000);
  db.collection('users').onSnapshot(s=>{clearTimeout(t);const nu={};s.docs.forEach(d=>nu[d.id]=d.data());users=nu;me=users[uid]||null;theme();if(me&&!phL){phL=1;loadPh()}stf();const sg2=JSON.stringify(Object.entries(nu).map(([i,u])=>{const r={...u};delete r.ls;return[i,r]}));if(me&&sg2===usg){upSub();return}usg=sg2;render()},er0);
- const setChats=()=>{const m=new Map();[...cm,...cp].forEach(c=>m.set(c.id,c));chats=[...m.values()];autoJoin();chkNotif();stf();fav();hash();render()};
+ const setChats=()=>{const m=new Map();[...cm,...cp].forEach(c=>m.set(c.id,c));chats=[...m.values()];autoJoin();chkNotif();stf();fav();hash();render();updBadge()};
  db.collection('chats').where('members','array-contains',uid).onSnapshot(s=>{cm=s.docs.map(d=>({id:d.id,...d.data()}));if(!s.metadata.fromCache)cmReady=true;setChats()},er0);
  db.collection('chats').where('pub','==',true).onSnapshot(s=>{cp=s.docs.map(d=>({id:d.id,...d.data()}));setChats()},er0);
  window.onhashchange=hash;T0=Date.now();if(window.Notification&&Notification.permission==='granted')setTimeout(()=>setupPush(1),2500);const hb=()=>{if(me)setU({ls:Date.now()}).catch(()=>{})};setInterval(()=>{if(!document.hidden)hb()},120000);setInterval(upSub,30000);document.addEventListener('visibilitychange',hb);setTimeout(hb,3000);
