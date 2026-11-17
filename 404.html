@@ -1,0 +1,7 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Danret</title></head><body style="background:#000"><script>
+// dan.me/название -> открывает мессенджер и нужный канал
+var h=location.hostname,seg=location.pathname.split('/').filter(Boolean),base='/';
+if(/\.github\.io$/.test(h)&&seg.length){base='/'+seg.shift()+'/'}
+var id=decodeURIComponent((seg[0]||'').replace(/^\+/,''));
+location.replace(base+(id?'#c-'+encodeURIComponent(id):''));
+</script></body></html>
