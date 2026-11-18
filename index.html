@@ -206,6 +206,14 @@ html.otf[data-theme=dark] .msgs{background-image:url("data:image/svg+xml,%3Csvg 
 .sdt .tl{display:flex;gap:6px;justify-content:center;margin-bottom:10px}.sdt .tl .gl.on{background:#fff;color:#000}
 .sdt .cl{display:flex;justify-content:space-between;align-items:center;gap:6px}.sdt .cl i{width:26px;height:26px;border-radius:50%;flex:none;border:2px solid transparent}.sdt .cl i.on{border-color:#fff;box-shadow:0 0 0 2px #0006}
 .sdt .ok{width:38px;height:38px;border-radius:50%;background:#3b82f6;border:0;color:#fff;font-size:18px;flex:none}
+.cvo{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.35);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;animation:fi .15s}
+.cvt{position:absolute;left:12px;right:12px;top:calc(env(safe-area-inset-top,0px) + 8px);height:52px;border-radius:20px;background:rgba(60,60,70,.7);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;align-items:center;gap:8px;padding:0 8px;color:#fff}
+.cvt button{background:none;border:0;color:#fff;width:36px;height:36px;display:flex;align-items:center;justify-content:center;padding:0}.cvt svg{width:22px;height:22px}
+.cvn{flex:1;text-align:center;display:flex;flex-direction:column;font-size:15px;line-height:1.2}.cvn span{font-size:12px;opacity:.7}
+.cvc{position:relative;width:min(94vw,60vh);aspect-ratio:1}.cvc video{width:100%;height:100%;border-radius:50%;object-fit:cover;background:#000;display:block}
+.cvc svg{position:absolute;inset:-2px;width:calc(100% + 4px);height:calc(100% + 4px);transform:rotate(-90deg);pointer-events:none}
+.cvc circle{fill:none;stroke-width:1.4;stroke-linecap:round}.cvc .b{stroke:#6aa84f}.cvc .p{stroke:#d0d0d0;stroke-width:1.8;stroke-dasharray:307.9;stroke-dashoffset:307.9}
+.cvm{position:absolute;left:12px;bottom:4px;background:rgba(0,0,0,.45);color:#fff;border-radius:12px;padding:2px 10px;font-size:15px}
 </style></head><body><div id="spl"><svg viewBox="0 0 100 100" width="84" height="84"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b72f7"/><stop offset="1" stop-color="#4f55e3"/></linearGradient></defs><rect width="100" height="100" rx="24" fill="url(#g1)"/><path d="M26 49 L76 27 L58 75 L49 56 Z" fill="#fff"/><path d="M49 56 L76 27 L40 50 Z" fill="#dfe3ff"/></svg><b>DANRET</b></div><script>(function(){var t0=Date.now(),d=false;function hide(){if(d)return;d=true;var e=document.getElementById('spl');if(!e)return;var w=Math.max(0,1300-(Date.now()-t0));setTimeout(function(){e.classList.add('off');setTimeout(function(){e.remove()},400)},w)}addEventListener('load',function(){setTimeout(hide,200)});setTimeout(hide,4000)})()</script><div id="app"></div>
 <script>if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("firebase-messaging-sw.js").catch(()=>{}))</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -747,6 +755,19 @@ function mixRows(a,ib){const r=a.concat(ib.map(x=>({ts:x.ts,h:`<div class="row" 
 function openIbList(ch){const c=chats.find(x=>x.id===ch);if(!c)return toast('Канал недоступен');ibList=true;ibFromChat=false;cur=ch;msgs=[];inf=ch;sub='inb';infoPage()}
 function ibClr(c){ibMark(c.id);chats.filter(d=>hideDm(d)&&d.members&&d.members.includes(uid)&&d['u_'+uid]>0).forEach(d=>{d['u_'+uid]=0;cs(d.id).update({['u_'+uid]:0}).catch(()=>{})});updBadge()}
 async function react(m,e){const c=chats.find(x=>x.id===cur),re={...(m.re||{})};if(c&&c.type==='channel'){if(!(c.rx||EM).includes(e)){pk=null;return toast('Эта реакция отключена')}const had=(re[e]||[]).includes(uid);for(const k of Object.keys(re)){re[k]=re[k].filter(x=>x!==uid);if(!re[k].length)delete re[k]}if(!had)re[e]=[...(re[e]||[]),uid]}else{const a=re[e]||[];re[e]=a.includes(uid)?a.filter(x=>x!==uid):[...a,uid];if(!re[e].length)delete re[e]}pk=null;await mc(cur).doc(m.id).update({re})}
+function playCircle(m){if($('.cvo'))$('.cvo').remove();
+ const PZ='<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>',PL='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg>';
+ const o=document.createElement('div');o.className='cvo';
+ o.innerHTML=`<div class="cvt"><button id="cvp">${PZ}</button><div class="cvn"><b>${E(uname(m.from))}</b><span>Видеосообщение</span></div><button id="cvx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div class="cvc"><video playsinline autoplay src="${m.u}"></video><svg viewBox="0 0 100 100"><circle class="b" cx="50" cy="50" r="49"/><circle class="p" id="cvr" cx="50" cy="50" r="49"/></svg><span class="cvm" id="cvm">0:00</span></div>`;
+ document.body.appendChild(o);
+ const v=o.querySelector('video'),r=o.querySelector('#cvr'),t=o.querySelector('#cvm'),pb=o.querySelector('#cvp');
+ const close=()=>{try{v.pause()}catch(e){}o.remove()};
+ v.onerror=()=>vfix(v,m.u,()=>{toast('Не удаётся воспроизвести кружок');close()});
+ v.ontimeupdate=()=>{const d=v.duration||m.d||1;r.style.strokeDashoffset=307.9*(1-Math.min(1,v.currentTime/d));t.textContent=fmt(v.currentTime)};
+ v.onended=()=>setTimeout(close,250);
+ const tog=()=>{if(v.paused){v.play().catch(()=>{});pb.innerHTML=PZ}else{v.pause();pb.innerHTML=PL}};
+ pb.onclick=tog;v.onclick=tog;o.querySelector('#cvx').onclick=close;o.onclick=ev=>{if(ev.target===o)close()};
+ v.play().catch(()=>{})}
 function chatView(){
  if(inf)return infoPage();if(ibCid){ibStop();ibCid=null}
  const c=chats.find(x=>x.id===cur);if(!c){cur=null;return main()}
@@ -766,7 +787,7 @@ function chatView(){
  A.querySelectorAll('[data-ph]').forEach(i=>i.onclick=()=>{sheet(hd('Фото')+`<img src="${i.dataset.ph}" style="width:100%;border-radius:12px">`)});
  markRead(c);
  A.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>react(msgs.find(m=>m.id===b.dataset.r),b.dataset.e));
- A.querySelectorAll('[data-vc]').forEach(v=>{v.onerror=()=>vfix(v,v.getAttribute('src'))});A.querySelectorAll('[data-vc]').forEach(v=>v.onclick=()=>{v.muted=!v.muted;v.currentTime=0;v.play()});A.querySelectorAll('[data-cm]').forEach(b=>b.onclick=()=>openCm(b.dataset.cm));A.querySelectorAll('[data-cp]').forEach(b=>b.onclick=e=>{e.stopPropagation();const m=msgs.find(x=>x.id===b.dataset.cp),w=sheet(hd('Видеосообщение')+`<div style="text-align:center"><video class="vc" src="${m.u}" controls autoplay playsinline style="margin:auto;width:min(80vw,320px);height:min(80vw,320px)"></video></div>`),v=w.querySelector('video');v.onerror=()=>vfix(v,m.u,()=>toast('Не удаётся воспроизвести кружок (код '+(v.error&&v.error.code||'?')+')'));v.play().catch(()=>{})});
+ A.querySelectorAll('[data-vc]').forEach(v=>{v.onerror=()=>vfix(v,v.getAttribute('src'))});A.querySelectorAll('[data-vc]').forEach(v=>v.onclick=()=>{v.muted=!v.muted;v.currentTime=0;v.play()});A.querySelectorAll('[data-cm]').forEach(b=>b.onclick=()=>openCm(b.dataset.cm));A.querySelectorAll('[data-cp]').forEach(b=>b.onclick=e=>{e.stopPropagation();const m=msgs.find(x=>x.id===b.dataset.cp);if(m)playCircle(m)});
  A.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const m=msgs.find(x=>x.id===b.dataset.a),same=auId===m.id;if(au){au.pause();au=null;auId=null;A.querySelectorAll('[data-a]').forEach(x=>x.textContent='▶')}if(same)return;au=new Audio(m.a);auId=m.id;b.textContent='⏸';au.ontimeupdate=()=>{const p=$('#pb'+m.id);if(p)p.style.width=(au.currentTime/(au.duration||m.d||1)*100)+'%'};au.onended=()=>{au=null;auId=null;if(cur&&!inf&&!$('.sheet'))chatView()};au.play().catch(()=>toast('Не удалось воспроизвести'))});
  const send=async()=>{const x=$('#gi').value.trim();if(!x)return;$('#gi').value='';if(fv)return chMsg(chats.find(k=>k.id===dmCh)||{id:dmCh,title:c['in_'+dmCh],owner:c['io_'+dmCh]},x);if(ro)return chMsg(c,x);if(ed){const id=ed;ed=null;await mc(cur).doc(id).update({text:x,ed:1}).catch(e=>toast('Ошибка: '+(e.code||e.message)));return chatView()}const o={text:x};if(rp&&rp.c===cur){o.rp={id:rp.id,n:rp.n,t:rp.t};rp=null}await postMsg(o)};
  if($('#sbs'))$('#sbs').onclick=async()=>{try{await joinCh(c);for(let i=0;i<30&&!chats.some(x=>x.id===c.id&&x.members.includes(uid));i++)await new Promise(f=>setTimeout(f,100));chatView()}catch(e){toast('Не удалось подписаться')}};if($('#mt2'))$('#mt2').onclick=()=>{const l=me.muted||[];me.muted=mu0?l.filter(x=>x!==c.id):[...l,c.id];setU({muted:me.muted}).catch(()=>{});chatView()};if($('#sd')){$('#sd').onclick=send;$('#gi').onkeydown=e=>{if(e.key==='Enter')send()};if($('#at')){$('#at').onclick=attachSheet;$('#mic').onclick=()=>rec('voice');$('#cam').onclick=recCircle}}
