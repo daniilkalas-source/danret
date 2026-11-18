@@ -311,13 +311,22 @@ function start(){
  db.collection('chats').where('members','array-contains',uid).onSnapshot(s=>{cm=s.docs.map(d=>({id:d.id,...d.data()}));if(!s.metadata.fromCache)cmReady=true;setChats()},er0);
  db.collection('chats').where('pub','==',true).onSnapshot(s=>{cp=s.docs.map(d=>({id:d.id,...d.data()}));setChats()},er0);
  db.collection('chats').where('link','==',DEFCH).onSnapshot(s=>{cp2=s.docs.map(d=>({id:d.id,...d.data()}));setChats()},er0);
- window.onhashchange=hash;T0=Date.now();if(window.Notification&&Notification.permission==='granted')setTimeout(()=>setupPush(1),2500);const hb=()=>{if(me)setU({ls:Date.now()}).catch(()=>{})};setInterval(()=>{if(!document.hidden)hb()},120000);setInterval(upSub,30000);document.addEventListener('visibilitychange',hb);setTimeout(hb,3000);
+ window.onhashchange=hash;T0=Date.now();if(window.Notification&&Notification.permission==='granted')setTimeout(()=>syncPush(1),800);const hb=()=>{if(me)setU({ls:Date.now()}).catch(()=>{})};setInterval(()=>{if(!document.hidden)hb()},120000);setInterval(upSub,30000);document.addEventListener('visibilitychange',hb);setTimeout(hb,3000);
 }
 const VAPID_KEY='BJoWiRJ7gVIlm40f2oMnFpYan5CmRTe0t5viFhA79L3a0mPLvsfOaFMhZFQ165QZYMIkTSpP2n26ifnI3DKaZEM';// <<< Firebase Console → Project settings → Cloud Messaging → Web Push certificates → Key pair
+let pushBusy=0,pushLast=0;
 async function setupPush(quiet){try{if(!('serviceWorker' in navigator)||!window.Notification||!firebase.messaging)return quiet||toast('Push не поддерживается. На iPhone: Safari → Поделиться → На экран «Домой», потом откройте оттуда');
  if(!VAPID_KEY)return quiet||toast('Вставьте VAPID-ключ в index.html (VAPID_KEY)');
- if(await Notification.requestPermission()!=='granted')return quiet||toast('Уведомления не разрешены в настройках');
- const reg=await navigator.serviceWorker.register('firebase-messaging-sw.js');quiet||toast('Уведомления включены ✓');try{const tk=await firebase.messaging().getToken({vapidKey:VAPID_KEY,serviceWorkerRegistration:reg});await db.collection('tokens').doc(tk).set({uid,ts:Date.now()})}catch(e){}}catch(e){quiet||toast('Ошибка push: '+(e.message||e.code||e))}}
+ if(Notification.permission!=='granted'&&await Notification.requestPermission()!=='granted')return quiet||toast('Уведомления не разрешены в настройках');
+ const ok=await syncPush(1);quiet||toast(ok?'Уведомления включены ✓':'Не удалось получить push-токен, попробуйте ещё раз')}catch(e){quiet||toast('Ошибка push: '+(e.message||e.code||e))}}
+// Регистрирует push-токен заново при каждом входе/возврате в приложение (токен на iOS «протухает»)
+async function syncPush(force){if(pushBusy||!uid||!window.Notification||Notification.permission!=='granted'||!('serviceWorker' in navigator)||!firebase.messaging)return false;if(!force&&Date.now()-pushLast<20000)return true;pushBusy=1;try{let reg=await navigator.serviceWorker.getRegistration('firebase-messaging-sw.js').catch(()=>null);if(!reg)reg=await navigator.serviceWorker.register('firebase-messaging-sw.js');try{await navigator.serviceWorker.ready}catch(e){}
+ const m=firebase.messaging();let tk='';for(let i=0;i<3&&!tk;i++){try{tk=await m.getToken({vapidKey:VAPID_KEY,serviceWorkerRegistration:reg})}catch(e){await new Promise(r=>setTimeout(r,1200))}}
+ if(!tk)return false;let old='';try{old=localStorage.dmTok||''}catch(e){}
+ await db.collection('tokens').doc(tk).set({uid,ts:Date.now(),ua:(navigator.userAgent||'').slice(0,120)},{merge:true});
+ if(old&&old!==tk)db.collection('tokens').doc(old).delete().catch(()=>{});
+ try{localStorage.dmTok=tk}catch(e){}pushLast=Date.now();return true}catch(e){return false}finally{pushBusy=0}}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncPush()});addEventListener('focus',()=>syncPush());addEventListener('pageshow',()=>syncPush());setInterval(()=>{if(!document.hidden)syncPush(1)},600000);
 const askPerm=async()=>{try{const s=await navigator.mediaDevices.getUserMedia({audio:true,video:true});s.getTracks().forEach(t=>t.stop());toast('Доступ к микрофону и камере разрешён ✓')}catch(e){toast('Доступ запрещён. Разрешите микрофон и камеру для этого сайта в настройках браузера.')}};
 
 const PT={
@@ -866,14 +875,14 @@ function chatView(){
  chatX(c);if(cmDraw)cmDraw();
 }
 let stPin=[],mpD=null,stRaw=[],usg='',T0=0,cmDraw=null;const NT={},NTm={};
-const APP_VER='202611181600',OFFC=['danretofficial','danretconru'];
+const APP_VER='202611181830',OFFC=['danretofficial','danretconru'];
 const PRD={msg:1,media:1,add:1,pin:0,prof:0},PRM=[['msg','Отправка сообщений'],['media','Отправка фото и видео'],['add','Добавление участников'],['pin','Закрепление сообщений'],['prof','Изменение профиля группы']],ADR=[['del','Удаление сообщений'],['pin','Закрепление сообщений'],['add','Добавление участников'],['prof','Изменение профиля']];
 const isAd=(c,u,r)=>{if(!c||!u)return false;if(c.owner===u)return true;const a=c.am&&c.am[u];return !!a&&(!r||!a.r||a.r[r]!==0)};
 const pm=(c,k)=>(c.perm&&c.perm[k]!==undefined)?c.perm[k]:PRD[k];
 let annD=0,updShown=0;
 function updBanner(){if(document.querySelector('.upb'))return;const d=document.createElement('div');d.className='upb';d.innerHTML='<b>Вышло новое обновление</b><button id="ub1">Обновить</button><button class="x" id="ub2">✕</button>';document.body.appendChild(d);d.querySelector('#ub2').onclick=()=>d.remove();d.querySelector('#ub1').onclick=async()=>{try{const rs=await navigator.serviceWorker.getRegistrations();for(const r of rs)await r.update()}catch(e){}try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}location.replace(location.pathname+'?u='+Date.now()+location.hash)};try{if(document.hidden&&window.Notification&&Notification.permission==='granted')new Notification('Danret',{body:'Вышло новое обновление'})}catch(e){}}
 function updWatch(){if(!me||!chats)return;const c=chats.find(x=>x.type==='channel'&&OFFC.includes(String(x.link||'').toLowerCase()));if(!c)return;const av0=String(c.av||'');
- if(c.owner===uid&&av0<APP_VER&&!annD){annD=1;const ts=Date.now();NTm[c.id]=ts;mc(c.id).doc(ts.toString(36)+rid()).set({from:uid,ts,kind:'text',text:'🔔 Вышло новое обновление!\nЗакройте и заново откройте приложение (или нажмите «Обновить»), чтобы получить новые функции.',upd:APP_VER}).then(()=>cs(c.id).update({last:'🔔 Вышло новое обновление!',lastTs:ts,av:APP_VER,lu:ts})).catch(()=>{annD=0})}
+ if(c.owner===uid&&av0<APP_VER&&!annD){annD=1;const ts=Date.now();NTm[c.id]=ts;mc(c.id).doc(ts.toString(36)+rid()).set({from:uid,ts,kind:'text',text:'ВЫШЛО НОВОЕ ОБНОВЛЕНИЕ 🆕 чтоб обновится следуйте инструкциям выше ⬆️\n\n• исправлены ошибки\n•добавлены новые функции',upd:APP_VER}).then(()=>cs(c.id).update({last:'ВЫШЛО НОВОЕ ОБНОВЛЕНИЕ 🆕',lastTs:ts,av:APP_VER,lu:ts})).catch(()=>{annD=0})}
  else if(av0>APP_VER&&!updShown){updShown=1;updBanner()}}
 const known=()=>{const k=new Set(me?.ct||[]);chats.forEach(c=>c.type==='dm'&&c.members.forEach(m=>k.add(m)));k.delete(uid);return k};
 const stf=()=>{stl=stRaw.filter(x=>x.uid===uid||(canSee(x,uid)&&(x.aud==='close'||x.aud==='sel'||known().has(x.uid))))};
