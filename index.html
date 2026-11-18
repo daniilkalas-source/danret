@@ -315,7 +315,7 @@ function init(){
  fbAuth.onAuthStateChanged(u=>{if(!u){if(started)return location.reload();return authForm()}if(started)return;started=true;uid=u.uid;start()});
 }
 const er0=e=>console.error(e);
-function updBadge(){try{let n=0;(chats||[]).forEach(c=>{if(c.members&&c.members.includes(uid)&&!((me&&me.muted)||[]).includes(c.id)&&!hideDm(c))n+=(c['u_'+uid]||0)});ibRows().forEach(r=>{if(!r.mu)n+=r.n});if(navigator.setAppBadge){n>0?navigator.setAppBadge(n):navigator.clearAppBadge()}}catch(e){}}
+function updBadge(){try{let n=0;(chats||[]).forEach(c=>{if(c.members&&c.members.includes(uid)&&!((me&&me.muted)||[]).includes(c.id)&&!hideDm(c))n+=unr(c)});ibRows().forEach(r=>{if(!r.mu)n+=r.n});if(navigator.setAppBadge){n>0?navigator.setAppBadge(n):navigator.clearAppBadge()}}catch(e){}}
 document.addEventListener('visibilitychange',()=>{updBadge();if(!document.hidden&&cur&&!inf)rdU(cur)});
 
 function start(){
@@ -887,7 +887,9 @@ async function recCircle(){
 function back(){if(unM)unM();unM=null;dmCh=null;cur=null;main()}
 function openChat(id,fc){addRec(id);dmCh=fc||null;cur=id;msgs=[];pk=null;if(unM)unM();
  unM=mc(id).orderBy('ts').onSnapshot(s=>{msgs=s.docs.map(d=>({id:d.id,...d.data()}));rdU(id);chatView()},()=>{});rdU(id);chatView()}
-function rdU(id){const c=chats.find(x=>x.id===id);if(c&&c.members&&c.members.includes(uid)&&!document.hidden){if(c['u_'+uid]>0&&!dmCh){c['u_'+uid]=0;cs(id).update({['u_'+uid]:0}).catch(()=>setTimeout(()=>cs(id).update({['u_'+uid]:0}).catch(()=>{}),1500))}if(dmCh)ibMark(dmCh,id)}}
+let RD={};try{RD=JSON.parse(localStorage.dmRd||'{}')}catch(e){}
+const unr=c=>{const n=c['u_'+uid]||0;if(!n)return 0;const r=RD[c.id];return r&&(c.lastTs||0)<=r?0:n};
+function rdU(id){const c=chats.find(x=>x.id===id);if(c&&c.members&&c.members.includes(uid)&&!document.hidden){if(!dmCh){RD[id]=c.lastTs||Date.now();try{localStorage.dmRd=JSON.stringify(RD)}catch(e){}updBadge()}if(c['u_'+uid]>0&&!dmCh){c['u_'+uid]=0;cs(id).update({['u_'+uid]:0}).catch(()=>setTimeout(()=>cs(id).update({['u_'+uid]:0}).catch(()=>{}),1500))}if(dmCh)ibMark(dmCh,id)}}
 const EM=['👍','❤️','🔥','😂','😮','😢'];
 const ALLR=['👍','👎','❤️','🔥','🥰','👏','😁','🤔','🤯','😱','😢','🎉','🤩','🙏','👌','😍','💯','⚡','🏆','💔','😂','😮'];
 async function chMsg(c,x){try{let d=chats.find(k=>k.type==='dm'&&k.members.includes(c.owner)&&k.members.includes(uid)),id=d?d.id:rid(10);if(!d)await cs(id).set({type:'dm',members:[uid,c.owner],owner:uid,created:Date.now(),lastTs:0,last:''});const ts=Date.now();await mc(id).doc(ts.toString(36)+rid()).set({from:uid,ts,kind:'text',text:x,raw:x,chn:c.id,co:c.owner,ct:c.title});if(!dmCh)toast('Сообщение отправлено')}catch(e){toast('Не удалось отправить')}}
@@ -960,7 +962,7 @@ function phOf(c){const id=c.type==='dm'?c.members.find(x=>x!==uid):c.id,o=users[
 function pop(c){const t=ctitle(c),x=(c.last||'').slice(0,80);if(!me.nosnd)beep();try{navigator.vibrate&&navigator.vibrate(150)}catch(e){}
  if(document.hidden&&window.Notification&&Notification.permission==='granted'){(async()=>{try{const r=await navigator.serviceWorker.getRegistration();if(r)return await r.showNotification(t,{body:x,tag:c.id,icon:phOf(c)})}catch(e){}try{new Notification(t,{body:x})}catch(e){}})();return}
  const d=document.createElement('div');d.className='nb';d.innerHTML=`<div class="nbw">${av(t,c.id,40)}<div style="min-width:0"><b>${icon(c)+E(t)}</b><div>${E(x)}</div></div></div>`;d.onclick=()=>{d.remove();inf=null;openChat(c.id)};document.body.appendChild(d);setTimeout(()=>d.remove(),4500)}
-const ub=c=>{const n=c['u_'+uid]||0;return n>0&&cur!==c.id?`<span class="ubd ${(me.muted||[]).includes(c.id)?'mu':''}">${n>99?'99+':n}</span>`:''};
+const ub=c=>{const n=unr(c);return n>0&&cur!==c.id?`<span class="ubd ${(me.muted||[]).includes(c.id)?'mu':''}">${n>99?'99+':n}</span>`:''};
 function chkNotif(){if(!me)return;chats.forEach(c=>{if(!c.members?.includes(uid))return;const p=NT[c.id];NT[c.id]=c.lastTs||0;if(p===undefined||!(c.lastTs>p)||c.lastTs===NTm[c.id]||!c.last||Date.now()-T0<5000)return;const up=c.lu&&c.lu===c.lastTs;if(!up&&(me.muted||[]).includes(c.id))return;const k={dm:'dm',group:'gr',channel:'ch'}[c.type];if(!k||(!up&&me['no'+k]))return;if(cur===c.id&&!inf&&!document.hidden)return;pop(c)})}
 const cmWord=n=>{const a=n%10,b=n%100;return n+' '+(a===1&&b!==11?'комментарий':a>=2&&a<=4&&(b<10||b>=20)?'комментария':'комментариев')};
 function cmBar(m){const L=m.cm||[],n=L.length,us=[...new Set(L.map(x=>x.u).reverse())].slice(0,3);
