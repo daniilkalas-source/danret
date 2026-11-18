@@ -250,6 +250,26 @@ html.otf[data-theme=dark] .msgs{background-image:url("data:image/svg+xml,%3Csvg 
 .pw.on:after{content:'✓';color:#34c759;transform:translateX(20px)}
 .upb{position:fixed;left:12px;right:12px;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:40;max-width:596px;margin:auto;background:var(--ac,#3b82f6);color:#fff;border-radius:16px;padding:10px 12px 10px 16px;display:flex;align-items:center;gap:10px;box-shadow:0 6px 24px #0005;font-size:15px}
 .upb b{flex:1}.upb button{border:0;border-radius:12px;padding:7px 14px;font-size:14px;font-weight:700;background:#fff;color:#111}.upb .x{background:none;color:#fff;padding:4px 8px;font-size:18px}
+
+#app{overflow-y:auto}.aw{min-height:100%;display:flex;flex-direction:column;justify-content:center;padding:24px 22px;position:relative;animation:asl .35s ease-out}
+@keyframes asl{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:none}}
+.ain{display:flex;flex-direction:column}
+.alg{display:flex;justify-content:center;margin:6px 0 18px;filter:drop-shadow(0 10px 26px rgba(74,79,224,.45))}
+.aw h1{text-align:center;font-size:28px;line-height:1.15;margin:0 0 8px;font-weight:800}
+.asub{text-align:center;color:var(--mu);margin:0 0 26px;font-size:16px}
+.afl{display:flex;align-items:center;gap:10px;background:var(--sf);border:1.5px solid var(--ln);border-radius:16px;padding:0 14px;margin-bottom:12px;transition:border-color .2s,box-shadow .2s}
+.afl:focus-within{border-color:var(--ac);box-shadow:0 0 0 4px rgba(59,130,246,.18)}
+.afi{width:24px;height:24px;color:var(--ac);flex:none;display:flex}.afi svg,.afe svg,.abk svg,.abtn svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.afl input{border:0!important;background:none!important;margin:0;padding:17px 0;border-radius:0;outline:0;flex:1;min-width:0;box-shadow:none;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.afe{background:none;border:0;color:var(--mu);width:26px;height:26px;padding:0;flex:none}
+.ahint{color:var(--mu);font-size:14px;text-align:center;margin:6px 6px 4px;line-height:1.4}
+.aer{color:#f66;text-align:center;font-size:14px;min-height:20px;margin-top:6px}
+.abtn{width:100%;margin-top:10px;height:56px;border:0;border-radius:28px;background:linear-gradient(135deg,#4f8bff,#4a4fe0);color:#fff;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 22px rgba(74,79,224,.4)}
+.abtn:active{transform:scale(.98)}.abtn:disabled{opacity:.6}.abtn svg{width:22px;height:22px}
+.asw{text-align:center;margin-top:22px;color:var(--ac);cursor:pointer;font-size:16px;font-weight:600}
+.abk{position:absolute;left:14px;top:14px;width:42px;height:42px;border-radius:50%;border:0;background:var(--sf);color:var(--ac);padding:10px}
+.adots{display:flex;justify-content:center;gap:8px;margin-bottom:14px}
+.adots i{width:8px;height:8px;border-radius:4px;background:var(--ln);transition:.3s}.adots i.on{width:26px;background:var(--ac)}.adots i.dn{background:var(--ac);opacity:.55}
 </style></head><body><div id="spl"><svg viewBox="0 0 100 100" width="84" height="84"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b72f7"/><stop offset="1" stop-color="#4f55e3"/></linearGradient></defs><rect width="100" height="100" rx="24" fill="url(#g1)"/><path d="M26 49 L76 27 L58 75 L49 56 Z" fill="#fff"/><path d="M49 56 L76 27 L40 50 Z" fill="#dfe3ff"/></svg><b>DANRET</b></div><script>(function(){var t0=Date.now(),d=false;function hide(){if(d)return;d=true;var e=document.getElementById('spl');if(!e)return;var w=Math.max(0,1300-(Date.now()-t0));setTimeout(function(){e.classList.add('off');setTimeout(function(){e.remove()},400)},w)}addEventListener('load',function(){setTimeout(hide,200)});setTimeout(hide,4000)})()</script><div id="app"></div>
 <script>if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("firebase-messaging-sw.js").catch(()=>{}))</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -356,21 +376,65 @@ const mine=()=>chats.filter(c=>c.members?.includes(uid)).sort((a,b)=>(b.type==='
 function render(){if(!me)return regBusy?void 0:auth();if(inf&&sub==='set'&&$('#st'))return;if(cur&&$('.msgs')&&!$('.sheet'))return;cur?chatView():main()}
 let authMode='reg';
 const mkProfile=async(id,n,u,pv)=>{await db.collection('users').doc(id).set({name:n,username:u,phone:'',phoneVis:'none',bio:'',created:Date.now()});if(pv){myPh=pv;phL=1;db.collection('data/users/'+id).doc('phone').set({v:pv}).catch(()=>{})}};
+const AI={
+ logo:'<svg viewBox="0 0 100 100" width="96" height="96"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b7cf7"/><stop offset="1" stop-color="#4a4fe0"/></linearGradient></defs><rect width="100" height="100" rx="24" fill="url(#lg)"/><path d="M24 50 76 26 62 76 49 56z" fill="#fff"/><path d="M49 56 76 26" stroke="#4a4fe0" stroke-width="3" stroke-linecap="round" fill="none" opacity=".35"/></svg>',
+ ph:'<svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A15 15 0 013 6a2 2 0 012-2z"/></svg>',
+ us:'<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg>',
+ at:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 006 0v-1a10 10 0 10-4 8"/></svg>',
+ lk:'<svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="3"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>',
+ ey:'<svg viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+ bk:'<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>',
+ ar:'<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'};
+let rs={step:0,p:'',n:'',u:'',pw:''};
 function authForm(){const reg=authMode==='reg';
- A.innerHTML=`<div class="pad"><h1>Danret</h1><p class="sub">${reg?'Создайте аккаунт, чтобы писать другим людям.':'Войдите в свой аккаунт.'}</p>
-${reg?'<input id="n" placeholder="Имя" maxlength="40">':''}<input id="u" placeholder="@username (латиница, цифры, _)" maxlength="24" autocapitalize="none" autocorrect="off" spellcheck="false"><input id="pw" type="password" placeholder="Пароль (от 6 символов)" maxlength="100">${reg?'<input id="p" type="tel" placeholder="Телефон (по желанию)" maxlength="20">':''}
-<div id="er" class="sub" style="color:#f66"></div><button class="btn" style="width:100%;margin-top:8px" id="go">${reg?'Зарегистрироваться':'Войти'}</button><div class="sub" id="sw" style="text-align:center;margin-top:18px;color:var(--ac);cursor:pointer">${reg?'Уже есть аккаунт? Войти':'Создать аккаунт'}</div></div>`;
- $('#sw').onclick=()=>{authMode=reg?'in':'reg';authForm()};
- $('#go').onclick=async()=>{const er=$('#er'),u=$('#u').value.trim().replace(/^@/,'').toLowerCase(),pw=$('#pw').value;er.textContent='';
-  if(!/^[a-z0-9_]{3,24}$/.test(u))return er.textContent='Username: 3–24 символа, a–z, 0–9, _';
+ const fld=(ic,inner,extra)=>`<div class="afl">${'<span class="afi">'+ic+'</span>'}${inner}${extra||''}</div>`;
+ const uIn=`<input id="u" placeholder="@username" maxlength="24" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="username">`;
+ const pwIn=(ph)=>`<input id="pw" type="password" placeholder="${ph}" maxlength="100" autocomplete="${reg?'new-password':'current-password'}">`;
+ const eye='<button type="button" class="afe" id="eye">'+AI.ey+'</button>';
+ let body,head,btn,hint='';
+ if(!reg){
+  head=`<h1>С возвращением</h1><p class="asub">Войдите в свой аккаунт Danret</p>`;
+  body=fld(AI.at,uIn)+fld(AI.lk,pwIn('Пароль'),eye);btn='Войти';
+ }else if(rs.step===0){
+  head=`<h1>Добро пожаловать в Danret</h1><p class="asub">Введите номер телефона</p>`;
+  body=fld(AI.ph,'<input id="p" type="tel" placeholder="Номер телефона" maxlength="20" autocomplete="tel">');btn='Дальше';
+ }else if(rs.step===1){
+  head=`<h1>Давайте знакомиться</h1><p class="asub">Введите имя и придумайте username</p>`;
+  body=fld(AI.us,'<input id="n" placeholder="Введите имя" maxlength="40" autocomplete="name">')+fld(AI.at,uIn);
+  hint='Username: латиница, цифры и _ (3–24 символа)';btn='Дальше';
+ }else{
+  head=`<h1>Придумайте пароль</h1><p class="asub">Введите пароль, минимум 6 символов</p>`;
+  body=fld(AI.lk,pwIn('Введите пароль'),eye);
+  hint='Запомните ваш пароль для дальнейших входов в наш мессенджер';btn='Создать аккаунт';
+ }
+ const dots=reg?`<div class="adots">${[0,1,2].map(i=>`<i class="${i===rs.step?'on':i<rs.step?'dn':''}"></i>`).join('')}</div>`:'';
+ const back=reg&&rs.step>0?`<button class="abk" id="bk">${AI.bk}</button>`:'';
+ A.innerHTML=`<div class="aw">${back}<div class="ain">${dots}<div class="alg">${AI.logo}</div>${head}<div class="afs">${body}</div>${hint?`<div class="ahint">${hint}</div>`:''}<div id="er" class="aer"></div><button class="abtn" id="go"><span>${btn}</span>${reg&&rs.step<2?AI.ar:''}</button><div class="asw" id="sw">${reg?'Уже есть аккаунт? Войти':'Создать аккаунт'}</div></div></div>`;
+ const er=$('#er'),set=(k,id)=>{const e=$(id);if(e)e.value=rs[k]};
+ set('p','#p');set('n','#n');set('u','#u');set('pw','#pw');
+ const save=()=>{['p','n','u','pw'].forEach(k=>{const e=$('#'+k);if(e)rs[k]=e.value})};
+ const go=(s)=>{save();rs.step=s;authForm()};
+ $('#sw').onclick=()=>{save();authMode=reg?'in':'reg';rs.step=0;authForm()};
+ if($('#bk'))$('#bk').onclick=()=>go(rs.step-1);
+ if($('#eye'))$('#eye').onclick=()=>{const e=$('#pw');e.type=e.type==='password'?'text':'password'};
+ const fin=async()=>{save();er.textContent='';
+  const u=rs.u.trim().replace(/^@/,'').toLowerCase(),pw=rs.pw,em=u+'@danret.app';
+  if(!reg){
+   if(!/^[a-z0-9_]{3,24}$/.test(u))return er.textContent='Username: 3–24 символа, a–z, 0–9, _';
+   if(pw.length<6)return er.textContent='Пароль: минимум 6 символов';
+   try{await fbAuth.signInWithEmailAndPassword(em,pw)}catch(e){er.textContent=ferr(e)}return}
+  if(rs.step===0){if(rs.p.replace(/\D/g,'').length<5)return er.textContent='Введите корректный номер телефона';return go(1)}
+  if(rs.step===1){if(!rs.n.trim())return er.textContent='Введите имя';
+   if(!/^[a-z0-9_]{3,24}$/.test(u))return er.textContent='Username: 3–24 символа, a–z, 0–9, _';return go(2)}
   if(pw.length<6)return er.textContent='Пароль: минимум 6 символов';
-  const em=u+'@danret.app';
-  if(!reg){try{await fbAuth.signInWithEmailAndPassword(em,pw)}catch(e){er.textContent=ferr(e)}return}
-  const n=$('#n').value.trim(),pv=$('#p').value.trim();if(!n)return er.textContent='Введите имя';
-  regBusy=true;let cu;
-  try{cu=await fbAuth.createUserWithEmailAndPassword(em,pw)}catch(e){regBusy=false;return er.textContent=ferr(e)}
+  const n=rs.n.trim(),pv=rs.p.trim();
+  regBusy=true;let cu;$('#go').disabled=true;
+  try{cu=await fbAuth.createUserWithEmailAndPassword(em,pw)}catch(e){regBusy=false;$('#go').disabled=false;er.textContent=ferr(e);if(e&&e.code==='auth/email-already-in-use'){rs.step=1;setTimeout(()=>{authForm();$('#er').textContent='Этот username уже занят'},0)}return}
   try{uid=cu.user.uid;await mkProfile(uid,n,u,pv)}catch(e){toast('Не удалось создать профиль: '+ferr(e))}
-  regBusy=false;render()}}
+  rs={step:0,p:'',n:'',u:'',pw:''};regBusy=false;render()};
+ $('#go').onclick=fin;
+ A.querySelectorAll('input').forEach(i=>i.addEventListener('keydown',e=>{if(e.key==='Enter')fin()}));
+ const f=A.querySelector('input');if(f&&!f.value)setTimeout(()=>f.focus(),250)}
 function auth(){const u=((fbAuth.currentUser||{}).email||'').split('@')[0];
  A.innerHTML=`<div class="pad"><h1>Danret</h1><p class="sub">Осталось указать имя для @${E(u)}.</p><input id="n" placeholder="Имя" maxlength="40"><input id="p" type="tel" placeholder="Телефон (по желанию)" maxlength="20"><div id="er" class="sub" style="color:#f66"></div><button class="btn" style="width:100%;margin-top:8px" id="go">Продолжить</button><div class="sub" id="lo2" style="text-align:center;margin-top:18px;color:var(--ac);cursor:pointer">Выйти</div></div>`;
  $('#lo2').onclick=()=>fbAuth.signOut();
