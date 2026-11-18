@@ -307,7 +307,7 @@ function start(){
  db.collection('calls').where('to','==',uid).onSnapshot(q=>{c2=q.docs.map(d=>d.data());setCl()},er0);
  const t=setTimeout(()=>{if(!me)A.innerHTML='<div class="empty">Не удалось загрузить. Обновите страницу.</div>'},10000);
  db.collection('users').onSnapshot(s=>{clearTimeout(t);const nu={};s.docs.forEach(d=>nu[d.id]=d.data());users=nu;me=users[uid]||null;theme();autoJoin();if(me&&!phL){phL=1;loadPh()}stf();const sg2=JSON.stringify(Object.entries(nu).map(([i,u])=>{const r={...u};delete r.ls;return[i,r]}));if(me&&sg2===usg){upSub();return}usg=sg2;render()},er0);
- const setChats=()=>{const m=new Map();[...cm,...cp,...cp2].forEach(c=>m.set(c.id,c));chats=[...m.values()];autoJoin();chkNotif();stf();fav();hash();ibSync();render();updBadge();updWatch()};
+ const setChats=()=>{const m=new Map();[...cm,...cp,...cp2].forEach(c=>m.set(c.id,c));chats=[...m.values()];autoJoin();chkNotif();stf();fav();hash();ibSync();try{if(cur&&!inf&&!document.hidden)rdU(cur)}catch(e){}render();updBadge();updWatch()};
  db.collection('chats').where('members','array-contains',uid).onSnapshot(s=>{cm=s.docs.map(d=>({id:d.id,...d.data()}));if(!s.metadata.fromCache)cmReady=true;setChats()},er0);
  db.collection('chats').where('pub','==',true).onSnapshot(s=>{cp=s.docs.map(d=>({id:d.id,...d.data()}));setChats()},er0);
  db.collection('chats').where('link','==',DEFCH).onSnapshot(s=>{cp2=s.docs.map(d=>({id:d.id,...d.data()}));setChats()},er0);
@@ -822,7 +822,7 @@ async function recCircle(){
 function back(){if(unM)unM();unM=null;dmCh=null;cur=null;main()}
 function openChat(id,fc){addRec(id);dmCh=fc||null;cur=id;msgs=[];pk=null;if(unM)unM();
  unM=mc(id).orderBy('ts').onSnapshot(s=>{msgs=s.docs.map(d=>({id:d.id,...d.data()}));rdU(id);chatView()},()=>{});rdU(id);chatView()}
-function rdU(id){const c=chats.find(x=>x.id===id);if(c&&c.members&&c.members.includes(uid)&&!document.hidden){if(c['u_'+uid]>0&&!dmCh){c['u_'+uid]=0;cs(id).update({['u_'+uid]:0}).catch(()=>{})}if(dmCh)ibMark(dmCh,id)}}
+function rdU(id){const c=chats.find(x=>x.id===id);if(c&&c.members&&c.members.includes(uid)&&!document.hidden){if(c['u_'+uid]>0&&!dmCh){c['u_'+uid]=0;cs(id).update({['u_'+uid]:0}).catch(()=>setTimeout(()=>cs(id).update({['u_'+uid]:0}).catch(()=>{}),1500))}if(dmCh)ibMark(dmCh,id)}}
 const EM=['👍','❤️','🔥','😂','😮','😢'];
 const ALLR=['👍','👎','❤️','🔥','🥰','👏','😁','🤔','🤯','😱','😢','🎉','🤩','🙏','👌','😍','💯','⚡','🏆','💔','😂','😮'];
 async function chMsg(c,x){try{let d=chats.find(k=>k.type==='dm'&&k.members.includes(c.owner)&&k.members.includes(uid)),id=d?d.id:rid(10);if(!d)await cs(id).set({type:'dm',members:[uid,c.owner],owner:uid,created:Date.now(),lastTs:0,last:''});const ts=Date.now();await mc(id).doc(ts.toString(36)+rid()).set({from:uid,ts,kind:'text',text:x,raw:x,chn:c.id,co:c.owner,ct:c.title});if(!dmCh)toast('Сообщение отправлено')}catch(e){toast('Не удалось отправить')}}
