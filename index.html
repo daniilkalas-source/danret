@@ -318,6 +318,30 @@ html.otf[data-theme=dark] .msgs{background-image:url("data:image/svg+xml,%3Csvg 
 .mpv .pop button svg{width:22px;height:22px}
 .mpv .pop button small{margin-top:1px;font-size:12px}
 .nocp,.nocp *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+
+/* v8: страницы вместо окон, action sheet, камера историй */
+.sheet{z-index:7}.sed{z-index:12}
+.asx{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;justify-content:center;animation:fi .15s}
+.asb{width:100%;max-width:620px;padding:8px 8px calc(env(safe-area-inset-bottom,0px) + 8px)}
+.asg{background:var(--sf);border-radius:16px;overflow:hidden;margin-bottom:8px}
+.ast{padding:14px 16px;text-align:center;color:var(--mu);font-size:13px;border-bottom:.5px solid var(--ln)}
+.asr,.asc{display:block;width:100%;border:0;background:var(--sf);font-size:19px;padding:16px;text-align:center}
+.asr{color:#e5484d;background:none}.asc{color:var(--ac);font-weight:600;border-radius:16px}
+.scam{position:fixed;inset:0;z-index:12;background:#000;display:flex;flex-direction:column;max-width:620px;margin:auto;padding-top:env(safe-area-inset-top,0px);color:#fff}
+.scv{position:relative;flex:1;min-height:0;border-radius:28px;overflow:hidden;background:#111}
+.scv video{width:100%;height:100%;object-fit:cover;display:block}.scv video.mir{transform:scaleX(-1)}
+.sct{position:absolute;top:14px;left:14px;right:14px;display:flex;align-items:center;justify-content:space-between;z-index:2}
+.sct button,.scf,.scg{border:0;background:rgba(40,40,44,.6);color:#fff;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.sct svg,.scf svg,.scg svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sct .tm{background:#e5484d;border-radius:14px;padding:4px 10px;font-weight:700;font-size:14px}
+.ssh{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);width:78px;height:78px;border-radius:50%;border:4px solid #fff;background:rgba(0,0,0,.25);padding:0;display:flex;align-items:center;justify-content:center}
+.ssh i{display:block;width:60px;height:60px;border-radius:50%;background:#fff;transition:all .15s}
+.scam.vd .ssh i{background:#e5484d}.scam.rc .ssh i{width:28px;height:28px;border-radius:8px}
+.scb{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px calc(env(safe-area-inset-bottom,0px) + 10px)}
+.scg,.scf{background:#2b2b2e}
+.scm{display:flex;background:#2b2b2e;border-radius:30px;padding:4px;flex:1;max-width:300px;margin:0 auto}
+.scm button{flex:1;border:0;background:none;color:#fff;font-weight:700;letter-spacing:.5px;font-size:15px;padding:11px 8px;border-radius:26px}
+.scm button.on{background:#111;color:#ffd60a}
 </style></head><body><div id="spl"><svg viewBox="0 0 100 100" width="84" height="84"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b72f7"/><stop offset="1" stop-color="#4f55e3"/></linearGradient></defs><rect width="100" height="100" rx="24" fill="url(#g1)"/><path d="M26 49 L76 27 L58 75 L49 56 Z" fill="#fff"/><path d="M49 56 L76 27 L40 50 Z" fill="#dfe3ff"/></svg><b>DANRET</b></div><script>(function(){var t0=Date.now(),d=false;function hide(){if(d)return;d=true;var e=document.getElementById('spl');if(!e)return;var w=Math.max(0,1300-(Date.now()-t0));setTimeout(function(){e.classList.add('off');setTimeout(function(){e.remove()},400)},w)}addEventListener('load',function(){setTimeout(hide,200)});setTimeout(hide,4000)})()</script><div id="app"></div>
 <script>if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("firebase-messaging-sw.js").catch(()=>{}))</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -348,7 +372,7 @@ const uname=u=>{const k=me&&me.cn&&me.cn[u];if(k&&(k.f||k.l))return((k.f||'')+' 
 const setU=p=>db.collection('users').doc(uid).update(p);
 const ctitle=c=>c.type==='dm'?uname(c.members.find(x=>x!==uid)):c.title;
 const icon=c=>({channel:'<svg class="i" viewBox="0 0 24 24"><path d="M3 11v2a1 1 0 001 1h2l5 4V6L6 10H4a1 1 0 00-1 1zM15 9a4 4 0 010 6M18 6.5a8 8 0 010 11"/></svg> ',group:'<svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M16 5a3 3 0 010 6M18 14c2 .6 3.5 2.2 3.5 5"/></svg> ',saved:'<svg class="i" viewBox="0 0 24 24"><path d="M6 4h12v16l-6-4-6 4z"/></svg> '}[c.type]||(c.secret?'<svg class="i" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg> ':''));
-function sheet(h){const s=document.createElement('div');s.className='sheet';s.innerHTML='<div>'+h+'</div>';document.body.appendChild(s);s.onclick=e=>{if(e.target===s)s.remove()};const x=s.querySelector('.cx');if(x)x.onclick=()=>s.remove();return s}
+function sheet(h){const s=document.createElement('div');s.className='sheet';const mh=h.match(/^<div class="top"><div class="t">([^<]*)<\/div><button class="ib cx"><svg[^>]*>.*?<\/svg><\/button><\/div>/);if(mh){h=hp(mh[1])+h.slice(mh[0].length);s.classList.add('pg')}s.innerHTML='<div>'+h+'</div>';document.body.appendChild(s);s.onclick=e=>{if(e.target===s)s.remove()};const x=s.querySelector('.cx');if(x)x.onclick=()=>s.remove();return s}
 const hd=t=>`<div class="top"><div class="t">${t}</div><button class="ib cx"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`;
 const copy=t=>{try{navigator.clipboard.writeText(t)}catch(e){}};
 const hp=t=>`<div class="top"><button class="ib cx"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="t">${t}</div><div style="width:36px"></div></div>`;
@@ -601,9 +625,38 @@ const SI={
  pal:'<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 100 18c1.4 0 2-1 1.6-2-.5-1.2.2-2.4 1.6-2.4H17a4 4 0 004-4C21 6.5 17 3 12 3z"/><circle cx="7.5" cy="11" r="1" fill="#fff"/><circle cx="10" cy="7.5" r="1" fill="#fff"/><circle cx="14.5" cy="7.5" r="1" fill="#fff"/></svg>'
 };
 const hrs=n=>n+' '+(n%10==1&&n%100!=11?'час':[2,3,4].includes(n%10)&&![12,13,14].includes(n%100)?'часа':'часов');
-function addStory(){const s=sheet(hd('Новая история')+`<button class="btn" id="s1" style="width:100%;margin-bottom:10px"><svg class="i" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg> Фото или видео</button><button class="btn" id="s2" style="width:100%"><svg class="i" viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19zM14 7l3 3"/></svg> Текст</button>`);
- s.querySelector('#s1').onclick=()=>{s.remove();pickFile('image/*,video/*',async f=>{if(f.type.startsWith('video/')&&f.size>700000)return toast('Видео слишком большое (до ~0.7 МБ)');storyEditor(f.type.startsWith('image/')?'photo':'video',f)})};
- s.querySelector('#s2').onclick=()=>{s.remove();storyEditor('text')}}
+function addStory(){storyCam()}
+function storyCam(){
+ const MAXB=650000,MAXS=15,ic=p=>`<svg viewBox="0 0 24 24">${p}</svg>`;
+ let mode='photo',face='environment',st=null,rec=null,ch=[],sz=0,tk=null,t0=0,alive=true;
+ const e=document.createElement('div');e.className='scam';
+ e.innerHTML=`<div class="scv"><video id="cv" autoplay muted playsinline></video><div class="sct"><span id="ctm" class="tm" hidden>0:00</span><span style="flex:1"></span><button id="cx">${ic('<path d="M6 6l12 12M18 6L6 18"/>')}</button></div><button class="ssh" id="csh"><i></i></button></div><div class="scb"><button class="scg" id="cg">${ic('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="M21 16l-5-5-8 8"/>')}</button><div class="scm"><button data-m="video">ВИДЕО</button><button data-m="photo" class="on">ФОТО</button></div><button class="scf" id="cf">${ic('<path d="M20 11a8 8 0 00-14-4M4 5v3h3M4 13a8 8 0 0014 4M20 19v-3h-3"/>')}</button></div>`;
+ document.body.appendChild(e);
+ const Q=x=>e.querySelector(x),vid=Q('#cv');
+ const stop=()=>{try{st&&st.getTracks().forEach(t=>t.stop())}catch(_){}st=null};
+ const close=()=>{alive=false;clearInterval(tk);try{rec&&rec.state!=='inactive'&&(rec.onstop=null,rec.stop())}catch(_){}stop();e.remove()};
+ const start=async()=>{stop();vid.classList.toggle('mir',face==='user');
+  const vc={facingMode:face,width:{ideal:1280},height:{ideal:1920}};
+  try{st=await navigator.mediaDevices.getUserMedia({video:vc,audio:mode==='video'})}catch(x){
+   try{st=await navigator.mediaDevices.getUserMedia({video:vc,audio:false});if(mode==='video')toast('Нет доступа к микрофону — видео будет без звука')}catch(y){close();toast('Нет доступа к камере. Выберите файл из галереи.');return pickFile('image/*,video/*',g)}}
+  if(!alive){stop();return}vid.srcObject=st;vid.play().catch(()=>{})};
+ const g=async f=>{if(f.type.startsWith('video/')&&f.size>700000)return toast('Видео слишком большое (до ~0.7 МБ)');close();storyEditor(f.type.startsWith('image/')?'photo':'video',f)};
+ const setMode=m=>{if(rec&&rec.state==='recording')return;mode=m;e.classList.toggle('vd',m==='video');e.querySelectorAll('[data-m]').forEach(b=>b.classList.toggle('on',b.dataset.m===m));start()};
+ e.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>setMode(b.dataset.m));
+ Q('#cx').onclick=close;Q('#cg').onclick=()=>pickFile('image/*,video/*',g);
+ Q('#cf').onclick=()=>{if(rec&&rec.state==='recording')return;face=face==='user'?'environment':'user';start()};
+ const fin=()=>{clearInterval(tk);e.classList.remove('rc');Q('#ctm').hidden=true;if(!alive)return;const ty=(rec&&rec.mimeType||'video/mp4').split(';')[0],b=new Blob(ch,{type:ty});if(b.size>700000){toast('Видео слишком большое, снимите короче');return}close();storyEditor('video',new File([b],'story.'+(ty.includes('mp4')?'mp4':'webm'),{type:ty}))};
+ Q('#csh').onclick=()=>{
+  if(!st||!vid.videoWidth)return;
+  if(mode==='photo'){const k=Math.min(1,1280/Math.max(vid.videoWidth,vid.videoHeight)),c=document.createElement('canvas');c.width=Math.round(vid.videoWidth*k);c.height=Math.round(vid.videoHeight*k);c.getContext('2d').drawImage(vid,0,0,c.width,c.height);c.toBlob(b=>{if(!b)return toast('Не удалось снять фото');close();storyEditor('photo',new File([b],'story.jpg',{type:'image/jpeg'}))},'image/jpeg',.85);return}
+  if(rec&&rec.state==='recording'){rec.stop();return}
+  if(!window.MediaRecorder)return toast('Запись видео не поддерживается в этом браузере');
+  const ty=['video/mp4','video/webm;codecs=vp8,opus','video/webm'].find(t=>MediaRecorder.isTypeSupported(t));ch=[];sz=0;
+  try{rec=new MediaRecorder(st,{...(ty?{mimeType:ty}:{}),videoBitsPerSecond:350000,audioBitsPerSecond:32000})}catch(x){return toast('Не удалось начать запись')}
+  rec.ondataavailable=ev=>{if(ev.data&&ev.data.size){ch.push(ev.data);sz+=ev.data.size;if(sz>MAXB&&rec.state==='recording')rec.stop()}};
+  rec.onstop=fin;rec.start(400);t0=Date.now();e.classList.add('rc');Q('#ctm').hidden=false;
+  tk=setInterval(()=>{const s=(Date.now()-t0)/1000;Q('#ctm').textContent='0:'+String(Math.floor(s)).padStart(2,'0');if(s>=MAXS&&rec.state==='recording')rec.stop()},250)};
+ start()}
 function storyEditor(kind,f){const id=rid(10);let bg=col(id),dur=24,url=f?URL.createObjectURL(f):'';
  const PEN='<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1-4L16 5l3 3L8 19zM14 7l3 3"/></svg>';
  const e=document.createElement('div');e.className='sed';
@@ -694,7 +747,7 @@ function pickUsers(title,pool,cur,cb){let sel=new Set(cur);const w=sheet(hd(titl
 const canSee=(x,v)=>{if(x.uid===v)return true;const a=x.aud,h=(x.hide||[]).includes(v);return a==='all'?!h:a==='contacts'?(users[x.uid]?.ct||[]).includes(v)&&!h:(a==='close'||a==='sel')?(x.sel||[]).includes(v):false};
 const stAgo=t=>{const m=Math.floor((Date.now()-t)/6e4);if(m<1)return'только что';if(m<60)return pl(m,['минуту','минуты','минут'])+' назад';const a=new Date(t).toDateString(),hm=tm(t);return a===new Date().toDateString()?'сегодня в '+hm:a===new Date(Date.now()-864e5).toDateString()?'вчера в '+hm:new Date(t).toLocaleDateString('ru')+' в '+hm};
 function openStory(u,list,sid){const items=(list||stl.filter(x=>x.uid===u)).sort((a,b)=>a.ts-b.ts);if(!items.length)return;let i=items.findIndex(x=>!x['v_'+uid]);if(i<0)i=0;if(sid){const k=items.findIndex(x=>x.id===sid);if(k>=0)i=k}let tmr;
- const d=document.createElement('div');d.style.cssText='position:fixed;inset:0;background:#000;z-index:4;display:flex;align-items:center;justify-content:center;color:#fff';document.body.appendChild(d);
+ const d=document.createElement('div');d.style.cssText='position:fixed;inset:0;background:#000;z-index:12;display:flex;align-items:center;justify-content:center;color:#fff';document.body.appendChild(d);
  const close=()=>{clearTimeout(tmr);d.remove()},nx=()=>{i++;i>=items.length?close():show()},pv=()=>{i=Math.max(0,i-1);show()};
  function show(){clearTimeout(tmr);const x=items[i];if(!x)return close();if(u!==uid&&!x['v_'+uid])db.collection('stories').doc(x.id).update({['v_'+uid]:Date.now()}).catch(()=>{});
   const vw=Object.keys(x).filter(k=>k.startsWith('v_')).length,T='top:calc(env(safe-area-inset-top,0px) + ';
@@ -719,17 +772,17 @@ function openStory(u,list,sid){const items=(list||stl.filter(x=>x.uid===u)).sort
      if(m==='save'){const a=document.createElement('a');a.href=x.u;a.download='story-'+x.id+(x.kind==='video'?'.mp4':'.jpg');document.body.appendChild(a);a.click();a.remove()}
      if(m==='link'){copy(url);toast('Ссылка скопирована')}
      if(m==='share'){try{await navigator.share({url})}catch(e3){}}
-     if(m==='del')return ask('Удалить историю?',async()=>{await db.collection('stories').doc(x.id).delete();close()},'Удалить');
+     if(m==='del')return ask('История будет удалена без возможности восстановления.',async()=>{await db.collection('stories').doc(x.id).delete();close()},'Удалить историю');
      back()})}
-  if(u===uid&&d.querySelector('#svw'))d.querySelector('#svw').onclick=()=>{clearTimeout(tmr);const vv=d.querySelector('video');vv&&vv.pause();const vl=Object.keys(x).filter(k=>k.startsWith('v_')&&k.slice(2)!==uid).map(k=>k.slice(2)).sort((a,b)=>(x['v_'+b]||0)-(x['v_'+a]||0)),w=sheet(hd('Просмотры · '+vl.length)+(vl.map(i=>`<div class="row">${av(uname(i),i,42)}<div class="col"><div class="nm">${E(uname(i))}</div><div class="sub">${x['v_'+i]>1?tm(x['v_'+i]):'просмотрено'}</div></div><span style="font-size:28px">${x['r_'+i]||''}</span></div>`).join('')||'<div class="empty" style="padding:20px">Пока никто не смотрел</div>')),rm=w.remove.bind(w);w.style.zIndex=10;w.remove=()=>{rm();show()}};
+  if(u===uid&&d.querySelector('#svw'))d.querySelector('#svw').onclick=()=>{clearTimeout(tmr);const vv=d.querySelector('video');vv&&vv.pause();const vl=Object.keys(x).filter(k=>k.startsWith('v_')&&k.slice(2)!==uid).map(k=>k.slice(2)).sort((a,b)=>(x['v_'+b]||0)-(x['v_'+a]||0)),w=sheet(hd('Просмотры · '+vl.length)+(vl.map(i=>`<div class="row">${av(uname(i),i,42)}<div class="col"><div class="nm">${E(uname(i))}</div><div class="sub">${x['v_'+i]>1?tm(x['v_'+i]):'просмотрено'}</div></div><span style="font-size:28px">${x['r_'+i]||''}</span></div>`).join('')||'<div class="empty" style="padding:20px">Пока никто не смотрел</div>')),rm=w.remove.bind(w);w.style.zIndex=20;w.remove=()=>{rm();show()}};
 d.querySelector('#sl').onclick=pv;d.querySelector('#sr').onclick=nx;
-  if($('#sdl')&&d.querySelector('#sdl'))d.querySelector('#sdl').onclick=()=>ask('Удалить историю?',async()=>{await db.collection('stories').doc(x.id).delete();close()},'Удалить');
+  if($('#sdl')&&d.querySelector('#sdl'))d.querySelector('#sdl').onclick=()=>ask('История будет удалена без возможности восстановления.',async()=>{await db.collection('stories').doc(x.id).delete();close()},'Удалить историю');
   const v=d.querySelector('video');if(v){v.onended=nx;v.onerror=nx}else tmr=setTimeout(nx,5000)}
  show()}
 const fmt=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
 const pl=(n,a)=>n+' '+a[n%10==1&&n%100!=11?0:[2,3,4].includes(n%10)&&![12,13,14].includes(n%100)?1:2];
 function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),4000)}
-function ask(t,ok,btn='Да'){const s=sheet(`<div style="text-align:center;padding:10px"><div class="nm" style="margin-bottom:14px">${E(t)}</div><div style="display:flex;gap:10px"><button class="btn" id="n" style="flex:1;background:var(--sf);color:var(--tx)">Отмена</button><button class="btn red" id="y" style="flex:1">${btn}</button></div></div>`);s.querySelector('#n').onclick=()=>s.remove();s.querySelector('#y').onclick=async()=>{s.remove();try{await ok()}catch(e){toast('Ошибка: '+(e.message||e.code||e))}}}
+function ask(t,ok,btn='Да'){const s=document.createElement('div');s.className='asx';s.innerHTML=`<div class="asb"><div class="asg"><div class="ast">${E(t)}</div><button class="asr" id="y">${btn}</button></div><button class="asc" id="n">Отмена</button></div>`;document.body.appendChild(s);s.onclick=e=>{if(e.target===s)s.remove()};s.querySelector('#n').onclick=()=>s.remove();s.querySelector('#y').onclick=async()=>{s.remove();try{await ok()}catch(e){toast('Ошибка: '+(e.message||e.code||e))}}}
 async function delChat(c){if(unM)unM();unM=null;try{const q=await mc(c.id).get();for(const d of q.docs)await mc(c.id).doc(d.id).delete()}catch(e){}await cs(c.id).delete();inf=null;cur=null;sub=null;main()}
 async function joinCh(c){await cs(c.id).update({members:firebase.firestore.FieldValue.arrayUnion(uid)});if(!(me.muted||[]).includes(c.id)){me.muted=[...(me.muted||[]),c.id];setU({muted:me.muted}).catch(()=>{})}}
 let aj=0;function autoJoin(){if(aj||!me)return;const c=chats.find(x=>x.type==='channel'&&['danretofficial','danretconru'].includes(String(x.link||'').toLowerCase()));if(!c||!c.members)return;aj=1;if(c.members.includes(uid))return;joinCh(c).catch(()=>{aj=0;setTimeout(autoJoin,4000)})}
@@ -744,7 +797,6 @@ function moreMenu(c,btn){
   ['wp',I('<path d="M5 4h11a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5a1 1 0 011-1zM17 7h2v5h-7v3M10 15h4v5h-4z"/>'),'Изменить обои'],
   dm&&!c.secret&&['sec',I('<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>'),'Начать секретный чат'],
   dm&&['ct',I('<path d="M13 5l7 6-7 6v-4c-5 0-8 1-9 5 0-6 3-9 9-9z"/>'),'Отправить контакт'],
-  dm&&['gf',I('<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v8h14v-8M12 8v12M12 8S9 8 9 6a2 2 0 013-1 2 2 0 013 1c0 2-3 2-3 2z"/>'),'Отправить подарок'],
   '-',
   adm&&['ttl',I('<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M10 2h4"/>'),'Автоудаление',c.ttl?ttlT(c.ttl):''],
   adm&&['ncp',I('<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h2M3 3l18 18"/>'),c.nocopy?'Разрешить копирование':'Запретить копирование'],
@@ -764,7 +816,6 @@ function moreMenu(c,btn){
   wp:()=>{const w=sheet(hd('Обои чата')+`<button class="btn" id="w1" style="width:100%;margin-bottom:10px">Выбрать из галереи</button><button class="btn" id="w2" style="width:100%;background:var(--sf);color:var(--tx)">Сбросить обои чата</button>`);w.querySelector('#w1').onclick=()=>{w.remove();wpPick(()=>toast('Обои чата установлены'),'wp_'+c.id)};w.querySelector('#w2').onclick=()=>{w.remove();try{localStorage.removeItem('wp_'+c.id)}catch(e){}toast('Обои сброшены')}},
   sec:()=>ask('Начать секретный чат с '+nm+'? Это отдельный чат: копирование и пересылка в нём запрещены. Сквозного шифрования нет.',()=>startSecret(oid),'Начать'),
   ct:()=>{const l=chats.filter(x=>x.members&&x.members.includes(uid)&&x.type!=='channel'&&x.id!==c.id);const w=sheet(hd('Отправить контакт')+(l.length?'':'<div class="empty" style="padding:20px">Нет чатов</div>')+l.map(x=>`<div class="row" data-t="${x.id}">${av(ctitle(x),x.id,40)}<div class="col nm">${E(ctitle(x))}</div></div>`).join(''));w.querySelectorAll('[data-t]').forEach(r=>r.onclick=()=>{const t=r.dataset.t;w.remove();postTo(t,{kind:'contact',cu:oid,text:''},'👤 '+uname(oid)).then(()=>toast('Контакт отправлен')).catch(()=>toast('Не удалось отправить'))})},
-  gf:()=>{const G=['🧸','💝','🌹','🎂','🏆','🍀','🚀','💎','🍾','☕','🐱','🎁'];const w=sheet(hd('Отправить подарок')+`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:8px 0">${G.map(g=>`<button class="btn" data-g="${g}" style="font-size:34px;padding:12px 0;background:var(--sf)">${g}</button>`).join('')}</div>`);w.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{const g=b.dataset.g;w.remove();postTo(c.id,{text:g+' Подарок для '+nm},g+' Подарок').then(()=>toast('Подарок отправлен')).catch(()=>toast('Не удалось отправить'))})},
   ttl:()=>{const V=[0,86400000,604800000,2592000000];const w=sheet(hd('Автоудаление')+V.map(v=>`<div class="row k" data-v="${v}"><div class="col">${ttlT(v)}</div>${(c.ttl||0)===v?'<span class="chk">✓</span>':''}</div>`).join('')+'<div class="sub" style="padding:8px 6px">Сообщения старше выбранного срока удаляются, когда кто-то открывает чат.</div>');w.querySelectorAll('[data-v]').forEach(r=>r.onclick=()=>{const v=+r.dataset.v;w.remove();cs(c.id).update({ttl:v}).then(()=>{c.ttl=v;toast('Автоудаление: '+ttlT(v))}).catch(fail)})},
   ncp:()=>{const v=!c.nocopy;cs(c.id).update({nocopy:v}).then(()=>{c.nocopy=v;toast(v?'Копирование запрещено':'Копирование разрешено')}).catch(fail)},
   arc:()=>archTog(c.id).then(()=>toast(ar0?'Возвращено из архива':'Перенесено в архив')),
@@ -1269,8 +1320,8 @@ function privPage(){const d=document.createElement('div');d.className='srv';
  document.body.appendChild(d);draw();prD=draw}
 let prD=null;
 function myProfile(){const d=document.createElement('div');d.className='srv pf';
- const draw=()=>{d.innerHTML=`${phs(uid)}<div class="main"><div class="phd" style="${pcBg(uid)}"><div class="top" style="background:none"><button class="ib" id="mpx"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="t"></div><button class="pill" id="mpe">Изм.</button></div><div class="hero" style="padding:0 20px 16px">${avH(me.name,uid,110,'mp')}<h1>${E(me.name)}</h1><div class="sub">в сети</div></div></div><div class="grp" style="margin-top:14px">${myPh?`<div class="fld"><b>мобильный</b><span style="color:var(--ac)">${E(myPh)}</span></div>`:''}<div class="fld"><b>имя пользователя</b><span style="color:var(--ac)">@${E(me.username)}</span></div>${me.bd?`<div class="fld"><b>день рождения</b><span>${fmtBd(me.bd)}</span></div>`:''}${me.bio?`<div class="fld"><b>о себе</b><span>${E(me.bio)}</span></div>`:''}</div><div class="seg" style="margin:14px"><button class="on">Публикации</button></div><div style="display:flex;gap:10px;justify-content:center;padding:0 14px 10px"><span class="pill">Все истории</span><button class="pill" id="mpa" style="color:var(--tx)">+ История</button><button class="pill" id="mpc" style="color:var(--tx)">Цвет</button></div>${pubGrid(uid)}</div>`;
-  d.querySelector('#mpx').onclick=()=>d.remove();d.querySelector('#mpe').onclick=editProfile;d.querySelector('#mpa').onclick=addStory;d.querySelector('#mpc').onclick=colorPage;pullAva(d);pubX(d)};
+ const draw=()=>{d.innerHTML=`${phs(uid)}<div class="main"><div class="phd" style="${pcBg(uid)}"><div class="top" style="background:none"><button class="ib" id="mpx"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="t"></div><button class="pill" id="mpe">Изм.</button></div><div class="hero" style="padding:0 20px 16px">${avH(me.name,uid,110,'mp')}<h1>${E(me.name)}</h1><div class="sub">в сети</div></div></div><div class="grp" style="margin-top:14px">${myPh?`<div class="fld"><b>мобильный</b><span style="color:var(--ac)">${E(myPh)}</span></div>`:''}<div class="fld"><b>имя пользователя</b><span style="color:var(--ac)">@${E(me.username)}</span></div>${me.bd?`<div class="fld"><b>день рождения</b><span>${fmtBd(me.bd)}</span></div>`:''}${me.bio?`<div class="fld"><b>о себе</b><span>${E(me.bio)}</span></div>`:''}</div><div class="seg" style="margin:14px"><button class="on">Публикации</button></div><div style="display:flex;gap:10px;justify-content:center;padding:0 14px 10px"><button class="pill" id="mpv" style="color:var(--tx)">Все истории</button><button class="pill" id="mpa" style="color:var(--tx)">+ История</button><button class="pill" id="mpc" style="color:var(--tx)">Цвет</button></div>${pubGrid(uid)}</div>`;
+  d.querySelector('#mpx').onclick=()=>d.remove();d.querySelector('#mpe').onclick=editProfile;d.querySelector('#mpa').onclick=addStory;d.querySelector('#mpv').onclick=()=>stl.some(x=>x.uid===uid)?openStory(uid):toast('У вас пока нет активных историй');d.querySelector('#mpc').onclick=colorPage;pullAva(d);pubX(d)};
  document.body.appendChild(d);draw();mpD=()=>{if(!document.body.contains(d)){mpD=null;return}draw()}}
 function editProfile(){const d=document.createElement('div');d.className='srv';const st={n:me.name,b:me.bio||'',d:me.bd||''},BV={all:'виден всем',contacts:'виден контактам',none:'скрыт от всех'},sh=v=>{const [y,m,x]=v.split('-').map(Number);return x+' '+MON[m-1]+' '+y},ic=(bg,p)=>`<span style="background:${bg};color:#fff;width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none"><svg class="i" viewBox="0 0 24 24">${p}</svg></span>`;
  const draw=()=>{d.innerHTML=`<div class="top" style="background:none"><button class="ib" id="epx"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="t"></div><button class="ib" id="eps" style="background:var(--ac);color:#fff"><svg class="i" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></button></div><div class="main"><div style="text-align:center;padding:6px 0 14px"><div id="epa" style="display:flex;justify-content:center;cursor:pointer">${av(me.name,uid,130)}</div><div id="epc" style="color:var(--ac);font-size:20px;margin-top:14px;cursor:pointer">Изменить фотографию</div></div>
