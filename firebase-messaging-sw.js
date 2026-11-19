@@ -1,6 +1,3 @@
-/* Простой service worker для push.
-   ГЛАВНОЕ: на КАЖДЫЙ push показываем уведомление (iOS и Android иначе отключают подписку).
-   Firebase SDK внутри воркера НЕ нужен — токен получается на странице. */
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
 
@@ -14,12 +11,17 @@ self.addEventListener('push', event => {
     body: n.body || d.body || d.text || 'Новое сообщение',
     icon: n.icon || d.icon || '/icon-192.png',
     badge: '/icon-192.png',
-    tag: d.tag || d.chatId || n.tag || undefined,   // одинаковый tag = заменяет прошлое уведомление
+    tag: d.tag || d.chatId || n.tag || undefined,
     renotify: !!(d.tag || d.chatId || n.tag),
     data: d
   };
-  // ВСЕГДА показываем, даже если приложение открыто
-  event.waitUntil(self.registration.showNotification(title, opts));
+  event.waitUntil((async () => {
+    await self.registration.showNotification(title, opts);
+    try {
+      const list = await self.registration.getNotifications();
+      if (self.navigator && self.navigator.setAppBadge) await self.navigator.setAppBadge(list.length);
+    } catch (e) {}
+  })());
 });
 
 self.addEventListener('notificationclick', event => {
