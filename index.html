@@ -447,7 +447,7 @@ async function hash(){const m=location.hash.match(/^#c-(.+)$/);if(!m||!me||!cmRe
 const mine=()=>chats.filter(c=>c.members?.includes(uid)).sort((a,b)=>(b.type==='saved')-(a.type==='saved')||(b.lastTs||0)-(a.lastTs||0));
 function render(){if(!me)return regBusy?void 0:auth();if(inf&&sub==='set'&&$('#st'))return;if(cur&&$('.msgs')&&!$('.sheet'))return;cur?chatView():main()}
 let authMode='reg';
-const mkProfile=async(id,n,u,pv)=>{await db.collection('users').doc(id).set({name:n,username:u,phone:'',phoneVis:'none',bio:'',created:Date.now()});if(pv){myPh=pv;phL=1;db.collection('data/users/'+id).doc('phone').set({v:pv}).catch(()=>{})}};
+const mkProfile=async(id,n,u,pv,ev)=>{await db.collection('users').doc(id).set({name:n,username:u,phone:'',phoneVis:'none',bio:'',created:Date.now()});if(pv){myPh=pv;phL=1;db.collection('data/users/'+id).doc('phone').set({v:pv}).catch(()=>{})}if(ev)db.collection('data/users/'+id).doc('email').set({v:ev,verified:true,t:Date.now()}).catch(()=>{})};
 const AI={
  logo:'<svg viewBox="0 0 100 100" width="96" height="96"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b7cf7"/><stop offset="1" stop-color="#4a4fe0"/></linearGradient></defs><rect width="100" height="100" rx="24" fill="url(#lg)"/><path d="M24 50 76 26 62 76 49 56z" fill="#fff"/><path d="M49 56 76 26" stroke="#4a4fe0" stroke-width="3" stroke-linecap="round" fill="none" opacity=".35"/></svg>',
  ph:'<svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A15 15 0 013 6a2 2 0 012-2z"/></svg>',
@@ -457,7 +457,12 @@ const AI={
  ey:'<svg viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
  bk:'<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>',
  ar:'<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'};
-let rs={step:0,p:'',n:'',u:'',pw:''};
+/* === Код на почту через EmailJS: впишите три значения (см. инструкцию), пока пусто — шаг почты пропускается === */
+const EJS={svc:'service_1n55cqj',tpl:'template_ha97x2e',key:'wtlQKEGxT-uzymR9k'};const EJS_ON=!!(EJS.svc&&EJS.tpl&&EJS.key);
+async function sendCode(em){const c=String(100000+(crypto.getRandomValues(new Uint32Array(1))[0]%900000));
+ const r=await fetch('https://api.emailjs.com/api/v1.0/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_id:EJS.svc,template_id:EJS.tpl,user_id:EJS.key,template_params:{email:em,to_email:em,passcode:c,code:c,time:new Date(Date.now()+900000).toLocaleString('ru-RU',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'}),app:'Danret'}})});
+ if(!r.ok)throw new Error('send');return c}
+let rs={step:0,p:'',n:'',u:'',pw:'',em:'',cd:'',code:'',codeEm:'',sent:0,tries:0,emOk:false};
 function authForm(){const reg=authMode==='reg';
  const fld=(ic,inner,extra)=>`<div class="afl">${'<span class="afi">'+ic+'</span>'}${inner}${extra||''}</div>`;
  const uIn=`<input id="u" placeholder="@username" maxlength="24" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="username">`;
@@ -474,18 +479,26 @@ function authForm(){const reg=authMode==='reg';
   head=`<h1>Давайте знакомиться</h1><p class="asub">Введите имя и придумайте username</p>`;
   body=fld(AI.us,'<input id="n" placeholder="Введите имя" maxlength="40" autocomplete="name">')+fld(AI.at,uIn);
   hint='Username: латиница, цифры и _ (3–24 символа)';btn='Дальше';
+ }else if(rs.step===2){
+  head=`<h1>Подтвердите почту</h1><p class="asub">Мы отправим на неё код подтверждения</p>`;
+  body=fld(AI.at,'<input id="em" type="email" placeholder="Ваша почта" maxlength="100" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="email">');
+  hint='Почта нужна для подтверждения аккаунта';btn='Отправить код';
+ }else if(rs.step===3){
+  head=`<h1>Введите код</h1><p class="asub">Код отправлен на ${E(rs.codeEm)}</p>`;
+  body=fld(AI.lk,'<input id="cd" inputmode="numeric" placeholder="6-значный код" maxlength="6" autocomplete="one-time-code">');
+  hint='Не пришло? Проверьте «Спам». <span id="rsd" style="color:var(--ac);cursor:pointer">Отправить ещё раз</span>';btn='Подтвердить';
  }else{
   head=`<h1>Придумайте пароль</h1><p class="asub">Введите пароль, минимум 6 символов</p>`;
   body=fld(AI.lk,pwIn('Введите пароль'),eye);
   hint='Запомните ваш пароль для дальнейших входов в наш мессенджер';btn='Создать аккаунт';
  }
- const dots=reg?`<div class="adots">${[0,1,2].map(i=>`<i class="${i===rs.step?'on':i<rs.step?'dn':''}"></i>`).join('')}</div>`:'';
+ const ds=EJS_ON?rs.step:(rs.step===4?2:rs.step);const dots=reg?`<div class="adots">${(EJS_ON?[0,1,2,3,4]:[0,1,2]).map(i=>`<i class="${i===ds?'on':i<ds?'dn':''}"></i>`).join('')}</div>`:'';
  const back=reg&&rs.step>0?`<button class="abk" id="bk">${AI.bk}</button>`:'';
- A.innerHTML=`<div class="aw">${back}<div class="ain">${dots}<div class="alg">${AI.logo}</div>${head}<div class="afs">${body}</div>${hint?`<div class="ahint">${hint}</div>`:''}<div id="er" class="aer"></div><button class="abtn" id="go"><span>${btn}</span>${reg&&rs.step<2?AI.ar:''}</button><div class="asw" id="sw">${reg?'Уже есть аккаунт? Войти':'Создать аккаунт'}</div></div></div>`;
+ A.innerHTML=`<div class="aw">${back}<div class="ain">${dots}<div class="alg">${AI.logo}</div>${head}<div class="afs">${body}</div>${hint?`<div class="ahint">${hint}</div>`:''}<div id="er" class="aer"></div><button class="abtn" id="go"><span>${btn}</span>${reg&&rs.step<4?AI.ar:''}</button><div class="asw" id="sw">${reg?'Уже есть аккаунт? Войти':'Создать аккаунт'}</div></div></div>`;
  const er=$('#er'),set=(k,id)=>{const e=$(id);if(e)e.value=rs[k]};
- set('p','#p');set('n','#n');set('u','#u');set('pw','#pw');
- const save=()=>{['p','n','u','pw'].forEach(k=>{const e=$('#'+k);if(e)rs[k]=e.value})};
- const go=(s)=>{save();rs.step=s;authForm()};
+ set('p','#p');set('n','#n');set('u','#u');set('pw','#pw');set('em','#em');set('cd','#cd');
+ const save=()=>{['p','n','u','pw','em','cd'].forEach(k=>{const e=$('#'+k);if(e)rs[k]=e.value})};
+ const go=(s)=>{save();if(!EJS_ON&&(s===2||s===3))s=s>rs.step?4:1;rs.step=s;authForm()};
  $('#sw').onclick=()=>{save();authMode=reg?'in':'reg';rs.step=0;authForm()};
  if($('#bk'))$('#bk').onclick=()=>go(rs.step-1);
  if($('#eye'))$('#eye').onclick=()=>{const e=$('#pw');e.type=e.type==='password'?'text':'password'};
@@ -498,13 +511,22 @@ function authForm(){const reg=authMode==='reg';
   if(rs.step===0){if(rs.p.replace(/\D/g,'').length<5)return er.textContent='Введите корректный номер телефона';return go(1)}
   if(rs.step===1){if(!rs.n.trim())return er.textContent='Введите имя';
    if(!/^[a-z0-9_]{3,24}$/.test(u))return er.textContent='Username: 3–24 символа, a–z, 0–9, _';return go(2)}
+  if(rs.step===2){const em2=rs.em.trim().toLowerCase();if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em2))return er.textContent='Введите корректную почту';
+   if(rs.codeEm===em2&&rs.code&&Date.now()-rs.sent<45000)return go(3);
+   $('#go').disabled=true;try{rs.code=await sendCode(em2);rs.codeEm=em2;rs.sent=Date.now();rs.tries=0;rs.emOk=false}catch(e){$('#go').disabled=false;return er.textContent='Не удалось отправить код. Проверьте почту и интернет'}return go(3)}
+  if(rs.step===3){const c=(rs.cd||'').replace(/\D/g,'');if(c.length!==6)return er.textContent='Введите 6-значный код';
+   if(!rs.code||Date.now()-rs.sent>900000)return er.textContent='Код устарел. Нажмите «Отправить ещё раз»';
+   if((rs.tries=(rs.tries||0)+1)>5){rs.code='';return er.textContent='Слишком много попыток. Отправьте код ещё раз'}
+   if(c!==rs.code)return er.textContent='Неверный код';rs.emOk=true;rs.cd='';return go(4)}
+  if(EJS_ON&&!rs.emOk)return go(2);
   if(pw.length<6)return er.textContent='Пароль: минимум 6 символов';
   const n=rs.n.trim(),pv=rs.p.trim();
   regBusy=true;let cu;$('#go').disabled=true;
   try{cu=await fbAuth.createUserWithEmailAndPassword(em,pw)}catch(e){regBusy=false;$('#go').disabled=false;er.textContent=ferr(e);if(e&&e.code==='auth/email-already-in-use'){rs.step=1;setTimeout(()=>{authForm();$('#er').textContent='Этот username уже занят'},0)}return}
-  try{uid=cu.user.uid;await mkProfile(uid,n,u,pv)}catch(e){toast('Не удалось создать профиль: '+ferr(e))}
-  rs={step:0,p:'',n:'',u:'',pw:''};regBusy=false;render()};
+  try{uid=cu.user.uid;await mkProfile(uid,n,u,pv,EJS_ON&&rs.emOk?rs.codeEm:'')}catch(e){toast('Не удалось создать профиль: '+ferr(e))}
+  rs={step:0,p:'',n:'',u:'',pw:'',em:'',cd:'',code:'',codeEm:'',sent:0,tries:0,emOk:false};regBusy=false;render()};
  $('#go').onclick=fin;
+ if($('#rsd'))$('#rsd').onclick=async()=>{if(Date.now()-rs.sent<45000)return er.textContent='Подождите немного перед повторной отправкой';er.textContent='';try{rs.code=await sendCode(rs.codeEm);rs.sent=Date.now();rs.tries=0;toast('Код отправлен ещё раз')}catch(e){er.textContent='Не удалось отправить код'}};
  A.querySelectorAll('input').forEach(i=>i.addEventListener('keydown',e=>{if(e.key==='Enter')fin()}));
  const f=A.querySelector('input');if(f&&!f.value)setTimeout(()=>f.focus(),250)}
 function auth(){const u=((fbAuth.currentUser||{}).email||'').split('@')[0];
