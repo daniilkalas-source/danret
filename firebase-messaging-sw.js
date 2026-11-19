@@ -1,23 +1,32 @@
-importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js','https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js');
-firebase.initializeApp({apiKey:"AIzaSyAjUd7LSuY1FNfl4iJ_8JXpXrfH_4_aGzc",authDomain:"danret-50fe2.firebaseapp.com",projectId:"danret-50fe2",storageBucket:"danret-50fe2.firebasestorage.app",messagingSenderId:"440628050408",appId:"1:440628050408:web:39f85d92e934a4c4748c5d"});
-const messaging=firebase.messaging();
-// Новый воркер подхватывается сразу, без ожидания закрытия всех вкладок
-self.addEventListener('install',()=>self.skipWaiting());
-self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));
-// Пуш приходит как data-сообщение: показываем сами + ставим цифру на иконку.
-// ВАЖНО: на iOS каждый push ОБЯЗАН показать уведомление, иначе Safari
-// считает подписку «тихой» и после нескольких таких пушей отключает её (уведомления приходят через раз).
-self.addEventListener('push',e=>{
-  let d={};
-  try{const j=e.data?e.data.json():{};d=j.data||j.notification||j||{}}catch(_){try{d={body:e.data.text()}}catch(__){}}
-  const n=parseInt(d.badge||'0',10)||0;
-  e.stopImmediatePropagation();
-  e.waitUntil(Promise.all([
-    self.registration.showNotification(d.title||'Danret',{body:d.body||'Новое сообщение',tag:d.chat||'danret',renotify:true,icon:'icon-192.png',data:{chat:d.chat||''}}),
-    (n&&self.navigator.setAppBadge)?self.navigator.setAppBadge(n).catch(()=>{}):Promise.resolve()
-  ]));
+/* Простой service worker для push.
+   ГЛАВНОЕ: на КАЖДЫЙ push показываем уведомление (iOS и Android иначе отключают подписку).
+   Firebase SDK внутри воркера НЕ нужен — токен получается на странице. */
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+
+self.addEventListener('push', event => {
+  let p = {};
+  try { p = event.data ? event.data.json() : {}; } catch (e) { try { p = { data: { body: event.data.text() } }; } catch (_) {} }
+  const n = p.notification || {};
+  const d = p.data || {};
+  const title = n.title || d.title || 'danret';
+  const opts = {
+    body: n.body || d.body || d.text || 'Новое сообщение',
+    icon: n.icon || d.icon || '/icon-192.png',
+    badge: '/icon-192.png',
+    tag: d.tag || d.chatId || n.tag || undefined,   // одинаковый tag = заменяет прошлое уведомление
+    renotify: !!(d.tag || d.chatId || n.tag),
+    data: d
+  };
+  // ВСЕГДА показываем, даже если приложение открыто
+  event.waitUntil(self.registration.showNotification(title, opts));
 });
-self.addEventListener('notificationclick',e=>{
-  e.notification.close();
-  e.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(l=>{if(l.length)return l[0].focus();return clients.openWindow('./')}));
+
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  event.waitUntil((async () => {
+    const all = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    for (const c of all) { if ('focus' in c) return c.focus(); }
+    return self.clients.openWindow('./');
+  })());
 });
