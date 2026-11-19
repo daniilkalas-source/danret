@@ -368,7 +368,7 @@ async function upMedia(f,kind,cap,gid){cap=cap||'';const G=gid?{gid}:{};toast('�
 let db,uid,me=null,users={},chats=[],cur=null,tab='chats',unM=null,msgs=[],pk=null,mk=false,inf=null,sub=null,t2='p',au=null,auId=null,VW=new Set(),stl=[],ar=false,lp=0,myPh='',phL=0;
 const tm=t=>t?new Date(t).toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'}):'';
 const rid=(n=5)=>Array.from({length:n},()=>'abcdefghjkmnpqrstuvwxyz23456789'[Math.random()*31|0]).join('');
-const uname=u=>{const k=me&&me.cn&&me.cn[u];if(k&&(k.f||k.l))return((k.f||'')+' '+(k.l||'')).trim();return users[u]?.name||'Пользователь'},cs=id=>{const r=db.collection('chats').doc(id),u0=r.update.bind(r);r.update=(o,...a)=>{try{if(o&&typeof o==='object'&&typeof o.lastTs==='number'&&o.last!==undefined&&Math.abs(Date.now()-o.lastTs)<5000&&!Object.keys(o).some(k=>k.startsWith('u_'))){const c=chats.find(x=>x.id===id);if(c&&c.members)c.members.forEach(m=>{if(m!==uid)o['u_'+m]=firebase.firestore.FieldValue.increment(1)})}}catch(e){}return u0(o,...a)};return r},mc=id=>db.collection('chats/'+id+'/messages');
+const uname=u=>{const k=me&&me.cn&&me.cn[u];if(k&&(k.f||k.l))return((k.f||'')+' '+(k.l||'')).trim();return users[u]?.name||virtName(u)||'Пользователь'},cs=id=>{const r=db.collection('chats').doc(id),u0=r.update.bind(r);r.update=(o,...a)=>{try{if(o&&typeof o==='object'&&typeof o.lastTs==='number'&&o.last!==undefined&&Math.abs(Date.now()-o.lastTs)<5000&&!Object.keys(o).some(k=>k.startsWith('u_'))){const c=chats.find(x=>x.id===id);if(c&&c.members)c.members.forEach(m=>{if(m!==uid)o['u_'+m]=firebase.firestore.FieldValue.increment(1)})}}catch(e){}return u0(o,...a)};return r},mc=id=>db.collection('chats/'+id+'/messages');
 const setU=p=>db.collection('users').doc(uid).update(p);
 const ctitle=c=>c.type==='dm'?uname(c.members.find(x=>x!==uid)):c.title;
 const icon=c=>({channel:'<svg class="i" viewBox="0 0 24 24"><path d="M3 11v2a1 1 0 001 1h2l5 4V6L6 10H4a1 1 0 00-1 1zM15 9a4 4 0 010 6M18 6.5a8 8 0 010 11"/></svg> ',group:'<svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M16 5a3 3 0 010 6M18 14c2 .6 3.5 2.2 3.5 5"/></svg> ',saved:'<svg class="i" viewBox="0 0 24 24"><path d="M6 4h12v16l-6-4-6 4z"/></svg> '}[c.type]||(c.secret?'<svg class="i" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg> ':''));
@@ -1106,6 +1106,30 @@ function virtR(m,c){if(!virtN(c))return {};const l=(c.rx||EM).slice();if(!l.leng
 function virtM(m,c){const re={...(m.re||{})},v=virtR(m,c);for(const e in v)re[e]=(re[e]||[]).concat(Array(v[e]).fill('~'));return re}
 setInterval(function(){try{if(document.hidden||!cur||inf)return;const c=chats.find(x=>x.id===cur);if(!virtN(c))return;let redo=false;document.querySelectorAll('.post[data-pid]').forEach(el=>{const m=msgs.find(x=>x.id===el.dataset.pid);if(!m)return;const sp=el.querySelector('[data-vv]');if(sp){const t=String(Object.keys(m).filter(k=>k.startsWith('v_')).length+virtV(m,c));if(sp.textContent!==t)sp.textContent=t}const v=virtM(m,c);for(const e in v){const b=el.querySelector('.chip[data-r="'+m.id+'"][data-e="'+e+'"]');if(!b){redo=true;continue}const t=e+' '+v[e].length;if(b.textContent!==t)b.textContent=t}});if(redo)chatView()}catch(e){}},3000);
 
+/* ===== виртуальные комментарии ===== */
+var VN=['Саша','Дима','Ника','Макс','Лена','Артём','Катя','Илья','Соня','Влад','Аня','Рома','Настя','Кирилл'];
+function virtName(u){u=String(u);return u[0]==='~'?VN[(+u.slice(1)||0)%VN.length]:''}
+function virtRnd(seed){let a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+var VC_GEN=[
+ [/как\s*(у\s*вас\s*)?(дела|жизнь|ты|вы|настроение|сам|сама|поживаешь|поживаете)/,['норм, у вас как?','нормис, у вас как?','отлично) ты как?','всё хорошо, а у тебя?','потихоньку, а у вас?','супер 😄','нормально, спасибо что спросил','как всегда, на высоте 😎','жив-здоров']],
+ [/привет|здаров|здравствуй|добр(ое|ый|ого)\s*(утро|день|вечер|ночи)|доброй ночи|всем хай|хай\b/,['привет!','здарова 👋','доброе!','и тебе привет','приветик','хай)','о, привет']],
+ [/спасибо|благодар/,['пожалуйста)','обращайся','не за что','всегда рады']],
+ [/как вам|как тебе|оцени|нравится|нрав\w+|смотрите|зацените|глянь|посмотри|новая штука|такая штука|вот это/,['вау красиво','крутяк 🔥','огонь!','топ','очень круто','класс','мне нравится','шикарно','красота','жесть как круто','вау','супер идея']],
+ [/обнов|новост|вышл|релиз|анонс|запуск|добавил|новая функц|новая фича/,['ого, круто','наконец-то!','ждали!','красавчики','топ новость','давно пора','это огонь 🔥','когда ещё обновления?']],
+];
+var VC_MEDIA=['вау красиво','крутяк 🔥','огонь!','топ','очень круто','красота','шикарно','класс','атмосферно','мне нравится'];
+var VC_Q=['хм, интересный вопрос','я за','думаю, да','зависит от ситуации','не знаю, но интересно','а что именно имеешь в виду?','мне кажется, да','пока не определился'];
+var VC_DEF=['интересно','👍','согласен','круто','ого','норм','прикольно','поддерживаю','👏','🔥','хорошо сказано'];
+function virtPool(m){const t=String(m.text||'').toLowerCase();for(const g of VC_GEN)if(g[0].test(t))return g[1];if(['photo','video','circle'].includes(m.kind))return VC_MEDIA;if(m.kind==='poll')return ['проголосовал','интересный опрос','выбрал свой вариант'];if(m.kind==='voice')return ['классный голос','послушал, огонь','🔥'];if(t.includes('?'))return VC_Q;return VC_DEF}
+function virtGen(m){const r=virtRnd(Math.floor((m.ts||0)/1000)),n=4+Math.floor(r()*5),pool=virtPool(m).slice(),ids=[],o=[],now=Date.now();
+ while(ids.length<Math.min(n,VN.length)){const i=Math.floor(r()*VN.length);if(!ids.includes(i))ids.push(i)}
+ let d=6000+r()*6000;
+ for(let i=0;i<ids.length;i++){const ts=(m.ts||0)+Math.round(d);d+=12000+r()*28000;if(ts>now)break;let t;if(pool.length)t=pool.splice(Math.floor(r()*pool.length),1)[0];else t=VC_DEF[Math.floor(r()*VC_DEF.length)];o.push({u:'~'+ids[i],t,ts})}
+ return o}
+function virtCm(m){const real=(m&&m.cm)||[];if(!m||!m.id)return real;const c=chats.find(x=>x.id===cur);if(!virtN(c))return real;return real.concat(virtGen(m)).sort((a,b)=>a.ts-b.ts)}
+var VC_N={};
+setInterval(function(){try{if(document.hidden||!cur||inf)return;const c=chats.find(x=>x.id===cur);if(!virtN(c))return;let ch=false;document.querySelectorAll('.post[data-pid]').forEach(el=>{const m=msgs.find(x=>x.id===el.dataset.pid);if(!m)return;const L=virtCm(m),k=m.id+':'+L.length;if(VC_N[m.id]===L.length)return;VC_N[m.id]=L.length;ch=true;const t=el.querySelector('.cmt'),a=el.querySelector('.cmav');if(t)t.textContent=L.length?cmWord(L.length):'Комментировать';if(a)a.innerHTML=[...new Set(L.map(x=>x.u).reverse())].slice(0,3).map(u=>av(uname(u),u,26)).join('')});if(ch&&typeof cmDraw==='function'&&cmDraw)cmDraw()}catch(e){}},3000);
+
 function chatView(){
  if(inf)return infoPage();if(ibCid){ibStop();ibCid=null}
  const c=chats.find(x=>x.id===cur);if(!c){cur=null;return main()}
@@ -1155,7 +1179,7 @@ function pop(c){const t=ctitle(c),x=(c.last||'').slice(0,80);if(!me.nosnd)beep()
 const ub=c=>{const n=unr(c);return n>0&&cur!==c.id?`<span class="ubd ${(me.muted||[]).includes(c.id)?'mu':''}">${n>99?'99+':n}</span>`:''};
 function chkNotif(){if(!me)return;chats.forEach(c=>{if(!c.members?.includes(uid))return;const p=NT[c.id];NT[c.id]=c.lastTs||0;if(p===undefined||!(c.lastTs>p)||c.lastTs===NTm[c.id]||!c.last||Date.now()-T0<5000)return;const up=c.lu&&c.lu===c.lastTs;if(!up&&(me.muted||[]).includes(c.id))return;const k={dm:'dm',group:'gr',channel:'ch'}[c.type];if(!k||(!up&&me['no'+k]))return;if(cur===c.id&&!inf&&!document.hidden)return;pop(c)})}
 const cmWord=n=>{const a=n%10,b=n%100;return n+' '+(a===1&&b!==11?'комментарий':a>=2&&a<=4&&(b<10||b>=20)?'комментария':'комментариев')};
-function cmBar(m){const L=m.cm||[],n=L.length,us=[...new Set(L.map(x=>x.u).reverse())].slice(0,3);
+function cmBar(m){const L=virtCm(m),n=L.length,us=[...new Set(L.map(x=>x.u).reverse())].slice(0,3);
  return `<div class="cmb" data-cm="${m.id}"><div class="cmav">${us.map(u=>av(uname(u),u,26)).join('')}</div><span class="cmt">${n?cmWord(n):'Комментировать'}</span><svg class="i cmc" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div>`}
 function openCm(mid){
  const src=A.querySelector('.post[data-pid="'+mid+'"]');
@@ -1172,14 +1196,14 @@ function openCm(mid){
  let last=-1;
  const draw=()=>{if(!document.body.contains(w)){cmDraw=null;return}
   const m=msgs.find(x=>x.id===mid);if(!m){close();return}
-  const L=m.cm||[],ow=chats.find(c=>c.id===cur)?.owner===uid,l=w.querySelector('#cml'),nb=l.scrollHeight-l.scrollTop-l.clientHeight<80;
+  const L=virtCm(m),ow=chats.find(c=>c.id===cur)?.owner===uid,l=w.querySelector('#cml'),nb=l.scrollHeight-l.scrollTop-l.clientHeight<80;
   w.querySelector('#cmh').innerHTML=L.length?'Комментарии <span style="font-weight:400;color:var(--mu);font-size:13px">'+L.length+'</span>':'Комментарии';
   w.querySelector('#cmn').innerHTML=`<div class="cmcnt">${L.length?cmWord(L.length):'Комментариев пока нет…'}</div>`;
   let pu=null;
   w.querySelector('#cmc2').innerHTML=L.map((x,i)=>{const mine=x.u===uid,nx=L[i+1],first=pu!==x.u,lastOfGroup=!nx||nx.u!==x.u;pu=x.u;
    const bub=`<div class="b ${mine?'me':''}" data-ci="${i}">${!mine&&first?`<small style="color:${col(x.u)}">${E(uname(x.u))}</small>`:''}${E(x.t)}<i>${tm(x.ts)}</i></div>`;
    return `<div class="cr ${mine?'mine':''}">${mine?'':(lastOfGroup?av(uname(x.u),x.u,34):'<span style="width:34px;flex:none"></span>')}${bub}</div>`}).join('');
-  w.querySelectorAll('[data-ci]').forEach(b=>b.onclick=()=>{const x=L[+b.dataset.ci];if(!x||!(x.u===uid||ow))return;ask('Удалить комментарий?',()=>mc(cur).doc(mid).update({cm:(msgs.find(q=>q.id===mid)?.cm||[]).filter(y=>!(y.ts===x.ts&&y.u===x.u&&y.t===x.t))}),'Удалить')});
+  w.querySelectorAll('[data-ci]').forEach(b=>b.onclick=()=>{const x=L[+b.dataset.ci];if(!x||String(x.u).startsWith('~')||!(x.u===uid||ow))return;ask('Удалить комментарий?',()=>mc(cur).doc(mid).update({cm:(msgs.find(q=>q.id===mid)?.cm||[]).filter(y=>!(y.ts===x.ts&&y.u===x.u&&y.t===x.t))}),'Удалить')});
   if(nb||last<0||L.length>last)l.scrollTop=l.scrollHeight;last=L.length};
  cmDraw=draw;draw();
  const inp=w.querySelector('#cmi'),btn=w.querySelector('#cms');
@@ -1189,7 +1213,7 @@ function openCm(mid){
  btn.onmousedown=e=>e.preventDefault();btn.ontouchstart=e=>e.preventDefault();
  btn.onclick=go;btn.ontouchend=e=>{e.preventDefault();go()};
  inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();go()}};
- if(!(msgs.find(x=>x.id===mid)?.cm||[]).length)inp.focus();
+ if(!virtCm(msgs.find(x=>x.id===mid)||{}).length)inp.focus();
 }
 function recs(){try{return JSON.parse(localStorage.getItem('rec')||'[]')}catch(e){return[]}}
 function addRec(id){try{const r=recs().filter(x=>x!==id);r.unshift(id);localStorage.setItem('rec',JSON.stringify(r.slice(0,20)))}catch(e){}}
