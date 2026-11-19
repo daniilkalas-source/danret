@@ -1531,6 +1531,84 @@ function editProfile(){const d=document.createElement('div');d.className='srv';c
   q('#eph').onclick=()=>{let pv=me.phoneVis||'none';const w=sheet(hd('Номер телефона')+`<input id="epi" type="tel" value="${E(myPh)}" placeholder="+7 …"><div class="sub" style="margin:8px 0">Кто видит номер в профиле:</div><div class="seg">${['all','contacts','none'].map(x=>`<button data-v="${x}" class="${pv===x?'on':''}">${VL[x]}</button>`).join('')}</div><button class="btn" id="epk" style="width:100%;margin-top:12px">Сохранить</button>`);w.style.zIndex=9;w.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{pv=b.dataset.v;w.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('on',x===b))});w.querySelector('#epk').onclick=async()=>{const v=w.querySelector('#epi').value.trim();try{await db.collection('data/users/'+uid).doc('phone').set({v});myPh=v;await setU({phoneVis:pv,phone:pv==='none'?'':v})}catch(e){toast('Не удалось сохранить')}w.remove();draw()}};
   q('#eps').onclick=async()=>{try{await setU({name:st.n.trim()||me.name,bio:st.b.trim(),bd:st.d||''});toast('Профиль сохранён')}catch(e){toast('Не удалось сохранить')}d.remove();mpD&&mpD()}};
  document.body.appendChild(d);draw()}
+/* ===== UI v3 ===== */
+let FLT='all',STO=0;
+const SV=p=>`<svg class="i" viewBox="0 0 24 24">${p[0]==='<'?p:`<path d="${p}"/>`}</svg>`,SRC='<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>';
+const FLS=[['all','Все'],['dm','Личные'],['group','Группы'],['channel','Каналы']];
+const _main=main;main=function(){_main();try{ui3()}catch(e){console.error(e)}};
+function ui3(){
+ if(tab!=='chats'||ar||!A.querySelector('.srch'))return;
+ const tp=A.querySelector('.top');tp.className='top tp2';
+ tp.innerHTML=`<button class="ib" id="hb">${SV('M4 7h16M4 12h16M4 17h16')}</button><div class="fl">${FLS.map(([k,l])=>`<button data-f="${k}" class="${FLT===k?'on':''}">${l}</button>`).join('')}</div><button class="ib" id="nw">${SV('M4 20l1-4L16 5l3 3L8 19zM14 7l3 3')}</button>`;
+ $('#nw').onclick=newSheet;$('#hb').onclick=drawer;
+ tp.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{FLT=b.dataset.f;main()});
+ const st=A.querySelector('.stp');
+ if(st){const us=[...new Set(stl.map(x=>x.uid))];if(!us.includes(uid))us.push(uid);
+  const p=document.createElement('div');p.className='sp';p.innerHTML=`<span class="stk">${us.slice(0,3).map(u=>`<span class="ring">${av(uname(u),u,38)}</span>`).join('')}</span><b>Истории</b>`;
+  st.before(p);st.style.display=STO?'':'none';p.onclick=()=>{STO=!STO;st.style.display=STO?'':'none'}}
+ let vis=0;
+ A.querySelectorAll('.main .row[data-c],.main [data-ib]').forEach(r=>{let t='channel';if(r.dataset.c){const c=chats.find(x=>x.id===r.dataset.c);t=c&&(c.type==='group'||c.type==='channel')?c.type:'dm'}
+  const ok=FLT==='all'||FLT===t;r.style.display=ok?'':'none';if(ok)vis++});
+ if(FLT!=='all'&&!vis)A.querySelector('.main').insertAdjacentHTML('beforeend','<div class="empty">Нет чатов в этой папке</div>');
+ A.insertAdjacentHTML('beforeend',`<button class="ib sbn" id="sbn">${SV(SRC)}</button>`);$('#sbn').onclick=openSearch}
+function drawer(){
+ const d=document.createElement('div');d.className='dr';
+ const R=(id,bg,ic,l,red)=>`<div class="row k ${red?'red':''}" id="${id}"><span class="dic" style="background:${bg}">${SV(ic)}</span><div class="col nm">${l}</div>${red?'':'<span class="sub">›</span>'}</div>`;
+ d.innerHTML=`<div class="dp"><div class="dhd">${av(me.name,uid,96)}<h2>${E(me.name)}</h2><div class="sub">@${E(me.username)}</div></div>
+ <div class="grp">${R('d1','#1f7ae0','M12 12a4 4 0 100-8 4 4 0 000 8zM4 20c0-4 3.6-6 8-6s8 2 8 6','Мой профиль')}${R('d2','#5b5bd6','<circle cx="9" cy="8" r="3.2"/><path d="M3 19c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M16 5a3 3 0 010 6M18 14c2 .6 3.5 2.2 3.5 5"/>','Создать группу')}${R('d3','#d98e1f','M6 4h12v16l-6-4-6 4z','Избранное')}${R('d4','#2fb5c4','M3 7h6l2 2h10v10H3z','Папки')}</div>
+ <div class="grp">${R('d5','#8e8e93','<circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/>','Настройки')}</div>
+ <div class="grp">${R('d6','#1f7ae0','<rect x="3" y="6" width="13" height="10" rx="1.5"/><path d="M8 20h4M10 16v4"/><rect x="17" y="9" width="4" height="8" rx="1"/>','Устройства')}</div>
+ <div class="grp">${R('d7','#e5453b','M10 4H5v16h5M15 8l4 4-4 4M19 12H9','Выйти из аккаунта',1)}</div>
+ <div class="sub" style="text-align:center;padding:6px">Danret · версия 2</div></div>`;
+ const q=s=>d.querySelector(s),x=f=>()=>{d.remove();f()};
+ d.onclick=e=>{if(e.target===d)d.remove()};
+ q('#d1').onclick=x(myProfile);q('#d2').onclick=x(newSheet);q('#d3').onclick=x(()=>openChat('fav_'+uid));q('#d4').onclick=x(foldersSheet);
+ q('#d5').onclick=x(()=>{tab='set';ar=false;main()});q('#d6').onclick=x(devices);q('#d7').onclick=x(()=>ask('Выйти из аккаунта?',()=>fbAuth.signOut(),'Выйти'));
+ document.body.appendChild(d);requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add('on')))}
+function foldersSheet(){const w=pgs(hp('Папки')+`<div class="grp">${FLS.map(([k,l])=>`<div class="row k" data-f="${k}"><div class="col nm">${k==='all'?'Все чаты':l}</div>${FLT===k?'<span class="chk">✓</span>':''}</div>`).join('')}</div>`);
+ w.querySelectorAll('[data-f]').forEach(r=>r.onclick=()=>{FLT=r.dataset.f;tab='chats';ar=false;w.remove();main()})}
+function devices(){const u=navigator.userAgent,n=/iPhone/.test(u)?'iPhone':/iPad/.test(u)?'iPad':/Android/.test(u)?'Android':/Mac/.test(u)?'Mac':/Windows/.test(u)?'Windows':'Устройство';
+ pgs(hp('Устройства')+`<div class="lbl">Это устройство</div><div class="grp"><div class="row"><span class="dic" style="background:#1f7ae0">${SV('<rect x="3" y="6" width="13" height="10" rx="1.5"/><path d="M8 20h4M10 16v4"/>')}</span><div class="col"><div class="nm">${n}</div><div class="sub">${E(navigator.platform||'')} · сейчас онлайн</div></div></div></div>`)}
+const _cv=chatView;chatView=function(){_cv();try{cv3()}catch(e){console.error(e)}};
+function cv3(){
+ const tp=A.querySelector('.top');if(!tp||!A.querySelector('.msgs')||!$('#bk'))return;
+ tp.classList.add('chh');tp.insertAdjacentHTML('beforeend',`<button class="ib" id="hs">${SV(SRC)}</button>`);$('#hs').onclick=openSearch;
+ const em=A.querySelector('.msgs .empty');
+ if(em){em.className='em2';em.innerHTML='<b>Здесь пока ничего нет...</b><span>Отправьте сообщение или нажмите на приветствие ниже.</span><button>🫡</button>';
+  em.querySelector('button').onclick=()=>{const g=$('#gi');if(g&&$('#sd')){g.value='🫡';$('#sd').click()}}}
+ const g=$('#gi'),sn=g&&g.closest('.send');if(!sn)return;
+ sn.classList.add('s2');g.placeholder='Сообщение';
+ const at=$('#at'),mic=$('#mic'),cam=$('#cam'),sd=$('#sd'),p=document.createElement('div');p.className='pl2';
+ if(at)p.appendChild(at);p.appendChild(g);
+ p.insertAdjacentHTML('beforeend',`<span class="aa">Aa</span><button class="ib" id="emb">${SV('<circle cx="12" cy="12" r="9"/><path d="M8.5 14a4 4 0 007 0M9 9.5v.1M15 9.5v.1"/>')}</button>`);
+ if(cam)p.appendChild(cam);
+ sn.prepend(p);if(mic)sn.appendChild(mic);sn.appendChild(sd);
+ const up=()=>sn.classList.toggle('typ',!mic||g.value.trim().length>0);g.addEventListener('input',up);sd.addEventListener('click',()=>setTimeout(up,0));up();
+ $('#emb').onclick=()=>{let r=A.querySelector('.emr');if(r)return r.remove();sn.insertAdjacentHTML('beforebegin','<div class="emr">'+['🙂','😂','😍','🔥','👍','❤️','🎉','🫡','🤔','😎'].map(e=>`<button>${e}</button>`).join('')+'</div>');
+  A.querySelectorAll('.emr button').forEach(b=>b.onclick=()=>{g.value+=b.textContent;g.dispatchEvent(new Event('input'))})}}
+const ACC=['#7b5cff','#5b8cff','#3b82f6','#00b8c4','#1f9d78','#30c85a','#ffc83d','#ff9f3d','#ff6b4a','#d6527f','#e5527a','#a855f7'];
+const _th=theme;theme=function(){_th();if(!me)return;const r=document.documentElement,s=r.style;
+ if(me.acc){s.setProperty('--ac',me.acc);s.setProperty('--me',me.acc)}
+ r.classList.toggle('maxg',me.dens==='max');
+ me.glass&&me.tr!=null?s.setProperty('--sf','rgba(255,255,255,'+(.04+me.tr/100*.3).toFixed(2)+')'):s.removeProperty('--sf')};
+const _thX=thX;thX=function(){_thX();const b=$('#s_th');if(b){const o=b.onclick;b.onclick=()=>design(o)}};
+function design(old){
+ const w=pgs(hp('Оформление')+'<div id="dz" style="padding:0 14px 30px"></div>'),z=w.querySelector('#dz');
+ const paint=()=>{const th=me.theme||'auto',ac=me.acc||'#3b82f6',dn=me.dens||(me.glass?'over':'def'),tr=me.tr==null?30:me.tr;
+  const mini=(k,l,bg)=>`<div class="tc ${th===k?'on':''}" data-th="${k}"><div class="mini" style="background:${bg}"><i></i><b></b><i style="width:40%"></i></div><span>${l}</span><div class="rd">${th===k?'✓':''}</div></div>`;
+  z.innerHTML=`<div class="opv"><div class="oh"><span class="oa">АС</span><div><b>Аня Смирнова</b><div class="ac">в сети</div></div></div><div class="ob in">Привет! Как тебе тема? ✨</div><div class="ob out">Меняется прямо здесь 💜</div><div class="oi"><span>Сообщение</span><i class="osn">↑</i></div></div>
+  <div class="dl">Тема</div><div class="dc ths3">${mini('light','Светлая','#f2f2f7')}${mini('dark','Тёмная','#111')}${mini('auto','Системная','linear-gradient(135deg,#f2f2f7 50%,#111 50%)')}</div>
+  <div class="dl">Акцент</div><div class="dc dots">${ACC.map(c=>`<button class="dot ${c===ac?'on':''}" data-c="${c}" style="background:${c};color:${c}"></button>`).join('')}</div>
+  <div class="dl">Плотность интерфейса</div><div class="dc"><div class="sg2">${[['def','Default'],['over','OverGlass'],['max','MaxGlass']].map(([k,l])=>`<button data-d="${k}" class="${dn===k?'on':''}">${l}</button>`).join('')}</div></div>
+  <div class="dl">Прозрачность интерфейса</div><div class="dc"><input type="range" id="trs" min="0" max="100" value="${tr}" style="margin:0;padding:0;border:0;background:none"></div>
+  <button class="btn" id="oo" style="width:100%;background:var(--sf);color:var(--ac)">Фон чата, темы и размер текста</button>`;
+  z.querySelectorAll('[data-th]').forEach(b=>b.onclick=()=>{me.theme=b.dataset.th;theme();setU({theme:me.theme});paint()});
+  z.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{me.acc=b.dataset.c;theme();setU({acc:me.acc});paint()});
+  z.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{me.dens=b.dataset.d;me.glass=me.dens!=='def';theme();setU({dens:me.dens,glass:me.glass});paint()});
+  const s=z.querySelector('#trs');s.oninput=()=>{me.tr=+s.value;theme()};s.onchange=()=>setU({tr:me.tr});
+  z.querySelector('#oo').onclick=()=>old&&old()};
+ paint()}
+
 init();
 </script>
 <style>.cap{padding:6px 2px 0;font-size:16px;white-space:pre-wrap;word-break:break-word}.dnut{width:200px;height:200px;border-radius:50%;margin:8px auto;display:flex;align-items:center;justify-content:center}.dnut b{width:130px;height:130px;border-radius:50%;background:var(--bg,#000);display:flex;align-items:center;justify-content:center;font-size:24px}.top .t .tn{display:inline-flex;align-items:center;justify-content:center;max-width:100%;white-space:nowrap}.top .t .tn .vb{margin-left:5px}
@@ -1539,6 +1617,47 @@ init();
 .msgs>:first-child:not(.empty){margin-top:auto!important}
 
 .b a.lk,.post a.lk{color:inherit;text-decoration:underline;text-underline-offset:2px;word-break:break-all;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;cursor:pointer;font-weight:500}
+/* ===== UI v3 ===== */
+.tp2{gap:10px;padding:10px 14px}.tp2 .ib{width:52px;height:52px;border-radius:50%;background:var(--sf);border:1px solid var(--ln);color:var(--tx)}
+.tp2 .fl{flex:1;min-width:0;display:flex;overflow-x:auto;background:var(--sf);border:1px solid var(--ln);border-radius:30px;padding:4px 6px;height:52px;align-items:center;scrollbar-width:none}.tp2 .fl::-webkit-scrollbar{display:none}
+.tp2 .fl button{flex:none;background:none;border:0;color:var(--mu);font-size:16px;font-weight:600;padding:10px 12px;border-radius:24px}.tp2 .fl .on{color:var(--ac)}
+.sp{display:inline-flex;align-items:center;gap:12px;margin:2px 14px 8px;padding:5px 20px 5px 5px;border-radius:30px;background:var(--sf);border:1px solid var(--ln);font-weight:700;font-size:19px;cursor:pointer}
+.sp .stk{display:flex}.sp .ring{margin-left:-14px;padding:2px;background:linear-gradient(135deg,var(--ac),#a855f7)}.sp .ring:first-child{margin-left:0}.sp .ring .av{border:2px solid var(--bg,#000)}
+.srch{display:none}
+.sbn{position:fixed;right:max(14px,calc(50% - 296px));bottom:calc(env(safe-area-inset-bottom,0px) + 10px);width:64px;height:64px;border-radius:50%;z-index:3;color:var(--tx);background:rgba(110,110,125,.28);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,.16)}
+#app:has(.sbn) .tabs{left:max(14px,calc(50% - 296px));transform:none;width:min(calc(100% - 94px),510px)}
+.dr{position:fixed;inset:0;z-index:10;background:rgba(0,0,0,0);transition:background .25s}.dr.on{background:rgba(0,0,0,.55)}
+.dp{position:absolute;left:0;top:0;bottom:0;width:80%;max-width:360px;overflow:auto;background:#0f0f14;color:#fff;padding:calc(env(safe-area-inset-top,0px) + 20px) 14px 24px;transform:translateX(-100%);transition:transform .28s}.dr.on .dp{transform:none}
+html[data-theme=light] .dp{background:#f2f2f7;color:#000}
+.dhd{padding:10px 6px 18px}.dhd h2{margin:12px 0 2px;font-size:28px}.dhd .av{width:96px;height:96px;font-size:38px}
+.dic{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;flex:none}.dic svg{width:22px;height:22px}
+.dp .grp{margin:0 0 14px;background:var(--sf)}.dp .red .nm{color:#ff453a}
+.chh{margin:8px 14px 4px;padding:6px 10px;border-radius:30px;background:var(--sf);border:1px solid var(--ln);gap:10px}
+.chh #bk{order:0;background:none;border:0;width:34px;color:var(--tx)}.chh #ha{order:1}.chh .t{order:2;text-align:left;min-width:0}.chh .t .tn{justify-content:flex-start}.chh #ibx{order:3}.chh #hs{order:4;background:none;border:0;color:var(--tx)}
+.chh #ha .av{width:44px!important;height:44px!important}
+.msgs .em2{margin:auto!important;width:min(78%,360px);padding:26px 20px;border-radius:30px;background:var(--sf);border:1px solid var(--ln);text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center;color:var(--tx)}
+.em2 b{font-size:20px}.em2 span{color:var(--mu);font-size:18px}.em2 button{background:none;border:0;font-size:84px;margin-top:14px;line-height:1}
+.s2{padding:8px 12px 10px;align-items:center}
+.s2 .pl2{flex:1;min-width:0;display:flex;align-items:center;gap:2px;background:var(--sf);border:1px solid var(--ln);border-radius:30px;padding:4px 10px;min-height:56px}
+.s2 .pl2 textarea{flex:1;border:0;background:none;margin:0;padding:10px 4px;min-width:0;resize:none;outline:0;border-radius:0}
+.s2 .pl2 .ib,.s2 .pl2 .aa{background:none;border:0;color:var(--mu);width:36px;height:36px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none;font-size:20px;padding:0}
+.s2 #mic,.s2 #sd{width:56px;height:56px;border-radius:50%;flex:none;padding:0;background:var(--sf);border:1px solid var(--ln);color:var(--tx);display:flex;align-items:center;justify-content:center}
+.s2 #sd{background:var(--ac);border:0;color:#fff;display:none}.s2.typ #sd{display:flex}.s2.typ #mic{display:none}
+.emr{display:flex;gap:6px;padding:6px 14px;overflow-x:auto}.emr button{background:var(--sf);border:0;border-radius:14px;font-size:24px;padding:6px 10px}
+.glass .pl2,.glass .chh,.glass .tp2 .fl,.glass .tp2 .ib,.glass .sp,.glass .em2,.glass .dc{backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4)}
+html.maxg .tabs,html.maxg .grp,html.maxg .b,html.maxg .post,html.maxg .pl2,html.maxg .chh,html.maxg .tp2 .ib,html.maxg .tp2 .fl,html.maxg .dc,html.maxg .sp{backdrop-filter:blur(40px) saturate(1.9)!important;-webkit-backdrop-filter:blur(40px) saturate(1.9)!important}
+.opv{margin:0 0 20px;padding:12px;border-radius:26px;background:linear-gradient(160deg,color-mix(in srgb,var(--ac) 30%,#0b0b12),#0b0b12);border:1px solid var(--ln);display:flex;flex-direction:column;gap:10px;color:#fff}
+.opv .oh{display:flex;gap:10px;align-items:center;padding:8px 12px;border-radius:30px;background:rgba(0,0,0,.35);border:1px solid var(--ln)}.oa{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#7b5cff);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.oh .ac{color:var(--ac);font-size:14px}.ob{padding:12px 16px;border-radius:20px;max-width:82%;font-size:18px}.ob.in{background:rgba(255,255,255,.08);align-self:flex-start}.ob.out{background:var(--ac);align-self:flex-end}
+.oi{display:flex;align-items:center;justify-content:space-between;padding:6px 6px 6px 18px;border-radius:30px;background:rgba(0,0,0,.35);border:1px solid var(--ln);color:var(--mu);font-size:18px}.osn{width:38px;height:38px;border-radius:50%;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:20px}
+.dl{color:var(--mu);font-size:15px;font-weight:600;letter-spacing:.5px;padding:10px 6px;text-transform:uppercase}.dc{background:var(--sf);border-radius:26px;padding:16px;margin-bottom:12px}
+.ths3{display:flex;justify-content:space-around}.tc{text-align:center;color:var(--mu);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:10px;padding:6px;font-size:18px}.tc.on{color:var(--tx);font-weight:700}
+.mini{width:84px;height:124px;border-radius:14px;padding:46px 10px 0;display:flex;flex-direction:column;gap:6px;border:3px solid transparent}.tc.on .mini{border-color:var(--ac)}
+.mini i{height:10px;border-radius:5px;width:70%;background:rgba(128,128,128,.4)}.mini b{height:10px;border-radius:5px;width:70%;align-self:flex-end;background:var(--ac)}
+.rd{width:34px;height:34px;border-radius:50%;border:2px solid var(--ln);display:flex;align-items:center;justify-content:center;color:#fff}.tc.on .rd{background:var(--ac);border-color:var(--ac)}
+.dots{display:grid;grid-template-columns:repeat(6,1fr);gap:16px 0;justify-items:center;padding:6px 0}.dot{width:42px;height:42px;border-radius:50%;border:0;position:relative}
+.dot.on{box-shadow:0 0 0 3px var(--sf),0 0 0 5px currentColor}.dot.on:after{content:'✓';color:#fff;font-size:20px}
+.sg2{display:flex;background:rgba(120,120,128,.24);border-radius:16px;padding:4px}.sg2 button{flex:1;border:0;background:none;color:var(--tx);padding:14px 4px;font-size:18px;font-weight:700;border-radius:13px}.sg2 .on{background:rgba(255,255,255,.18)}
 </style>
 <script>
 const MC='danret-media',trf=n=>{try{localStorage.dmTraf=(+localStorage.dmTraf||0)+n}catch(e){}};
