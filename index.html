@@ -364,11 +364,18 @@ html[data-theme=light] .ib{background:rgba(255,255,255,.7);border-color:rgba(108
 .top{letter-spacing:.1px}
 .top .t{font-weight:800}
 
-/* список чатов: плавные строки в стиле Telegram */
+/* список чатов: плавные строки с незаметной полоской-разделителем */
 .row{border-bottom:0}
-.row[data-c],.row[data-u],.row[data-j],.row[data-m],.row.k{margin:2px 8px;padding:10px 10px;border-radius:20px;transition:background .15s,transform .15s}
-.row[data-c]:active,.row[data-u]:active,.row[data-j]:active,.row[data-m]:active,.row.k:active{background:rgba(139,123,255,.16);transform:scale(.985)}
+.row[data-c],.row[data-u],.row[data-j],.row[data-m]{margin:0;padding:11px 12px;border-radius:0;transition:background .15s;border-bottom:1px solid rgba(255,255,255,.055)}
+.row[data-c]:last-child,.row[data-u]:last-child,.row[data-j]:last-child,.row[data-m]:last-child{border-bottom:0}
+.clist{margin:6px 10px 12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:18px;overflow:hidden;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.clist .row[data-c]:active,.clist .row[data-u]:active{background:rgba(139,123,255,.14)}
+.row.k{margin:2px 8px;padding:10px 10px;border-radius:16px;transition:background .15s,transform .15s}
+.row.k:active{background:rgba(139,123,255,.14);transform:scale(.985)}
 .row .nm{font-weight:700;letter-spacing:.1px}
+@media(prefers-color-scheme:light){html:not([data-theme=dark]) .clist{background:rgba(255,255,255,.7);border-color:rgba(0,0,0,.06)}html:not([data-theme=dark]) .row[data-c],html:not([data-theme=dark]) .row[data-u]{border-bottom-color:rgba(0,0,0,.06)}}
+html[data-theme=light] .clist{background:rgba(255,255,255,.7);border-color:rgba(0,0,0,.06)}
+html[data-theme=light] .row[data-c],html[data-theme=light] .row[data-u]{border-bottom-color:rgba(0,0,0,.06)}
 .av{box-shadow:0 4px 14px rgba(80,60,200,.35),inset 0 0 0 1px rgba(255,255,255,.18);background-image:linear-gradient(145deg,rgba(255,255,255,.22),rgba(255,255,255,0) 55%)}
 img.av{box-shadow:0 4px 14px rgba(80,60,200,.3)}
 .ubd{background:linear-gradient(135deg,#8a63ff,#4f7cff);box-shadow:0 3px 10px rgba(110,90,255,.5)}
@@ -674,7 +681,7 @@ const IC={ph:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8a15
 function main(){
  const AR=me.arch||[],L=mine().filter(c=>ar?AR.includes(c.id):!AR.includes(c.id)).filter(c=>!hideDm(c)),sg={};stl.forEach(x=>(sg[x.uid]=sg[x.uid]||[]).push(x));let b='';
  const pre=ar?'':`<div class="srch" id="sbtn"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg> Поиск</div><div class="stp"><div class="stc" id="ms">${sg[uid]?`<div class="ring">${av(me.name,uid,52)}</div>`:av(me.name,uid,56)}<span class="plus" id="mp">＋</span><div class="sub">Моя история</div></div>${Object.keys(sg).filter(u=>u!==uid).map(u=>`<div class="stc" data-su="${u}"><div class="ring ${sg[u].every(i=>i['v_'+uid])?'seen':''}">${av(uname(u),u,52)}</div><div class="sub">${E(uname(u).slice(0,9))}</div></div>`).join('')}</div>`+(mine().some(c=>AR.includes(c.id)&&!hideDm(c))?`<div class="row k" id="arow"><span style="font-size:22px"><svg class="i" viewBox="0 0 24 24"><path d="M3 5h18v4H3zM5 9v10h14V9M10 13h4"/></svg></span><div class="col nm">Архив чатов</div><span class="sub">${mine().filter(c=>AR.includes(c.id)&&!hideDm(c)).length}</span></div>`:'');
- if(tab==='chats')b=pre+mixRows(L.map(c=>({ts:c.type==='saved'?1e18:(me.pins||[]).includes(c.id)?1e17+(c.lastTs||0):(c.lastTs||0),h:`<div class="row" data-c="${c.id}">${av(ctitle(c),c.id)}<div class="col"><div class="nm">${icon(c)}${E(ctitle(c))}${isV(c)?vb():''}${(me.muted||[]).includes(c.id)?' <svg class="i" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 0112 0v5l1.5 2h-15zM10 20a2 2 0 004 0M4 4l16 16"/></svg>':''}</div><div class="sub">${E(c.last||(c.type==='saved'?'Ваши заметки':'Нет сообщений'))}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><div class="sub">${tm(c.lastTs)}</div>${ub(c)}</div></div>`})),ar?[]:ibRows())||(ar?'<div class="empty">Архив пуст</div>':'<div class="empty">Чатов пока нет.</div>');
+ if(tab==='chats'){const rows=mixRows(L.map(c=>({ts:c.type==='saved'?1e18:(me.pins||[]).includes(c.id)?1e17+(c.lastTs||0):(c.lastTs||0),h:`<div class="row" data-c="${c.id}">${av(ctitle(c),c.id)}<div class="col"><div class="nm">${icon(c)}${E(ctitle(c))}${isV(c)?vb():''}${(me.muted||[]).includes(c.id)?' <svg class="i" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 0112 0v5l1.5 2h-15zM10 20a2 2 0 004 0M4 4l16 16"/></svg>':''}</div><div class="sub">${E(c.last||(c.type==='saved'?'Ваши заметки':'Нет сообщений'))}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><div class="sub">${tm(c.lastTs)}</div>${ub(c)}</div></div>`})),ar?[]:ibRows());b=pre+(rows?`<div class="clist">${rows}</div>`:(ar?'<div class="empty">Архив пуст</div>':'<div class="empty">Чатов пока нет.</div>'));}
  if(tab==='calls')b=callsList();
  if(tab==='set')b=`
  <div class="grp"><div class="row k" id="mypf"><span style="background:#e5564e;color:#fff;width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:none"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/></svg></span><div class="col nm">Мой профиль</div><span class="sub">›</span></div><div class="row k" id="s_pc"><span style="background:#8059c0;color:#fff;width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:none"><svg class="i" viewBox="0 0 24 24"><path d="M12 3a9 9 0 100 18c1.4 0 2-1 1.5-2s0-2.2 1.3-2.2H17a4 4 0 004-4c0-5-4-9.8-9-9.8z"/></svg></span><div class="col nm">Цвет профиля</div><span class="sub">›</span></div><div class="row k" id="s_ph"><span style="background:#3b82f6;color:#fff;width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:none"><svg class="i" viewBox="0 0 24 24"><path d="M4 8h3l2-2h6l2 2h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span><div class="col nm">Изменить фотографию</div><span class="sub">›</span></div></div>
@@ -1554,7 +1561,7 @@ function ui3(){
 function drawer(){
  const d=document.createElement('div');d.className='dr';
  const R=(id,bg,ic,l,red)=>`<div class="row k ${red?'red':''}" id="${id}"><span class="dic" style="background:${bg}">${SV(ic)}</span><div class="col nm">${l}</div>${red?'':'<span class="sub">›</span>'}</div>`;
- d.innerHTML=`<div class="dp"><div class="dhd">${av(me.name,uid,96)}<h2>${E(me.name)}</h2><div class="sub">@${E(me.username)}</div></div>
+ d.innerHTML=`<div class="dp"><div class="dhd">${av(me.name,uid,84)}<h2>${E(me.name)}</h2><div class="sub">@${E(me.username)}</div></div>
  <div class="grp">${R('d1','#1f7ae0','M12 12a4 4 0 100-8 4 4 0 000 8zM4 20c0-4 3.6-6 8-6s8 2 8 6','Мой профиль')}${R('d2','#5b5bd6','<circle cx="9" cy="8" r="3.2"/><path d="M3 19c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M16 5a3 3 0 010 6M18 14c2 .6 3.5 2.2 3.5 5"/>','Создать группу')}${R('d3','#d98e1f','M6 4h12v16l-6-4-6 4z','Избранное')}${R('d4','#2fb5c4','M3 7h6l2 2h10v10H3z','Папки')}</div>
  <div class="grp">${R('d5','#8e8e93','<circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/>','Настройки')}</div>
  <div class="grp">${R('d6','#1f7ae0','<rect x="3" y="6" width="13" height="10" rx="1.5"/><path d="M8 20h4M10 16v4"/><rect x="17" y="9" width="4" height="8" rx="1"/>','Устройства')}</div>
@@ -1628,11 +1635,12 @@ init();
 .sbn{position:fixed;right:max(14px,calc(50% - 296px));bottom:calc(env(safe-area-inset-bottom,0px) + 10px);width:64px;height:64px;border-radius:50%;z-index:3;color:var(--tx);background:rgba(110,110,125,.28);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,.16)}
 #app:has(.sbn) .tabs{left:max(14px,calc(50% - 296px));transform:none;width:min(calc(100% - 94px),510px)}
 .dr{position:fixed;inset:0;z-index:10;background:rgba(0,0,0,0);transition:background .25s}.dr.on{background:rgba(0,0,0,.55)}
-.dp{position:absolute;left:0;top:0;bottom:0;width:80%;max-width:360px;overflow:auto;background:#0f0f14;color:#fff;padding:calc(env(safe-area-inset-top,0px) + 20px) 14px 24px;transform:translateX(-100%);transition:transform .28s}.dr.on .dp{transform:none}
+.dp{position:absolute;left:0;top:0;bottom:0;width:80%;max-width:360px;overflow:auto;background:#0f0f14;color:#fff;padding:calc(env(safe-area-inset-top,0px) + 36px) 14px 24px;transform:translateX(-100%);transition:transform .28s}.dr.on .dp{transform:none}
 html[data-theme=light] .dp{background:#f2f2f7;color:#000}
-.dhd{padding:10px 6px 18px}.dhd h2{margin:12px 0 2px;font-size:28px}.dhd .av{width:96px;height:96px;font-size:38px}
-.dic{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;flex:none}.dic svg{width:22px;height:22px}
-.dp .grp{margin:0 0 14px;background:var(--sf)}.dp .red .nm{color:#ff453a}
+.dhd{padding:6px 6px 16px;text-align:center}.dhd h2{margin:10px 0 2px;font-size:24px;font-weight:700}.dhd .av{width:84px!important;height:84px!important;font-size:34px!important;margin:0 auto;display:block}.dhd .sub{font-size:14px;opacity:.75}
+.dic{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;flex:none}.dic svg{width:16px;height:16px}
+.dp .grp{margin:0 0 12px;background:var(--sf);border-radius:16px;overflow:hidden}.dp .grp .row{padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.06)}.dp .grp .row:last-child{border-bottom:0}.dp .red .nm{color:#ff453a}
+.dp .row .nm{font-size:15px;font-weight:600}.dp .row .sub{font-size:13px}
 .chh{margin:8px 14px 4px;padding:6px 10px;border-radius:30px;background:var(--sf);border:1px solid var(--ln);gap:10px}
 .chh #bk{order:0;background:none;border:0;width:34px;color:var(--tx)}.chh #ha{order:1}.chh .t{order:2;text-align:left;min-width:0}.chh .t .tn{justify-content:flex-start}.chh #ibx{order:3}.chh #hs{order:4;background:none;border:0;color:var(--tx)}
 .chh #ha .av{width:44px!important;height:44px!important}
