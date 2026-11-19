@@ -1641,9 +1641,14 @@ html[data-theme=light] .dp{background:#f2f2f7;color:#000}
 .dic{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;flex:none}.dic svg{width:16px;height:16px}
 .dp .grp{margin:0 0 12px;background:var(--sf);border-radius:16px;overflow:hidden}.dp .grp .row{padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.06)}.dp .grp .row:last-child{border-bottom:0}.dp .red .nm{color:#ff453a}
 .dp .row .nm{font-size:15px;font-weight:600}.dp .row .sub{font-size:13px}
-.chh{margin:8px 14px 4px;padding:6px 10px;border-radius:30px;background:var(--sf);border:1px solid var(--ln);gap:10px}
-.chh #bk{order:0;background:none;border:0;width:34px;color:var(--tx)}.chh #ha{order:1}.chh .t{order:2;text-align:left;min-width:0}.chh .t .tn{justify-content:flex-start}.chh #ibx{order:3}.chh #hs{order:4;background:none;border:0;color:var(--tx)}
-.chh #ha .av{width:44px!important;height:44px!important}
+/* шапка чата всегда видна и не уезжает */
+#app:has(>.top+.msgs)>.top.chh,
+.chh{margin:0!important;padding:calc(env(safe-area-inset-top,0px) + 6px) 10px 8px!important;border-radius:0!important;background:rgba(12,10,28,.72)!important;border:0!important;border-bottom:1px solid rgba(255,255,255,.08)!important;backdrop-filter:blur(24px) saturate(1.6)!important;-webkit-backdrop-filter:blur(24px) saturate(1.6)!important;gap:8px;align-items:center;z-index:5}
+.chh #bk{order:0;background:rgba(255,255,255,.1)!important;border:0;width:36px;height:36px;border-radius:50%;color:var(--tx);flex:none}
+.chh #ha{order:1;flex:none}.chh .t,#hd{order:2;text-align:left;min-width:0;flex:1}.chh .t .tn{justify-content:flex-start}
+.chh #ibx{order:3}.chh #hs{order:4;background:rgba(255,255,255,.1)!important;border:0;width:36px;height:36px;border-radius:50%;color:var(--tx);flex:none}
+.chh #ha .av,.chh #ha>*{width:38px!important;height:38px!important;font-size:15px!important}
+#app:has(>.top+.msgs)>.msgs{padding-top:calc(env(safe-area-inset-top,0px) + 62px)!important}
 .msgs .em2{margin:auto!important;width:min(78%,360px);padding:26px 20px;border-radius:30px;background:var(--sf);border:1px solid var(--ln);text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center;color:var(--tx)}
 .em2 b{font-size:20px}.em2 span{color:var(--mu);font-size:18px}.em2 button{background:none;border:0;font-size:84px;margin-top:14px;line-height:1}
 .s2{padding:8px 12px 10px;align-items:center}
@@ -1699,7 +1704,7 @@ let mto;new MutationObserver(()=>{clearTimeout(mto);mto=setTimeout(scanMedia,400
 .dot{width:36px!important;height:36px!important}.dot.on:after{font-size:16px}.sg2 button{font-size:14px!important;padding:10px 2px!important}
 .tsz{display:flex;align-items:center;gap:12px;color:var(--mu)}.tsz input{flex:1;margin:0;padding:0;border:0;background:none}input[type=range]{accent-color:var(--ac)}
 #app .msgs .b,#app .msgs .post{font-size:calc(16px*var(--tz,1))}
-.chh{margin:6px 12px 2px!important;padding:4px 8px!important}.chh #ha .av{width:36px!important;height:36px!important}.chh .t{font-size:16px}
+/* chh уже настроен выше — не перебиваем */
 .msgs .em2{width:min(74%,300px)!important;padding:20px 16px!important;border-radius:26px!important}.em2 b{font-size:16px!important}.em2 span{font-size:14px!important}.em2 button{font-size:64px!important;margin-top:10px!important}
 .s2 .pl2{min-height:46px!important}.s2 #mic,.s2 #sd{width:46px!important;height:46px!important}
 /* search */
@@ -1732,7 +1737,13 @@ let mto;new MutationObserver(()=>{clearTimeout(mto);mto=setTimeout(scanMedia,400
 <script>
 /* ===== v4 ===== */
 {const _t=theme;theme=function(){_t();if(me){const f=Number(me.fs)||16;document.documentElement.style.setProperty('--tz',f<=30?f/16:f/100)}}}
-{const _c=chatView;chatView=function(){window.__fullInfo=0;_c()}}
+{const _c=chatView;chatView=function(){window.__fullInfo=0;_c();
+ /* свайп слева направо = назад */
+ try{const el=document.getElementById('app');if(!el||el._sw)return;el._sw=1;let sx=0,sy=0,ok=0;
+  el.addEventListener('touchstart',e=>{if(!cur&&!inf)return;const t=e.touches[0];sx=t.clientX;sy=t.clientY;ok=sx<28?1:0},{passive:true});
+  el.addEventListener('touchmove',e=>{if(!ok)return;const t=e.touches[0];if(Math.abs(t.clientY-sy)>40)ok=0;else if(t.clientX-sx>70){ok=0;if(inf){inf=null;sub=null;chatView()}else if(cur)back()}},{passive:true});
+ }catch(e){}}
+}
 {const _s=openSearch;openSearch=function(){_s();const d=[...document.querySelectorAll('.srv')].pop(),sq=d.querySelector('#sq'),res=d.querySelector('#sres'),tb=d.querySelector('#stb'),tp=d.querySelector('.top');
  d.classList.add('s3');d.append(res,tb,tp);
  const sync=()=>{const on=tb.querySelector('.on');if(!sq.value.trim()&&on&&on.dataset.v==='c')res.innerHTML='<div class="shint">Введите имя, чат или текст сообщения</div>'};
@@ -1745,21 +1756,9 @@ archSheet=function(id){const c=chats.find(x=>x.id===id);if(!c)return;
  mc(id).orderBy('ts','desc').limit(6).get().then(s=>{B.innerHTML=s.docs.map(x=>x.data()).reverse().map(m=>`<div class="lb ${m.from===uid?'me':''}">${E(String(m.text||m.cap||{photo:'🖼 Фото',video:'🎬 Видео',voice:'🎤 Голосовое'}[m.kind]||'Вложение').slice(0,140))}<small>${tm(m.ts)}</small></div>`).join('')}).catch(()=>{B.textContent=c.last||''});
  const A={o:()=>openChat(id),p:()=>{me.pins=pin?me.pins.filter(x=>x!==id):[...(me.pins||[]),id];setU({pins:me.pins}).then(main).catch(()=>{})},m:()=>{me.muted=mu?me.muted.filter(x=>x!==id):[...(me.muted||[]),id];setU({muted:me.muted}).then(main).catch(()=>{})},u:()=>cs(id).update({['u_'+uid]:1}).then(()=>{c['u_'+uid]=1;main()}).catch(()=>toast('Не удалось')),a:()=>archTog(id).then(()=>toast(a?'Возвращено из архива':'Перенесено в архив'))};
  o.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{o.remove();A[b.dataset.k]()})};
-{const _ip=infoPage;infoPage=function(){const c=chats.find(x=>x.id===inf);if(c&&c.type==='dm'&&!c.secret&&!sub&&!window.__fullInfo){inf=null;return profCard(c)}return _ip()}}
-function profCard(c){const oid=c.members.find(x=>x!==uid),u=users[oid]||{},nm=uname(oid),bl=(me.blk||[]).includes(oid),w=document.createElement('div');w.className='pcm';
- const I=p=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`,pc=['Общее'];
- const common=chats.filter(x=>x.type==='group'&&x.members&&x.members.includes(uid)&&x.members.includes(oid));
- w.innerHTML=`<div class="pcd"><div class="pcv" style="background:linear-gradient(160deg,${col(oid)},#120d2e)"><button id="pcx">✕</button></div><div class="pcr">${av(nm,oid,90)}</div><h2>${E(nm)}</h2><div class="ls">${E(seenText(oid))}</div>
- <div class="pca"><button id="pw">${I('<path d="M4 5h16v11H9l-5 4z"/>')}Написать</button><button id="pc1">${I('<path d="M6.6 10.8a15 15 0 006.6 6.6l2.2-2.2a1 1 0 011-.25c1.1.37 2.3.57 3.6.57a1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.6a1 1 0 01-.25 1z"/>')}Позвонить</button><button id="pc2">${I('<rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3z"/>')}Видео</button><button id="pm">${I('<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>')}Ещё</button></div>
- <div class="grp">${u.bio?`<div class="row"><div class="col"><div>${E(u.bio)}</div><div class="sub">О себе</div></div></div>`:''}<div class="row k" id="pun"><div class="col"><div class="sub">Имя пользователя</div><div class="nm">@${E(u.username||'')}</div></div></div></div>
- <div class="grp"><div class="row k" id="prp"><div class="col nm">Пожаловаться</div></div><div class="row k" id="pbl"><div class="col nm" style="color:#ff453a">${bl?'Разблокировать':'Заблокировать'}</div></div></div>
- ${common.length?`<div class="pt">Общее с ${E(nm)}</div><div class="grp">${common.map(x=>`<div class="row k" data-g="${x.id}">${av(x.title,x.id,36)}<div class="col nm">${E(x.title)}</div></div>`).join('')}</div>`:''}<div style="height:8px"></div></div>`;
- document.body.appendChild(w);const q=s=>w.querySelector(s),cl=()=>w.remove();w.onclick=e=>{if(e.target===w)cl()};q('#pcx').onclick=cl;q('#pw').onclick=cl;
- q('#pc1').onclick=()=>{cl();startCall('audio',oid)};q('#pc2').onclick=()=>{cl();startCall('video',oid)};
- q('#pm').onclick=()=>{cl();inf=c.id;window.__fullInfo=1;infoPage()};
- q('#pun').onclick=()=>{copy('@'+(u.username||''));toast('Скопировано')};
- const via=k=>{cl();moreMenu(c,{getBoundingClientRect:()=>({right:innerWidth,bottom:0})});const b=document.querySelector('.mpv [data-m="'+k+'"]');b&&b.click()};q('#prp').onclick=()=>via('rep');q('#pbl').onclick=()=>via('blk');
- w.querySelectorAll('[data-g]').forEach(r=>r.onclick=()=>{cl();openChat(r.dataset.g)})}
+/* профіль завжди повною сторінкою, без квадратного картки */
+{const _ip=infoPage;infoPage=function(){window.__fullInfo=1;return _ip()}}
+function profCard(c){inf=c.id;window.__fullInfo=1;infoPage()}
 {const _d=drawer;drawer=function(){_d();const d=document.querySelector('.dr');if(!d)return;d.querySelector('.grp').insertAdjacentHTML('beforeend',`<div class="row k" id="dcl"><span class="dic" style="background:#34c759">${IC.ph}</span><div class="col nm">Звонки</div><span class="sub">›</span></div>`);d.querySelector('#dcl').onclick=()=>{d.remove();tab='calls';ar=false;main()}}}
 {const _e=storyEditor;storyEditor=function(k,f){_e(k,f);try{const e=[...document.querySelectorAll('.sed')].pop(),sbr=e.querySelector('#sbr'),scb=e.querySelector('#scb'),spl=e.querySelector('.spl'),sbk=e.querySelector('#sbk'),nx=e.querySelector('#snx');e.classList.add('s3');if(scb)sbr.insertBefore(scb,nx);e.appendChild(sbk);e.appendChild(spl);const ip=e.querySelector('#scp');if(ip)ip.placeholder='Добавить подпись…'}catch(x){console.error(x)}}}
 shareStory=function(d,done){
