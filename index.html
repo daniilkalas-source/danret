@@ -1571,8 +1571,35 @@ function drawer(){
  const q=s=>d.querySelector(s),x=f=>()=>{d.remove();f()};
  d.onclick=e=>{if(e.target===d)d.remove()};
  q('#d1').onclick=x(myProfile);q('#d2').onclick=x(newSheet);q('#d3').onclick=x(()=>openChat('fav_'+uid));q('#d4').onclick=x(foldersSheet);
- q('#d5').onclick=x(()=>{tab='set';ar=false;main()});q('#d6').onclick=x(devices);q('#d7').onclick=x(()=>ask('Выйти из аккаунта?',()=>fbAuth.signOut(),'Выйти'));
+ q('#d5').onclick=x(settingsPage);q('#d6').onclick=x(devices);q('#d7').onclick=x(()=>ask('Выйти из аккаунта?',()=>fbAuth.signOut(),'Выйти'));
  document.body.appendChild(d);requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add('on')))}
+function settingsPage(){
+ const ic=(bg,p)=>`<span class="dic" style="background:${bg}"><svg class="i" viewBox="0 0 24 24">${p}</svg></span>`;
+ const w=pgs(hp('Настройки')+`
+ <div class="grp">
+  <div class="row k" id="s_nf">${ic('#e5484d','<path d="M6 16v-5a6 6 0 0112 0v5l1.5 2h-15zM10 20a2 2 0 004 0"/>')}<div class="col nm">Уведомления и звуки</div><span class="sub">›</span></div>
+  <div class="row k" id="s_pr">${ic('#8e8e93','<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>')}<div class="col nm">Конфиденциальность</div><span class="sub">›</span></div>
+  <div class="row k" id="s_dt">${ic('#3b82f6','<path d="M5 4h11l3 3v13H5zM8 4v5h7V4M8 20v-6h8v6"/>')}<div class="col nm">Данные и память</div><span class="sub">›</span></div>
+ </div>
+ <div class="grp">
+  <div class="row k" id="s_th">${ic('#8a63ff','<path d="M12 3a9 9 0 100 18c1.4 0 2-1 1.5-2s0-2.2 1.3-2.2H17a4 4 0 004-4c0-5-4-9.8-9-9.8z"/>')}<div class="col nm">Оформление</div><span class="sub">›</span></div>
+  <div class="row k" id="s_ct">${ic('#34c759','<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/>')}<div class="col nm">Контакты</div><span class="sub">${(me.ct||[]).length} ›</span></div>
+  <div class="row k" id="inv">${ic('#5b5bd6','<path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1"/>')}<div class="col nm">Пригласить друзей</div><span class="sub">›</span></div>
+ </div>
+ <div class="grp">
+  <div class="row k" id="s_ab">${ic('#666','<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.1"/>')}<div class="col nm">О приложении</div><span class="sub">›</span></div>
+ </div>
+ <div class="sub" style="padding:12px 20px;text-align:center">Danret · версия 2</div>`);
+ // reuse existing handlers from setX
+ if(typeof setX==='function'){const prev=A;try{/* bind on w */}catch(e){}}
+ w.querySelector('#s_nf').onclick=()=>{const t=(k,l)=>`<div class="row"><div class="col">${l}</div><button class="sw ${me[k]?'':'on'}" data-tg="${k}"></button></div>`,p=pgs(hp('Уведомления и звуки')+`<div class="grp" style="margin:0">${t('nodm','Личные чаты')}${t('nogr','Группы')}${t('noch','Каналы')}${t('nosnd','Звук')}</div><button class="btn" id="np" style="width:100%;margin-top:12px">Разрешить системные уведомления</button><div class="sub" style="margin-top:8px">Уведомления приходят, пока приложение открыто или свёрнуто. Отдельный чат можно заглушить в его профиле.</div>`);p.querySelectorAll('[data-tg]').forEach(x=>x.onclick=()=>{setU({[x.dataset.tg]:!me[x.dataset.tg]});x.classList.toggle('on')});p.querySelector('#np').onclick=()=>setupPush()};
+ w.querySelector('#s_pr').onclick=privPage;
+ w.querySelector('#s_dt').onclick=dataPage;
+ w.querySelector('#s_th').onclick=()=>design();
+ w.querySelector('#s_ct').onclick=()=>{const L=(me.ct||[]).filter(i=>users[i]),p=pgs(hp('Контакты')+(L.map(i=>`<div class="row" data-o="${i}">${av(uname(i),i)}<div class="col"><div class="nm">${E(uname(i))}</div><div class="sub">@${E(users[i].username)}</div></div></div>`).join('')||'<div class="empty" style="padding:20px">Контактов пока нет.</div>'));p.querySelectorAll('[data-o]').forEach(r=>r.onclick=()=>{p.remove();openDM(r.dataset.o)})};
+ w.querySelector('#inv').onclick=()=>{const link=location.origin+location.pathname+(me.username?'#u/'+me.username:'');copy(link);toast('Ссылка скопирована')};
+ w.querySelector('#s_ab').onclick=()=>pgs(hp('О приложении')+'<div class="sub" style="line-height:1.7">Danret · версия 2<br>Мессенджер на Firebase.</div>');
+}
 function foldersSheet(){const w=pgs(hp('Папки')+`<div class="grp">${FLS.map(([k,l])=>`<div class="row k" data-f="${k}"><div class="col nm">${k==='all'?'Все чаты':l}</div>${FLT===k?'<span class="chk">✓</span>':''}</div>`).join('')}</div>`);
  w.querySelectorAll('[data-f]').forEach(r=>r.onclick=()=>{FLT=r.dataset.f;tab='chats';ar=false;w.remove();main()})}
 function devices(){const u=navigator.userAgent,n=/iPhone/.test(u)?'iPhone':/iPad/.test(u)?'iPad':/Android/.test(u)?'Android':/Mac/.test(u)?'Mac':/Windows/.test(u)?'Windows':'Устройство';
