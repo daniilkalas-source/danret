@@ -1,7 +1,7 @@
 <!doctype html><html lang="ru"><head><meta charset="utf-8"><title>Danret</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#0e0b1f">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -342,7 +342,123 @@ html.otf[data-theme=dark] .msgs{background-image:url("data:image/svg+xml,%3Csvg 
 .scm{display:flex;background:#2b2b2e;border-radius:30px;padding:4px;flex:1;max-width:300px;margin:0 auto}
 .scm button{flex:1;border:0;background:none;color:#fff;font-weight:700;letter-spacing:.5px;font-size:15px;padding:11px 8px;border-radius:26px}
 .scm button.on{background:#111;color:#ffd60a}
-</style></head><body><div id="spl"><svg viewBox="0 0 100 100" width="84" height="84"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b72f7"/><stop offset="1" stop-color="#4f55e3"/></linearGradient></defs><rect width="100" height="100" rx="24" fill="url(#g1)"/><path d="M26 49 L76 27 L58 75 L49 56 Z" fill="#fff"/><path d="M49 56 L76 27 L40 50 Z" fill="#dfe3ff"/></svg><b>DANRET</b></div><script>(function(){var t0=Date.now(),d=false;function hide(){if(d)return;d=true;var e=document.getElementById('spl');if(!e)return;var w=Math.max(0,1300-(Date.now()-t0));setTimeout(function(){e.classList.add('off');setTimeout(function(){e.remove()},400)},w)}addEventListener('load',function(){setTimeout(hide,200)});setTimeout(hide,4000)})()</script><div id="app"></div>
+
+/* ================= AURORA SKIN: Corvox-glow + Telegram + iOS glass ================= */
+:root:root{--bg:#0e0b1f;--sf:#1a1633;--tx:#f5f3ff;--mu:#9d98c6;--ac:#8b7bff;--ln:#2b2650;--me:#5b4bd6;--mb:linear-gradient(135deg,#8a63ff 0%,#5b6bff 55%,#3f8cff 100%);--mti:#e6e1ff;--bi:rgba(40,34,78,.88);--glow:0 8px 30px rgba(120,90,255,.28)}
+@media(prefers-color-scheme:light){:root:root:not([data-theme=dark]){--bg:#f4f1ff;--sf:#ffffff;--tx:#1b1636;--mu:#7a74a3;--ac:#6c58f2;--ln:#e5e0fa;--bi:rgba(255,255,255,.95);--glow:0 8px 26px rgba(108,88,242,.22)}}
+:root:root[data-theme=light]{--bg:#f4f1ff;--sf:#ffffff;--tx:#1b1636;--mu:#7a74a3;--ac:#6c58f2;--ln:#e5e0fa;--bi:rgba(255,255,255,.95);--glow:0 8px 26px rgba(108,88,242,.22)}
+:root:root[data-theme=dark]{--bg:#0e0b1f;--sf:#1a1633;--tx:#f5f3ff;--mu:#9d98c6;--ac:#8b7bff;--ln:#2b2650;--bi:rgba(40,34,78,.88)}
+body{background:radial-gradient(900px 520px at 12% -4%,rgba(124,92,255,.42),transparent 60%),radial-gradient(700px 500px at 100% 105%,rgba(56,130,255,.26),transparent 60%),radial-gradient(500px 400px at 85% 30%,rgba(190,80,255,.12),transparent 60%),#0e0b1f;background-attachment:fixed;background-repeat:no-repeat}
+@media(prefers-color-scheme:light){html:not([data-theme=dark]) body{background:radial-gradient(900px 520px at 12% -4%,rgba(140,110,255,.30),transparent 60%),radial-gradient(700px 500px at 100% 105%,rgba(90,160,255,.24),transparent 60%),#f4f1ff;background-attachment:fixed}}
+html[data-theme=light] body{background:radial-gradient(900px 520px at 12% -4%,rgba(140,110,255,.30),transparent 60%),radial-gradient(700px 500px at 100% 105%,rgba(90,160,255,.24),transparent 60%),#f4f1ff;background-attachment:fixed}
+body{font-family:-apple-system,"SF Pro Text","Inter",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+::selection{background:rgba(139,123,255,.4)}
+
+/* круглые стеклянные кнопки как у Corvox */
+.ib{background:rgba(255,255,255,.07);color:var(--tx);border:1px solid rgba(255,255,255,.12)!important;backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);transition:transform .15s,background .2s;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.ib:active{transform:scale(.9)}
+@media(prefers-color-scheme:light){html:not([data-theme=dark]) .ib{background:rgba(255,255,255,.7);border-color:rgba(108,88,242,.18)!important;color:var(--ac)}}
+html[data-theme=light] .ib{background:rgba(255,255,255,.7);border-color:rgba(108,88,242,.18)!important;color:var(--ac)}
+.pill{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14)!important;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:22px}
+.btn{background:linear-gradient(135deg,#8a63ff,#4f7cff);box-shadow:var(--glow);border-radius:16px;transition:transform .15s}.btn:active{transform:scale(.97)}
+.top{letter-spacing:.1px}
+.top .t{font-weight:800}
+
+/* список чатов: плавные строки в стиле Telegram */
+.row{border-bottom:0}
+.row[data-c],.row[data-u],.row[data-j],.row[data-m],.row.k{margin:2px 8px;padding:10px 10px;border-radius:20px;transition:background .15s,transform .15s}
+.row[data-c]:active,.row[data-u]:active,.row[data-j]:active,.row[data-m]:active,.row.k:active{background:rgba(139,123,255,.16);transform:scale(.985)}
+.row .nm{font-weight:700;letter-spacing:.1px}
+.av{box-shadow:0 4px 14px rgba(80,60,200,.35),inset 0 0 0 1px rgba(255,255,255,.18);background-image:linear-gradient(145deg,rgba(255,255,255,.22),rgba(255,255,255,0) 55%)}
+img.av{box-shadow:0 4px 14px rgba(80,60,200,.3)}
+.ubd{background:linear-gradient(135deg,#8a63ff,#4f7cff);box-shadow:0 3px 10px rgba(110,90,255,.5)}
+.ubd.mu{background:rgba(255,255,255,.14);box-shadow:none}
+
+/* поиск + истории */
+.srch{margin:8px 14px 4px;padding:12px 16px;border-radius:22px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+@media(prefers-color-scheme:light){html:not([data-theme=dark]) .srch{background:rgba(255,255,255,.75);border-color:rgba(108,88,242,.14)}}
+html[data-theme=light] .srch{background:rgba(255,255,255,.75);border-color:rgba(108,88,242,.14)}
+.ring{background:conic-gradient(from 210deg,#8a63ff,#3fa9ff,#c45bff,#8a63ff);box-shadow:0 0 16px rgba(139,99,255,.45)}.ring.seen{background:rgba(255,255,255,.22);box-shadow:none}
+.plus{background:linear-gradient(135deg,#8a63ff,#4f7cff);border:2px solid var(--bg)}
+
+/* плавающая нижняя панель (как «Чаты · Серверы · Профиль») */
+.tabs{background:rgba(24,20,52,.62);border:1px solid rgba(255,255,255,.13);border-radius:36px;box-shadow:0 14px 40px rgba(5,0,30,.55),inset 0 1px 0 rgba(255,255,255,.14);backdrop-filter:blur(28px) saturate(1.8);-webkit-backdrop-filter:blur(28px) saturate(1.8)}
+@media(prefers-color-scheme:light){html:not([data-theme=dark]) .tabs{background:rgba(255,255,255,.7);border-color:rgba(108,88,242,.16);box-shadow:0 12px 34px rgba(108,88,242,.2)}}
+html[data-theme=light] .tabs{background:rgba(255,255,255,.7);border-color:rgba(108,88,242,.16);box-shadow:0 12px 34px rgba(108,88,242,.2)}
+.tabs button{color:var(--mu);transition:color .2s,transform .15s}.tabs button:active{transform:scale(.93)}
+.tabs .on,.glass .tabs .on{color:#fff}
+@media(prefers-color-scheme:light){html:not([data-theme=dark]) .tabs .on{color:var(--ac)}}
+html[data-theme=light] .tabs .on{color:var(--ac)}
+.tp{background:linear-gradient(135deg,rgba(138,99,255,.55),rgba(79,124,255,.4));border:1px solid rgba(180,160,255,.35);box-shadow:0 0 22px rgba(139,99,255,.45),inset 0 1px 0 rgba(255,255,255,.25)}
+@media(prefers-color-scheme:light){html:not([data-theme=dark]) .tp{background:linear-gradient(135deg,rgba(138,99,255,.22),rgba(79,124,255,.16));border-color:rgba(108,88,242,.3);box-shadow:0 0 18px rgba(139,99,255,.25)}}
+html[data-theme=light] .tp{background:linear-gradient(135deg,rgba(138,99,255,.22),rgba(79,124,255,.16));border-color:rgba(108,88,242,.3);box-shadow:0 0 18px rgba(139,99,255,.25)}
+
+/* карточки настроек */
+.grp,.thc{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:24px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+@media(prefers-color-scheme:light){html:not([data-theme=dark]) .grp,html:not([data-theme=dark]) .thc{background:rgba(255,255,255,.82);border-color:rgba(108,88,242,.12)}}
+html[data-theme=light] .grp,html[data-theme=light] .thc{background:rgba(255,255,255,.82);border-color:rgba(108,88,242,.12)}
+.grp .row{border-color:rgba(255,255,255,.07)}
+.grp .row.k>span:first-child{background:linear-gradient(145deg,rgba(139,99,255,.35),rgba(79,124,255,.18));border-color:rgba(190,170,255,.3);color:#cfc5ff}
+.lbl{letter-spacing:.8px;font-weight:600}
+.sw.on,.pw.on{background:#8a63ff}.pw.on:after{color:#8a63ff}
+.ss .sw.on{background:#8a63ff}
+.seg{border:1px solid rgba(255,255,255,.08);border-radius:18px}.seg .on{background:linear-gradient(135deg,#8a63ff,#4f7cff);box-shadow:var(--glow)}
+.chip.on{background:rgba(139,99,255,.25);border-color:var(--ac)}
+
+/* поля ввода — пилюли со свечением */
+input,textarea{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:20px;transition:border-color .2s,box-shadow .2s}
+input:focus,textarea:focus{outline:0;border-color:rgba(160,140,255,.8);box-shadow:0 0 0 4px rgba(139,99,255,.2)}
+input::placeholder,textarea::placeholder{color:var(--mu)}
+@media(prefers-color-scheme:light){html:not([data-theme=dark]) input,html:not([data-theme=dark]) textarea{background:rgba(255,255,255,.85);border-color:rgba(108,88,242,.18)}}
+html[data-theme=light] input,html[data-theme=light] textarea{background:rgba(255,255,255,.85);border-color:rgba(108,88,242,.18)}
+
+/* сообщения */
+.b{border-radius:22px;box-shadow:0 2px 10px rgba(0,0,0,.18);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);animation:bpop .22s cubic-bezier(.3,1.4,.5,1)}
+@keyframes bpop{from{opacity:0;transform:translateY(8px) scale(.96)}to{opacity:1;transform:none}}
+.b.me{border-bottom-right-radius:7px;box-shadow:0 6px 20px rgba(100,80,255,.35)}
+.b:not(.me){border-bottom-left-radius:7px;border:1px solid rgba(255,255,255,.07)!important}
+@media(prefers-color-scheme:light){html:not([data-theme=dark]) .b:not(.me){border-color:rgba(108,88,242,.1)!important}}
+html[data-theme=light] .b:not(.me){border-color:rgba(108,88,242,.1)!important}
+.post{background:var(--bi);border:1px solid rgba(255,255,255,.08);border-radius:22px}
+.dsep{background:rgba(30,25,64,.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08)}
+.qt{border-left-color:#b3a5ff}
+.send textarea{border-radius:24px}
+.cms.on{background:linear-gradient(135deg,#8a63ff,#4f7cff);box-shadow:var(--glow)}
+.cpi{border-radius:26px}
+
+/* шторки и меню */
+.sheet>div,.sheet.pg>div{border-radius:30px 30px 0 0}
+.mnu .mm,.mnu .mr,.mpv .pop{border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 50px rgba(10,0,50,.55)}
+.mnu .mr .on{background:rgba(139,99,255,.5)}
+.toast,.nb{background:rgba(30,25,64,.92);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:20px}
+.upb{background:linear-gradient(135deg,#8a63ff,#4f7cff)}
+
+/* экран входа */
+.aw::before{content:"";position:absolute;left:50%;top:6%;width:340px;height:340px;transform:translateX(-50%);background:radial-gradient(circle,rgba(139,99,255,.45),transparent 65%);filter:blur(18px);pointer-events:none;z-index:0}
+.aw>*{position:relative;z-index:1}
+.aw h1{background:linear-gradient(180deg,#fff,#cfc7ff);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;letter-spacing:-.3px}
+@media(prefers-color-scheme:light){html:not([data-theme=dark]) .aw h1{background:linear-gradient(180deg,#2a1f6b,#6c58f2);-webkit-background-clip:text;background-clip:text}}
+html[data-theme=light] .aw h1{background:linear-gradient(180deg,#2a1f6b,#6c58f2);-webkit-background-clip:text;background-clip:text}
+.alg{filter:drop-shadow(0 12px 34px rgba(139,99,255,.65))}
+.afl{border-radius:22px;background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.afl:focus-within{border-color:rgba(160,140,255,.85);box-shadow:0 0 0 4px rgba(139,99,255,.22)}
+.afi{color:#a99bff}
+.abtn{background:linear-gradient(135deg,#8a63ff,#4f7cff);box-shadow:0 12px 32px rgba(110,90,255,.5);height:58px;border-radius:30px}
+.asw,.lnk{color:#b3a5ff}
+.adots i.on{background:linear-gradient(90deg,#8a63ff,#4f7cff)}
+.abk{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07)}
+
+/* загрузочный экран как у Corvox */
+#spl{background:radial-gradient(520px 420px at 50% 38%,rgba(110,80,255,.38),transparent 65%),#0d0a1c;flex-direction:column;gap:22px}
+#spl svg{filter:drop-shadow(0 0 34px rgba(110,130,255,.75));animation:splf 2.4s ease-in-out infinite}
+#spl b{color:#fff;font-size:30px;letter-spacing:7px;font-weight:800;background:linear-gradient(180deg,#fff,#b9adff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+#spl .spb{position:absolute;left:50%;bottom:16%;transform:translateX(-50%);width:min(62%,300px);height:4px;border-radius:2px;background:rgba(255,255,255,.12);overflow:hidden}
+#spl .spb i{display:block;height:100%;width:45%;border-radius:2px;background:linear-gradient(90deg,#8a63ff,#4fa8ff);animation:spld 1.3s ease-in-out infinite}
+@keyframes spld{0%{transform:translateX(-110%)}100%{transform:translateX(260%)}}
+@keyframes splf{50%{transform:translateY(-6px) scale(1.04)}}
+@media(prefers-color-scheme:dark){#spl{background:radial-gradient(520px 420px at 50% 38%,rgba(110,80,255,.38),transparent 65%),#0d0a1c}#spl b{color:#fff}}
+/* ================= /AURORA ================= */
+</style></head><body><div id="spl"><svg viewBox="0 0 120 120" width="108" height="108"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#bfeaff"/><stop offset="1" stop-color="#4f8bff"/></linearGradient></defs><path fill="url(#g1)" fill-rule="evenodd" d="M30 16h30c27 0 46 19 46 44S87 104 60 104H30c-8 0-14-6-14-14V30c0-8 6-14 14-14zM41 38v44h19c15 0 25-9 25-22S75 38 60 38z"/><path fill="url(#g1)" d="M30 104l-14 12v-26z" opacity=".9"/></svg><b>DANRET</b><div class="spb"><i></i></div></div><script>(function(){var t0=Date.now(),d=false;function hide(){if(d)return;d=true;var e=document.getElementById('spl');if(!e)return;var w=Math.max(0,1300-(Date.now()-t0));setTimeout(function(){e.classList.add('off');setTimeout(function(){e.remove()},400)},w)}addEventListener('load',function(){setTimeout(hide,200)});setTimeout(hide,4000)})()</script><div id="app"></div>
 <script>if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("firebase-messaging-sw.js").catch(()=>{}))</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
