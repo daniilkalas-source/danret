@@ -1592,7 +1592,7 @@ function cv3(){
  if(cam)p.appendChild(cam);
  sn.prepend(p);if(mic)sn.appendChild(mic);sn.appendChild(sd);
  const up=()=>sn.classList.toggle('typ',!mic||g.value.trim().length>0);g.addEventListener('input',up);sd.addEventListener('click',()=>setTimeout(up,0));up();
- $('#emb').onclick=()=>openEmojiPanel(g,sn)}}
+ $('#emb').onclick=()=>openEmojiPanel(g,sn)}
 function openEmojiPanel(g,sn){
  const old=A.querySelector('.emp');if(old){old.remove();return}
  const EMO=['😀','😃','😄','😁','😆','😅','😂','🤣','😊','😇','🙂','😉','😍','🥰','😘','😗','😋','😜','🤪','😝','🤑','🤗','🤭','🤫','🤔','🤐','🤨','😐','😑','😶','😏','😒','🙄','😬','😮','😯','😲','😳','🥺','😢','😭','😤','😠','😡','🤬','😈','👿','💀','💩','🤡','👻','👽','🤖','😺','😸','😹','😻','😼','😽','🙀','😿','😾','👍','👎','👏','🙌','🤝','🙏','💪','✌️','🤞','🤟','🤘','👌','🤌','🤏','👈','👉','👆','👇','☝️','✋','🤚','🖐️','🖖','👋','🤙','💋','❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❣️','💕','💞','💓','💗','💖','💘','💝','🔥','⭐','✨','🌟','💫','🎉','🎊','🎈','🎁','🏆','🥇','🎯','💯'];
