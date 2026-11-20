@@ -528,7 +528,75 @@ html.glass body{background:none}
 
 .botc .b{white-space:pre-wrap}
 .botft{padding:10px 14px calc(12px + env(safe-area-inset-bottom,0px));text-align:center;color:var(--mu);font-size:13px;flex:none}
-</style></head><body><div id="spl"><svg viewBox="0 0 120 120" width="108" height="108"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#bfeaff"/><stop offset="1" stop-color="#4f8bff"/></linearGradient></defs><path fill="url(#g1)" fill-rule="evenodd" d="M30 16h30c27 0 46 19 46 44S87 104 60 104H30c-8 0-14-6-14-14V30c0-8 6-14 14-14zM41 38v44h19c15 0 25-9 25-22S75 38 60 38z"/><path fill="url(#g1)" d="M30 104l-14 12v-26z" opacity=".9"/></svg><b>DANRET</b><div class="spb"><i></i></div></div><script>(function(){var t0=Date.now(),d=false;function hide(){if(d)return;d=true;var e=document.getElementById('spl');if(!e)return;var w=Math.max(0,1300-(Date.now()-t0));setTimeout(function(){e.classList.add('off');setTimeout(function(){e.remove()},400)},w)}addEventListener('load',function(){setTimeout(hide,200)});setTimeout(hide,4000)})()</script><div id="app"></div>
+</style></head><body><style id="dn-splash">
+#dsp{position:fixed;inset:0;z-index:99999;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#0b0818;color:#fff;transition:opacity .45s ease,transform .45s ease;font-family:-apple-system,system-ui,sans-serif}
+#dsp.off{opacity:0;transform:scale(1.04);pointer-events:none}
+#dsp .dsa i{position:absolute;border-radius:50%;filter:blur(60px);opacity:.75;animation:dsf 9s ease-in-out infinite}
+#dsp .dsa i:nth-child(1){width:340px;height:340px;left:-80px;top:8%;background:#6a45ff}
+#dsp .dsa i:nth-child(2){width:300px;height:300px;right:-90px;top:42%;background:#2f7bff;animation-delay:-3s}
+#dsp .dsa i:nth-child(3){width:280px;height:280px;left:20%;bottom:-90px;background:#b04dff;animation-delay:-6s}
+@keyframes dsf{50%{transform:translate(40px,-50px) scale(1.15)}}
+#dsp .dpt s{position:absolute;width:4px;height:4px;border-radius:50%;background:#fff;opacity:0;animation:dsp 6s linear infinite}
+@keyframes dsp{0%{transform:translateY(0);opacity:0}15%{opacity:.8}100%{transform:translateY(-220px);opacity:0}}
+#dsp .dsc{position:relative;display:flex;flex-direction:column;align-items:center;gap:26px;margin-top:-30px}
+#dsp .dsl{position:relative;width:176px;height:176px;display:flex;align-items:center;justify-content:center}
+#dsp .dsr{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+#dsp .dsr circle{fill:none;stroke-width:4;stroke-linecap:round}
+#dsp .dsr .t{stroke:rgba(255,255,255,.12)}
+#dsp .dsr .p{stroke:url(#dg2);stroke-dasharray:452.4;stroke-dashoffset:452.4;transition:stroke-dashoffset .25s linear;filter:drop-shadow(0 0 6px rgba(120,140,255,.9))}
+#dsp .dlg{width:96px;height:96px;filter:drop-shadow(0 0 28px rgba(110,130,255,.8));animation:dlg 2.6s ease-in-out infinite;transition:transform .35s ease,opacity .3s ease}
+@keyframes dlg{50%{transform:translateY(-5px) scale(1.05)}}
+#dsp .dlg .d1{animation:dpop .7s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes dpop{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:none}}
+#dsp .dok{position:absolute;width:132px;height:132px;opacity:0;transform:scale(.2) rotate(-25deg);transition:transform .55s cubic-bezier(.2,1.6,.4,1),opacity .2s}
+#dsp.rdy .dlg{opacity:0;transform:scale(.3);animation:none}
+#dsp.rdy .dsr{opacity:0;transition:opacity .3s}
+#dsp.rdy .dok{opacity:1;transform:none}
+#dsp .dok .eye{transform-origin:center;transform-box:fill-box;animation:dbl 2.2s .9s infinite}
+#dsp .dok .eye.w{animation:dwk 1.4s .5s 1 both}
+@keyframes dbl{0%,90%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes dwk{0%,40%{transform:scaleY(1)}55%,75%{transform:scaleY(.1)}100%{transform:scaleY(1)}}
+#dsp .dok .sm{stroke-dasharray:70;stroke-dashoffset:70}
+#dsp.rdy .dok .sm{animation:dsd .5s .25s ease-out forwards}
+@keyframes dsd{to{stroke-dashoffset:0}}
+#dsp .dok{animation:none}
+#dsp.rdy .dok{animation:dhop 1s .5s ease-in-out 1}
+@keyframes dhop{30%{transform:translateY(-12px) scale(1.06)}60%{transform:translateY(0) scale(.98)}}
+#dsp .dsk{position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px;border-radius:2px;opacity:0}
+#dsp.rdy .dsk{animation:dsk .9s .2s ease-out forwards}
+@keyframes dsk{0%{opacity:1;transform:rotate(var(--a)) translateY(-50px) scale(.4)}100%{opacity:0;transform:rotate(var(--a)) translateY(-120px) scale(1) rotate(200deg)}}
+#dsp .dnm{display:flex;font-size:30px;font-weight:800;letter-spacing:7px;margin-right:-7px}
+#dsp .dnm span{background:linear-gradient(180deg,#fff,#b9adff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:dlt .6s cubic-bezier(.2,1.3,.4,1) both}
+#dsp .dnm span:nth-child(1){animation-delay:.15s}#dsp .dnm span:nth-child(2){animation-delay:.22s}#dsp .dnm span:nth-child(3){animation-delay:.29s}#dsp .dnm span:nth-child(4){animation-delay:.36s}#dsp .dnm span:nth-child(5){animation-delay:.43s}#dsp .dnm span:nth-child(6){animation-delay:.5s}
+@keyframes dlt{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+#dsp .dtx{height:24px;font-size:16px;font-weight:600;color:rgba(255,255,255,.72);letter-spacing:.3px;display:flex;align-items:center;gap:1px}
+#dsp .dtx u{text-decoration:none;animation:ddt 1.2s infinite}
+#dsp .dtx u:nth-of-type(2){animation-delay:.2s}#dsp .dtx u:nth-of-type(3){animation-delay:.4s}
+@keyframes ddt{0%,60%,100%{opacity:.2}30%{opacity:1}}
+#dsp.rdy .dtx{color:#fff;font-size:20px;animation:dlt .4s both}
+#dsp.rdy .dtx u{display:none}
+@media(prefers-reduced-motion:reduce){#dsp *{animation-duration:.01s!important}}
+</style>
+<div id="dsp"><div class="dsa"><i></i><i></i><i></i></div>
+<div class="dpt"><s style="left:12%;bottom:20%;animation-delay:0s"></s><s style="left:28%;bottom:12%;animation-delay:1.2s"></s><s style="left:46%;bottom:24%;animation-delay:2.4s"></s><s style="left:63%;bottom:10%;animation-delay:.8s"></s><s style="left:80%;bottom:22%;animation-delay:3.1s"></s><s style="left:90%;bottom:14%;animation-delay:1.9s"></s></div>
+<div class="dsc"><div class="dsl">
+<svg class="dsr" viewBox="0 0 160 160"><defs><linearGradient id="dg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8a63ff"/><stop offset="1" stop-color="#4fa8ff"/></linearGradient></defs><circle class="t" cx="80" cy="80" r="72"/><circle class="p" id="dpr" cx="80" cy="80" r="72"/></svg>
+<svg class="dlg" viewBox="0 0 120 120"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#bfeaff"/><stop offset="1" stop-color="#4f8bff"/></linearGradient></defs><g class="d1"><path fill="url(#g1)" fill-rule="evenodd" d="M30 16h30c27 0 46 19 46 44S87 104 60 104H30c-8 0-14-6-14-14V30c0-8 6-14 14-14zM41 38v44h19c15 0 25-9 25-22S75 38 60 38z"/><path fill="url(#g1)" d="M30 104l-14 12v-26z" opacity=".9"/></g></svg>
+<svg class="dok" viewBox="0 0 120 120"><defs><radialGradient id="dg3" cx=".38" cy=".3" r=".85"><stop offset="0" stop-color="#fff3a8"/><stop offset=".55" stop-color="#ffd24a"/><stop offset="1" stop-color="#ff9f2e"/></radialGradient></defs><circle cx="60" cy="60" r="52" fill="url(#dg3)"/><ellipse class="eye" cx="42" cy="52" rx="5.5" ry="8" fill="#5a2a00"/><ellipse class="eye w" cx="78" cy="52" rx="5.5" ry="8" fill="#5a2a00"/><circle cx="30" cy="72" r="7" fill="#ff7a8a" opacity=".45"/><circle cx="90" cy="72" r="7" fill="#ff7a8a" opacity=".45"/><path class="sm" d="M36 70Q60 100 84 70" fill="none" stroke="#5a2a00" stroke-width="6" stroke-linecap="round"/></svg>
+<i class="dsk" style="--a:0deg;background:#ffd24a"></i><i class="dsk" style="--a:45deg;background:#8a63ff"></i><i class="dsk" style="--a:90deg;background:#4fa8ff"></i><i class="dsk" style="--a:135deg;background:#ff7a8a"></i><i class="dsk" style="--a:180deg;background:#ffd24a"></i><i class="dsk" style="--a:225deg;background:#8a63ff"></i><i class="dsk" style="--a:270deg;background:#4fa8ff"></i><i class="dsk" style="--a:315deg;background:#ff7a8a"></i>
+</div>
+<div class="dnm"><span>D</span><span>A</span><span>N</span><span>R</span><span>E</span><span>T</span></div>
+<div class="dtx" id="dtx"><span id="dtt">Загрузка</span><u>.</u><u>.</u><u>.</u></div></div></div>
+<script>(function(){var t0=Date.now(),C=452.4,p=0,rd=false,el=document.getElementById('dsp'),ring=document.getElementById('dpr'),tt=document.getElementById('dtt');
+function set(v){p=v;if(ring)ring.style.strokeDashoffset=C*(1-v/100)}
+var iv=setInterval(function(){if(rd)return;set(p+(92-p)*.05);var s=Date.now()-t0;tt.textContent=s>5000?'Почти готово':s>1800?'Подключаемся':'Загрузка'},90);
+function hide(){el.classList.add('off');setTimeout(function(){el.remove()},520)}
+function ready(ok){if(rd)return;rd=true;clearInterval(iv);var w=Math.max(0,1700-(Date.now()-t0));
+setTimeout(function(){if(!ok)return hide();set(100);setTimeout(function(){el.classList.add('rdy');tt.textContent='Готово!';setTimeout(hide,1500)},350)},w)}
+function chk(){try{if(!window.firebase)return ready(false);if(typeof uLd!=='undefined'&&uLd&&typeof me!=='undefined'&&me)return ready(true);if(document.querySelector('#app input'))return ready(true)}catch(e){}
+if(Date.now()-t0>9000)return ready(false);setTimeout(chk,120)}
+addEventListener('load',function(){setTimeout(chk,150)});setTimeout(function(){ready(false)},12000)})()</script>
+<div id="app"></div>
 <script>if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("firebase-messaging-sw.js").catch(()=>{}))</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -555,7 +623,8 @@ document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest
  const k=chKey(a.dataset.lk||a.href);if(k===null)return;e.preventDefault();e.stopPropagation();openCh(k)},true);
 const COL=['#e17076','#7bc862','#e5ca77','#65aadd','#a695e7','#ee7aae','#6ec9cb','#faa774'];
 const col=s=>COL[[...String(s)].reduce((a,c)=>a+c.charCodeAt(0),0)%8];
-const av=(n,id,sz)=>{const dc=chats.find(c=>c.id===id&&c.type==='dm');if(dc)id=dc.members.find(x=>x!==uid)||id;const o=users[id]||chats.find(c=>c.id===id)||{};let ph=o.ph;if(ph&&users[id]&&id!==uid){const v=o.phVis||'all';if(v==='none'||(v==='contacts'&&!(o.ct||[]).includes(uid)))ph=''}const cph=id!==uid&&me&&me.cn&&me.cn[id]&&me.cn[id].ph;if(cph)ph=cph;const z=sz?`width:${sz}px;height:${sz}px;font-size:${sz*.4}px`:'';return ph?`<img class="av" src="${ph}" style="${z}">`:`<div class="av" style="background:${col(id)};${z}">${E((n||'?')[0].toUpperCase())}</div>`};
+const isOn=id=>{try{if(!id)return false;if(id===uid)return !!me;const u=users[id];if(!u||!u.ls||gone(id))return false;const v=u.seenVis||'all';if(v==='none'||(v==='contacts'&&!(u.ct||[]).includes(uid)))return false;return Date.now()-u.ls<180000}catch(e){return false}},onlSig=()=>{try{return Object.keys(users).filter(isOn).join()}catch(e){return ''}};
+const av=(n,id,sz)=>{const dc=chats.find(c=>c.id===id&&c.type==='dm');if(dc)id=dc.members.find(x=>x!==uid)||id;const o=users[id]||chats.find(c=>c.id===id)||{};let ph=o.ph;if(ph&&users[id]&&id!==uid){const v=o.phVis||'all';if(v==='none'||(v==='contacts'&&!(o.ct||[]).includes(uid)))ph=''}const cph=id!==uid&&me&&me.cn&&me.cn[id]&&me.cn[id].ph;if(cph)ph=cph;const z=sz?`width:${sz}px;height:${sz}px;font-size:${sz*.4}px`:'';const on=(sz===undefined||sz>=34)&&!!users[id]&&isOn(id),h=ph?`<img class="av" src="${ph}" style="${z}">`:`<div class="av" style="background:${col(id)};${z}">${E((n||'?')[0].toUpperCase())}</div>`;return on?`<span class="avo">${h}</span>`:h};
 function pickFile(acc,cb,cap){const i=document.createElement('input');i.type='file';i.accept=acc;if(cap)i.capture=cap;i.style.display='none';document.body.appendChild(i);i.onchange=async()=>{const f=i.files[0];i.remove();if(f)try{await cb(f)}catch(e){toast('Ошибка: '+(e.message||e.code||e))}};i.click()}
 const shrink=(f,m)=>new Promise((res,rej)=>{const im=new Image();im.onload=()=>{const k=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);c.toBlob(b=>{if(!b)return rej(new Error('image'));if(b.size>650000&&m>300)return res(shrink(f,Math.round(m*.7)));res(b)},'image/jpeg',.72)};im.onerror=()=>rej(new Error('Не удалось прочитать фото'));im.src=URL.createObjectURL(f)});
 async function upv(b,onp){
@@ -639,7 +708,7 @@ function start(){
  db.collection('calls').where('from','==',uid).onSnapshot(q=>{c1=q.docs.map(d=>d.data());setCl()},er0);
  db.collection('calls').where('to','==',uid).onSnapshot(q=>{c2=q.docs.map(d=>d.data());setCl()},er0);
  const t=setTimeout(()=>{if(!me)A.innerHTML='<div class="empty">Не удалось загрузить. Обновите страницу.</div>'},10000);
- db.collection('users').onSnapshot(s=>{clearTimeout(t);uLd=true;const nu={};s.docs.forEach(d=>nu[d.id]=d.data());users=nu;me=users[uid]||null;try{botSync()}catch(e){}theme();autoJoin();if(me&&!phL){phL=1;loadPh()}stf();const sg2=JSON.stringify(Object.entries(nu).map(([i,u])=>{const r={...u};delete r.ls;return[i,r]}));if(me&&sg2===usg){upSub();return}usg=sg2;render()},er0);
+ db.collection('users').onSnapshot(s=>{clearTimeout(t);uLd=true;const nu={};s.docs.forEach(d=>nu[d.id]=d.data());users=nu;me=users[uid]||null;try{botSync()}catch(e){}theme();autoJoin();if(me&&!phL){phL=1;loadPh()}stf();const sg2=JSON.stringify(Object.entries(nu).map(([i,u])=>{const r={...u};delete r.ls;return[i,r]}))+onlSig();if(me&&sg2===usg){upSub();return}usg=sg2;render()},er0);
  const setChats=()=>{const m=new Map();[...cm,...cp,...cp2].forEach(c=>m.set(c.id,c));chats=[...m.values()];try{botSync()}catch(e){}autoJoin();chkNotif();stf();fav();hash();ibSync();try{if(cur&&!inf&&!document.hidden)rdU(cur)}catch(e){}render();updBadge();updWatch()};
  db.collection('chats').where('members','array-contains',uid).onSnapshot(s=>{cm=s.docs.map(d=>({id:d.id,...d.data()}));if(!s.metadata.fromCache)cmReady=true;setChats()},er0);
  db.collection('chats').where('pub','==',true).onSnapshot(s=>{cp=s.docs.map(d=>({id:d.id,...d.data()}));setChats()},er0);
@@ -2372,4 +2441,69 @@ html:not([data-theme=light]):not(.lt) #app .msgs .b:not(.me){background:var(--bi
 #app .msgs .b.cv>i{position:absolute!important;float:none!important;right:12px;bottom:14px;margin:0!important;padding:3px 9px!important;background:rgba(0,0,0,.45)!important;color:#fff!important;border-radius:12px;font-size:11.5px!important;line-height:1.2!important;display:block!important;z-index:2}
 #app .msgs .b.cv>i *{color:#fff!important}
 </style>
+
+<style id="dn-v7">
+/* ===== зелёный кружок «в сети» ===== */
+.avo{position:relative;display:inline-flex;flex:none;border-radius:50%;line-height:0;vertical-align:middle}
+.avo::after{content:'';position:absolute;right:0;bottom:0;width:27%;height:27%;min-width:11px;min-height:11px;border-radius:50%;background:#2fd27a;border:2.5px solid var(--sf,#1c1b24);box-sizing:border-box;box-shadow:0 0 8px rgba(47,210,122,.65);animation:onp 2.4s ease-in-out infinite;pointer-events:none;z-index:2}
+@keyframes onp{50%{box-shadow:0 0 0 4px rgba(47,210,122,.18),0 0 10px rgba(47,210,122,.8)}}
+.ring .avo::after,#ha .avo::after,.cmav .avo::after,.cu .avo::after{display:none}
+/* ===== входящий звонок ===== */
+.cu.inc{background:radial-gradient(520px 420px at 50% 30%,rgba(120,90,255,.45),transparent 70%),linear-gradient(180deg,#14112e,#241a5e 60%,#33267c)!important}
+.cu.inc .cur{position:relative;background:#ffffff1f}
+.cu.inc .cur::before,.cu.inc .cur::after{content:'';position:absolute;inset:0;border-radius:50%;border:2px solid rgba(165,145,255,.6);animation:cring 2.4s ease-out infinite;pointer-events:none}
+.cu.inc .cur::after{animation-delay:1.2s}
+@keyframes cring{0%{transform:scale(1);opacity:.9}100%{transform:scale(2.1);opacity:0}}
+.cu.inc .cuc h2{text-shadow:0 2px 14px rgba(0,0,0,.35)}
+.cu.inc #cs{letter-spacing:.3px}
+.cu.inc .cub{gap:70px;margin-bottom:10px}
+.cu.inc .cb{position:relative;overflow:visible}
+.cu.inc .cb::after{position:absolute;top:calc(100% + 10px);left:50%;transform:translateX(-50%);font-size:13px;font-weight:600;white-space:nowrap;opacity:.85;color:#fff}
+.cu.inc #ac::after{content:'Ответить'}.cu.inc #hg::after{content:'Отклонить'}
+.cu.inc #ac{animation:cacc 1.3s ease-in-out infinite;box-shadow:0 0 0 0 rgba(52,199,89,.6)}
+@keyframes cacc{0%{box-shadow:0 0 0 0 rgba(52,199,89,.55);transform:scale(1)}50%{transform:scale(1.07)}100%{box-shadow:0 0 0 22px rgba(52,199,89,0);transform:scale(1)}}
+.cu.inc #ac svg{animation:cshk 1.3s ease-in-out infinite}
+@keyframes cshk{0%,60%,100%{transform:rotate(0)}10%,30%,50%{transform:rotate(-14deg)}20%,40%{transform:rotate(14deg)}}
+</style>
+<script id="dn-v7j">
+(function(){
+/* --- обновление кружков «в сети» без перерисовки по любому поводу --- */
+setInterval(function(){try{var s=onlSig();if(window.__ol===undefined){window.__ol=s;return}
+if(s!==window.__ol){window.__ol=s;if(me&&!document.hidden&&tab==='chats'&&!cur&&!inf&&!document.querySelector('.sheet,.cu'))main()}}catch(e){}},20000);
+
+/* --- рингтон, вибрация, мигающий заголовок --- */
+var RA=null,TB=0,T0t=null;
+function ringStop(){if(RA){clearInterval(RA.iv);clearInterval(RA.vb);try{RA.a.close()}catch(e){}RA=null}try{navigator.vibrate&&navigator.vibrate(0)}catch(e){}
+clearInterval(TB);if(T0t!==null){document.title=T0t;T0t=null}}
+function ringStart(){ringStop();
+try{var AC=window.AudioContext||window.webkitAudioContext,a=new AC();RA={a:a,iv:0,vb:0};if(a.state==='suspended')a.resume().catch(function(){});
+var note=function(f,t,d,v){var o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.value=f;o.connect(g);g.connect(a.destination);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.02);g.gain.exponentialRampToValueAtTime(.0008,t+d);o.start(t);o.stop(t+d+.03)};
+var ph=function(){var t=a.currentTime+.03;[[659,0],[784,.16],[988,.32],[784,.5],[988,.7],[1175,.86]].forEach(function(x){note(x[0],t+x[1],.36,.24)})};ph();RA.iv=setInterval(ph,2600)}catch(e){}
+if(!RA)RA={a:{close:function(){}},iv:0,vb:0};
+var vb=function(){try{navigator.vibrate&&navigator.vibrate([500,250,500,250,500])}catch(e){}};vb();RA.vb=setInterval(vb,2600);
+T0t=document.title;var k=0;TB=setInterval(function(){document.title=(k++%2)?T0t:'📞 Входящий звонок'},900)}
+
+/* --- системное уведомление о звонке (когда приложение свёрнуто) --- */
+function closeCallNotif(){try{navigator.serviceWorker.getRegistration().then(function(r){r&&r.getNotifications({tag:'dn-call'}).then(function(l){l.forEach(function(x){x.close()})})}).catch(function(){})}catch(e){}}
+async function callNotify(){
+if(!document.hidden||!window.Notification||Notification.permission!=='granted'||!call)return;
+var n=uname(call.peer),v=call.kind==='video',o={body:(v?'📹 Входящий видеозвонок':'📞 Входящий аудиозвонок')+'. Откройте Danret, чтобы ответить',tag:'dn-call',renotify:true,requireInteraction:true,vibrate:[500,250,500,250,500,250,500],data:{call:call.id}};
+try{var u=users[call.peer];if(u&&u.ph&&String(u.ph).indexOf('data:')!==0)o.icon=u.ph}catch(e){}
+try{var r=await navigator.serviceWorker.getRegistration();if(r)return await r.showNotification('📞 '+n,o)}catch(e){}
+try{var x=new Notification('📞 '+n,o);x.onclick=function(){try{window.focus()}catch(e){}x.close()}}catch(e){}}
+document.addEventListener('visibilitychange',function(){if(!document.hidden)closeCallNotif()});
+
+/* --- подключаем к существующей логике звонков --- */
+var _sc=showCall;showCall=function(st,inc){_sc.apply(this,arguments);var d=document.getElementById('cu');if(!d)return;
+var i=!!inc&&call&&call.role==='b'&&!call.stream;d.classList.toggle('inc',i);if(i){if(!RA)ringStart()}else ringStop()};
+var _ec=endCall;endCall=function(){ringStop();closeCallNotif();return _ec.apply(this,arguments)};
+var _os=onSig;onSig=async function(d){var r=await _os.apply(this,arguments);
+try{if(d&&d.t==='ring'&&call&&call.id===d.id&&call.role==='b')callNotify()}catch(e){}return r};
+
+/* --- один раз просим разрешение на уведомления (нужен тап) --- */
+function askNotif(){document.removeEventListener('pointerdown',askNotif,true);
+try{if(!window.Notification||Notification.permission!=='default'||localStorage.dnAsk||!me)return;localStorage.dnAsk=1;setTimeout(function(){try{setupPush(true)}catch(e){}},400)}catch(e){}}
+document.addEventListener('pointerdown',askNotif,true);
+})();
+</script>
 </body></html>
