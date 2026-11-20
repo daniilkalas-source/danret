@@ -298,34 +298,34 @@ html.otf[data-theme=dark] .msgs{background-image:url("data:image/svg+xml,%3Csvg 
 .pov{position:absolute;inset:0;z-index:6}.pop{position:absolute;right:12px;top:calc(env(safe-area-inset-top,0px) + 70px);min-width:260px;background:rgba(58,58,60,.7);backdrop-filter:blur(30px) saturate(1.6);-webkit-backdrop-filter:blur(30px) saturate(1.6);border-radius:26px;padding:8px;color:#fff;animation:fi .15s}.pop button{display:flex;gap:14px;align-items:center;width:100%;background:none;border:0;color:#fff;font-size:17px;padding:11px 14px;text-align:left}.pop button svg{width:24px;height:24px;flex:none}.pop small{display:block;color:#fff9;font-size:14px}.pop hr{border:0;border-top:1px solid #fff2;margin:6px 10px}.pop .rd{color:#ff6b61}
 
 /* v5: обои на весь экран, стеклянные шапка и панель ввода (шрифт не трогаем) */
-#app:has(>.top+.msgs){position:relative;overflow:hidden}
-#app:has(>.top+.msgs)>.msgs{position:absolute;inset:0;padding:calc(env(safe-area-inset-top,0px) + 76px) 10px calc(env(safe-area-inset-bottom,0px) + 78px)}
-#app:has(>.top+.msgs)>.top{position:absolute;top:0;left:0;right:0;z-index:3;background:none;margin:0;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 0;align-items:center}
-#app:has(>.top+.msgs)>.send{position:absolute;left:0;right:0;bottom:0;z-index:3;background:none;padding:8px 12px calc(env(safe-area-inset-bottom,0px) + 8px)}
-#app:has(>.top+.msgs)>:not(.top):not(.msgs):not(.send){position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 66px);z-index:3}
-#app:has(>.top+.msgs)>.top>.ib,#app:has(>.top+.msgs)>.top>#hd,#app:has(>.top+.msgs)>.send>.ib,#app:has(>.top+.msgs)>.send textarea{background:var(--sf);background:color-mix(in srgb,var(--sf) 72%,transparent);backdrop-filter:blur(22px) saturate(1.5);-webkit-backdrop-filter:blur(22px) saturate(1.5);border:1px solid rgba(255,255,255,.35);box-shadow:0 2px 10px rgba(0,0,0,.08)}
-#app:has(>.top+.msgs)>.top>#hd{flex:1;min-width:0;display:block;text-align:center;line-height:1.25;padding:6px 14px;border-radius:28px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-#app:has(>.top+.msgs)>.top>#ha{border-radius:50%;box-shadow:0 0 0 2px rgba(255,255,255,.5)}
+#app:has(>.top~.msgs){position:relative;overflow:hidden}
+#app:has(>.top~.msgs)>.msgs{position:absolute;inset:0;padding:calc(env(safe-area-inset-top,0px) + 76px) 10px calc(env(safe-area-inset-bottom,0px) + 78px)}
+#app:has(>.top~.msgs)>.top{position:absolute;top:0;left:0;right:0;z-index:3;background:none;margin:0;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 0;align-items:center}
+#app:has(>.top~.msgs)>.send{position:absolute;left:0;right:0;bottom:0;z-index:3;background:none;padding:8px 12px calc(env(safe-area-inset-bottom,0px) + 8px)}
+#app:has(>.top~.msgs)>:not(.top):not(.msgs):not(.send){position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 66px);z-index:3}
+#app:has(>.top~.msgs)>.top>.ib,#app:has(>.top~.msgs)>.top>#hd,#app:has(>.top~.msgs)>.send>.ib,#app:has(>.top~.msgs)>.send textarea{background:var(--sf);background:color-mix(in srgb,var(--sf) 72%,transparent);backdrop-filter:blur(22px) saturate(1.5);-webkit-backdrop-filter:blur(22px) saturate(1.5);border:1px solid rgba(255,255,255,.35);box-shadow:0 2px 10px rgba(0,0,0,.08)}
+#app:has(>.top~.msgs)>.top>#hd{flex:1;min-width:0;display:block;text-align:center;line-height:1.25;padding:6px 14px;border-radius:28px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+#app:has(>.top~.msgs)>.top>#ha{border-radius:50%;box-shadow:0 0 0 2px rgba(255,255,255,.5)}
 /* v6: обои без белой полосы, шапка как в Telegram */
-#app:has(>.top+.msgs){height:calc(100% + env(safe-area-inset-top,0px) + env(safe-area-inset-bottom,0px));margin-top:calc(-1*env(safe-area-inset-top,0px));margin-bottom:0}
-#app:has(>.top+.msgs)>.top{gap:10px}
-#app:has(>.top+.msgs)>.top>#bk{width:46px;height:46px;border-radius:50%}
-#app:has(>.top+.msgs)>.top>#hd{padding:7px 16px;min-height:50px;display:flex;flex-direction:column;justify-content:center;align-items:center}
-#app:has(>.top+.msgs)>.top>#ha{flex:none;width:50px;height:50px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center}
-#app:has(>.top+.msgs)>.top>#ha>*{width:100%!important;height:100%!important;font-size:20px}
-#app:has(>.top+.msgs)>.top>#ha img{object-fit:cover;border-radius:50%}
+#app:has(>.top~.msgs){height:calc(100% + env(safe-area-inset-top,0px) + env(safe-area-inset-bottom,0px));margin-top:calc(-1*env(safe-area-inset-top,0px));margin-bottom:0}
+#app:has(>.top~.msgs)>.top{gap:10px}
+#app:has(>.top~.msgs)>.top>#bk{width:46px;height:46px;border-radius:50%}
+#app:has(>.top~.msgs)>.top>#hd{padding:7px 16px;min-height:50px;display:flex;flex-direction:column;justify-content:center;align-items:center}
+#app:has(>.top~.msgs)>.top>#ha{flex:none;width:50px;height:50px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center}
+#app:has(>.top~.msgs)>.top>#ha>*{width:100%!important;height:100%!important;font-size:20px}
+#app:has(>.top~.msgs)>.top>#ha img{object-fit:cover;border-radius:50%}
 .acts:has(#a6){gap:6px;padding:14px 10px}.acts:has(#a6) button{font-size:12px;padding:14px 2px;min-width:0}
 
 /* v7: компактная шапка чата как в системе, меню «ещё», запрет копирования */
-#app:has(>.top+.msgs)>.top{gap:8px;padding:calc(env(safe-area-inset-top,0px) + 6px) 10px 0}
-#app:has(>.top+.msgs)>.top>.ib{width:36px;height:36px;font-size:16px}
-#app:has(>.top+.msgs)>.top>#bk{width:36px;height:36px}
-#app:has(>.top+.msgs)>.top>#bk svg,#app:has(>.top+.msgs)>.top>.ib svg{width:18px;height:18px}
-#app:has(>.top+.msgs)>.top>#hd{padding:3px 14px;min-height:38px;font-size:15px;font-weight:600;line-height:1.2}
-#app:has(>.top+.msgs)>.top>#hd svg{width:14px;height:14px}
-#app:has(>.top+.msgs)>.top>#ha{width:38px;height:38px}
-#app:has(>.top+.msgs)>.top>#ha>*{font-size:15px}
-#app:has(>.top+.msgs)>.msgs{padding-top:calc(env(safe-area-inset-top,0px) + 56px)}
+#app:has(>.top~.msgs)>.top{gap:8px;padding:calc(env(safe-area-inset-top,0px) + 6px) 10px 0}
+#app:has(>.top~.msgs)>.top>.ib{width:36px;height:36px;font-size:16px}
+#app:has(>.top~.msgs)>.top>#bk{width:36px;height:36px}
+#app:has(>.top~.msgs)>.top>#bk svg,#app:has(>.top~.msgs)>.top>.ib svg{width:18px;height:18px}
+#app:has(>.top~.msgs)>.top>#hd{padding:3px 14px;min-height:38px;font-size:15px;font-weight:600;line-height:1.2}
+#app:has(>.top~.msgs)>.top>#hd svg{width:14px;height:14px}
+#app:has(>.top~.msgs)>.top>#ha{width:38px;height:38px}
+#app:has(>.top~.msgs)>.top>#ha>*{font-size:15px}
+#app:has(>.top~.msgs)>.msgs{padding-top:calc(env(safe-area-inset-top,0px) + 56px)}
 .mpv{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.08)}
 .mpv .pop{position:fixed;min-width:250px;max-width:calc(100vw - 24px);overflow:auto;background:var(--bg);background:color-mix(in srgb,var(--bg) 84%,transparent);color:var(--tx);backdrop-filter:blur(30px) saturate(1.6);-webkit-backdrop-filter:blur(30px) saturate(1.6);border-radius:22px;padding:6px;box-shadow:0 10px 40px rgba(0,0,0,.25)}
 .mpv .pop{border:.5px solid var(--ln)}.mpv .pop button{color:var(--tx)}.mpv .pop button small{color:var(--mu)}.mpv .pop hr{border-top:1px solid var(--ln)}.mpv .pop button.rd{color:#e5484d}
@@ -2158,13 +2158,13 @@ html[data-theme=light] .dp{background:#f2f2f7;color:#000}
 .dp .grp{margin:0 0 10px;background:var(--sf);border-radius:14px;overflow:hidden}.dp .grp .row{padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.06);min-height:0}.dp .grp .row:last-child{border-bottom:0}.dp .red .nm{color:#ff453a}
 .dp .row .nm{font-size:14px;font-weight:600}.dp .row .sub{font-size:12px}
 /* шапка чата всегда видна и не уезжает */
-#app:has(>.top+.msgs)>.top.chh,
+#app:has(>.top~.msgs)>.top.chh,
 .chh{margin:0!important;padding:calc(env(safe-area-inset-top,0px) + 6px) 10px 8px!important;border-radius:0!important;background:rgba(12,10,28,.72)!important;border:0!important;border-bottom:1px solid rgba(255,255,255,.08)!important;backdrop-filter:blur(24px) saturate(1.6)!important;-webkit-backdrop-filter:blur(24px) saturate(1.6)!important;gap:8px;align-items:center;z-index:5}
 .chh #bk{order:0;background:rgba(255,255,255,.1)!important;border:0;width:36px;height:36px;border-radius:50%;color:var(--tx);flex:none}
 .chh #ha{order:1;flex:none}.chh .t,#hd{order:2;text-align:left;min-width:0;flex:1}.chh .t .tn{justify-content:flex-start}
 .chh #ibx{order:3}.chh #hs{order:4;background:rgba(255,255,255,.1)!important;border:0;width:36px;height:36px;border-radius:50%;color:var(--tx);flex:none}
 .chh #ha .av,.chh #ha>*{width:38px!important;height:38px!important;font-size:15px!important}
-#app:has(>.top+.msgs)>.msgs{padding-top:calc(env(safe-area-inset-top,0px) + 62px)!important}
+#app:has(>.top~.msgs)>.msgs{padding-top:calc(env(safe-area-inset-top,0px) + 62px)!important}
 .msgs .em2{margin:auto!important;width:min(78%,360px);padding:26px 20px;border-radius:30px;background:var(--sf);border:1px solid var(--ln);text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center;color:var(--tx)}
 .em2 b{font-size:20px}.em2 span{color:var(--mu);font-size:18px}.em2 button{background:none;border:0;font-size:84px;margin-top:14px;line-height:1}
 .s2{padding:8px 12px 10px;align-items:center}
@@ -2339,7 +2339,7 @@ html.lt .bna{background:#f4f1ff}
 html,body{height:100%!important;margin:0;overscroll-behavior:none}
 body{position:fixed;left:0;right:0;top:0;bottom:0;width:100%;height:auto!important;overflow:hidden;-webkit-text-size-adjust:100%}
 #app{height:100%;padding-top:env(safe-area-inset-top,0px);padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px);box-sizing:border-box;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-#app:has(>.top+.msgs){height:100%!important;margin:0!important;padding:0!important}
+#app:has(>.top~.msgs){height:100%!important;margin:0!important;padding:0!important}
 #spl{position:fixed;inset:0}
 body::before{content:"";position:fixed;top:0;left:0;right:0;height:calc(env(safe-area-inset-top,0px) + 2px);z-index:2;pointer-events:none;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);-webkit-mask-image:linear-gradient(#000 55%,transparent);mask-image:linear-gradient(#000 55%,transparent)}
 /* сообщения: анимируются только НОВЫЕ, а не все при каждом обновлении */
@@ -2434,24 +2434,24 @@ html[data-theme=dark]{--v3p:rgba(17,15,32,.88);--v3b:rgba(255,255,255,.11);--v3t
 
 /* фон чата без узора, мягкое фиолетовое свечение; панель непрозрачная (нужно для свайпа) */
 html.otf .msgs,html.otf[data-theme=dark] .msgs,html.otf:not([data-theme=dark]) .msgs,html.otf[data-theme=light] .msgs{background-image:var(--wp,none)!important}
-html:not([data-theme=light]) #app:has(>.top+.msgs){background:radial-gradient(520px 430px at 28% 24%,rgba(98,74,222,.36),transparent 64%),#0e0b1f}
-@media(prefers-color-scheme:light){html:not([data-theme=dark]) #app:has(>.top+.msgs){background:radial-gradient(520px 430px at 28% 24%,rgba(140,110,255,.28),transparent 64%),#f4f1ff}}
-html[data-theme=light] #app:has(>.top+.msgs),html.lt #app:has(>.top+.msgs){background:radial-gradient(520px 430px at 28% 24%,rgba(140,110,255,.28),transparent 64%),#f4f1ff}
+html:not([data-theme=light]) #app:has(>.top~.msgs){background:radial-gradient(520px 430px at 28% 24%,rgba(98,74,222,.36),transparent 64%),#0e0b1f}
+@media(prefers-color-scheme:light){html:not([data-theme=dark]) #app:has(>.top~.msgs){background:radial-gradient(520px 430px at 28% 24%,rgba(140,110,255,.28),transparent 64%),#f4f1ff}}
+html[data-theme=light] #app:has(>.top~.msgs),html.lt #app:has(>.top~.msgs){background:radial-gradient(520px 430px at 28% 24%,rgba(140,110,255,.28),transparent 64%),#f4f1ff}
 
 /* шапка: одна плавающая пилюля */
-#app:has(>.top+.msgs)>.top.chh{top:calc(env(safe-area-inset-top,0px) + 8px)!important;left:12px!important;right:12px!important;padding:8px 10px 8px 6px!important;border-radius:34px!important;background:var(--v3p)!important;border:1px solid var(--v3b)!important;gap:6px!important;-webkit-backdrop-filter:blur(22px) saturate(1.5)!important;backdrop-filter:blur(22px) saturate(1.5)!important;box-shadow:none!important;align-items:center}
-#app:has(>.top+.msgs)>.top.chh>.ib{background:none!important;border:0!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;color:var(--v3t)!important;width:38px!important;height:44px!important;border-radius:12px!important;padding:0}
-#app:has(>.top+.msgs)>.top.chh>.ib svg{width:23px!important;height:23px!important;stroke-width:2}
-#app:has(>.top+.msgs)>.top.chh>#bk svg{width:24px!important;height:24px!important;stroke-width:2.4}
-#app:has(>.top+.msgs)>.top.chh>#bk{width:30px!important;margin-right:-4px}
-#app:has(>.top+.msgs)>.top.chh>#ha{order:1;width:46px!important;height:46px!important;box-shadow:none!important;margin-left:2px}
-#app:has(>.top+.msgs)>.top.chh>#ha>*{font-size:18px!important}
-#app:has(>.top+.msgs)>.top.chh>#hd{order:2;flex:1;min-width:0;background:none!important;border:0!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;padding:0 6px!important;min-height:0!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:center;text-align:left!important;font-size:17px!important;font-weight:500!important;line-height:1.2!important;color:var(--v3t)}
-#app:has(>.top+.msgs)>.top.chh>#hd .tn{justify-content:flex-start!important;font-weight:500}
-#app:has(>.top+.msgs)>.top.chh>#hd #sbt{font-size:13.5px!important;font-weight:400!important;color:var(--v3m);margin-top:2px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#app:has(>.top+.msgs)>.top.chh>#hd #sbt.on{color:var(--ac,#7c5cff)!important}
+#app:has(>.top~.msgs)>.top.chh{top:calc(env(safe-area-inset-top,0px) + 8px)!important;left:12px!important;right:12px!important;padding:8px 10px 8px 6px!important;border-radius:34px!important;background:var(--v3p)!important;border:1px solid var(--v3b)!important;gap:6px!important;-webkit-backdrop-filter:blur(22px) saturate(1.5)!important;backdrop-filter:blur(22px) saturate(1.5)!important;box-shadow:none!important;align-items:center}
+#app:has(>.top~.msgs)>.top.chh>.ib{background:none!important;border:0!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;color:var(--v3t)!important;width:38px!important;height:44px!important;border-radius:12px!important;padding:0}
+#app:has(>.top~.msgs)>.top.chh>.ib svg{width:23px!important;height:23px!important;stroke-width:2}
+#app:has(>.top~.msgs)>.top.chh>#bk svg{width:24px!important;height:24px!important;stroke-width:2.4}
+#app:has(>.top~.msgs)>.top.chh>#bk{width:30px!important;margin-right:-4px}
+#app:has(>.top~.msgs)>.top.chh>#ha{order:1;width:46px!important;height:46px!important;box-shadow:none!important;margin-left:2px}
+#app:has(>.top~.msgs)>.top.chh>#ha>*{font-size:18px!important}
+#app:has(>.top~.msgs)>.top.chh>#hd{order:2;flex:1;min-width:0;background:none!important;border:0!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;padding:0 6px!important;min-height:0!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:center;text-align:left!important;font-size:17px!important;font-weight:500!important;line-height:1.2!important;color:var(--v3t)}
+#app:has(>.top~.msgs)>.top.chh>#hd .tn{justify-content:flex-start!important;font-weight:500}
+#app:has(>.top~.msgs)>.top.chh>#hd #sbt{font-size:13.5px!important;font-weight:400!important;color:var(--v3m);margin-top:2px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#app:has(>.top~.msgs)>.top.chh>#hd #sbt.on{color:var(--ac,#7c5cff)!important}
 .chh #ibx{order:3}.chh #hs{order:4}.chh #hc{order:5}
-#app:has(>.top+.msgs)>.msgs{padding:calc(env(safe-area-inset-top,0px) + 84px) 12px calc(env(safe-area-inset-bottom,0px) + 86px)!important}
+#app:has(>.top~.msgs)>.msgs{padding:calc(env(safe-area-inset-top,0px) + 84px) 12px calc(env(safe-area-inset-bottom,0px) + 86px)!important}
 
 /* пузыри: плоские, шрифт поменьше, время в одной строке с текстом */
 #app .msgs .b{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;box-shadow:none!important;border:0!important;border-radius:20px!important;padding:7px 12px 6px!important;font-size:calc(16px*min(var(--tz,1),1.06))!important;font-weight:400!important;line-height:1.3!important;max-width:80%!important}
@@ -2488,15 +2488,15 @@ html[data-theme=light] #app:has(>.top+.msgs),html.lt #app:has(>.top+.msgs){backg
 #app .msgs .post{font-size:calc(16px*min(var(--tz,1),1.06))}
 
 /* поле ввода: пилюля + отдельная круглая кнопка */
-#app:has(>.top+.msgs)>.send.s2{padding:8px 12px calc(env(safe-area-inset-bottom,0px) + 8px)!important;gap:8px!important;align-items:center!important}
+#app:has(>.top~.msgs)>.send.s2{padding:8px 12px calc(env(safe-area-inset-bottom,0px) + 8px)!important;gap:8px!important;align-items:center!important}
 #app .s2 .pl2{min-height:58px!important;border-radius:32px!important;background:var(--v3p)!important;border:1px solid var(--v3b)!important;padding:0 8px 0 8px!important;gap:0!important;-webkit-backdrop-filter:blur(22px) saturate(1.5);backdrop-filter:blur(22px) saturate(1.5)}
-#app:has(>.top+.msgs)>.send.s2 .pl2 textarea{background:none!important;border:0!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border-radius:0!important;font-size:17px!important;font-weight:400!important;padding:15px 6px!important;min-height:0!important;color:var(--v3t)}
+#app:has(>.top~.msgs)>.send.s2 .pl2 textarea{background:none!important;border:0!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border-radius:0!important;font-size:17px!important;font-weight:400!important;padding:15px 6px!important;min-height:0!important;color:var(--v3t)}
 #app .s2 .pl2 textarea::placeholder{color:var(--v3m);opacity:1}
-#app:has(>.top+.msgs)>.send.s2 .pl2 .ib{background:none!important;border:0!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;color:var(--v3m)!important;width:38px!important;height:38px!important;margin:0!important}
+#app:has(>.top~.msgs)>.send.s2 .pl2 .ib{background:none!important;border:0!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;color:var(--v3m)!important;width:38px!important;height:38px!important;margin:0!important}
 #app .s2 .pl2 .ib svg{width:23px;height:23px}
 #app .s2 .pl2 .aa{color:var(--v3m)!important;font-size:17px!important;font-weight:700!important;width:32px!important}
-#app:has(>.top+.msgs)>.send.s2>#mic{width:58px!important;height:58px!important;border-radius:50%!important;background:var(--v3p)!important;border:1px solid var(--v3b)!important;color:var(--v3t)!important;box-shadow:none!important;-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);margin:0!important}
-#app:has(>.top+.msgs)>.send.s2>#sd{width:58px!important;height:58px!important;border-radius:50%!important;margin:0!important}
+#app:has(>.top~.msgs)>.send.s2>#mic{width:58px!important;height:58px!important;border-radius:50%!important;background:var(--v3p)!important;border:1px solid var(--v3b)!important;color:var(--v3t)!important;box-shadow:none!important;-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);margin:0!important}
+#app:has(>.top~.msgs)>.send.s2>#sd{width:58px!important;height:58px!important;border-radius:50%!important;margin:0!important}
 #app .s2>#mic svg{width:24px;height:24px}
 
 /* шрифты в списках — легче и мельче */
@@ -2529,7 +2529,7 @@ html.dnswp #app>*{animation:none!important}
  try{A._sw=1;
   let sx=0,sy=0,t0=0,st=0,dx=0,W=0,under=null,dim=null;
   const blocked=()=>document.querySelector('.sheet,.srv,.sed,.scam,.cmv,.pkv,.lpm,.pcm,.stv,.dr.on,.emp');
-  const inChat=()=>cur&&!inf&&A.querySelector(':scope>.top+.msgs');
+  const inChat=()=>cur&&!inf&&A.querySelector(':scope>.top~.msgs');
   const clean=()=>{A.classList.remove('dnPanel');A.style.transform='';A.style.transition='';if(under){under.remove();under=null}if(dim){dim.remove();dim=null}};
   const begin=()=>{W=A.getBoundingClientRect().width||innerWidth;
    dim=document.createElement('div');dim.className='dnDim';dim.style.opacity='.45';
@@ -2554,17 +2554,17 @@ html.dnswp #app>*{animation:none!important}
 </script>
 <style id="dn-v3b">
 /* ===== размеры как в эталоне (фото 2) ===== */
-#app:has(>.top+.msgs)>.top.chh{left:10px!important;right:10px!important;padding:5px 8px 5px 4px!important;border-radius:30px!important;gap:4px!important}
-#app:has(>.top+.msgs)>.top.chh>#bk{width:26px!important;height:38px!important;margin-right:0!important}
-#app:has(>.top+.msgs)>.top.chh>#bk svg{width:21px!important;height:21px!important}
-#app:has(>.top+.msgs)>.top.chh>#ha{width:38px!important;height:38px!important;margin-left:2px!important}
-#app:has(>.top+.msgs)>.top.chh>#ha>*,#app:has(>.top+.msgs)>.top.chh>#ha .av{width:38px!important;height:38px!important;font-size:15px!important}
-#app:has(>.top+.msgs)>.top.chh>#hd{font-size:15px!important;padding:0 4px!important}
-#app:has(>.top+.msgs)>.top.chh>#hd .tn{font-size:15px!important}
-#app:has(>.top+.msgs)>.top.chh>#hd #sbt{font-size:12px!important;margin-top:1px!important}
-#app:has(>.top+.msgs)>.top.chh>.ib{width:34px!important;height:38px!important}
-#app:has(>.top+.msgs)>.top.chh>.ib svg{width:20px!important;height:20px!important}
-#app:has(>.top+.msgs)>.msgs{padding:calc(env(safe-area-inset-top,0px) + 70px) 10px calc(env(safe-area-inset-bottom,0px) + 70px)!important}
+#app:has(>.top~.msgs)>.top.chh{left:10px!important;right:10px!important;padding:5px 8px 5px 4px!important;border-radius:30px!important;gap:4px!important}
+#app:has(>.top~.msgs)>.top.chh>#bk{width:26px!important;height:38px!important;margin-right:0!important}
+#app:has(>.top~.msgs)>.top.chh>#bk svg{width:21px!important;height:21px!important}
+#app:has(>.top~.msgs)>.top.chh>#ha{width:38px!important;height:38px!important;margin-left:2px!important}
+#app:has(>.top~.msgs)>.top.chh>#ha>*,#app:has(>.top~.msgs)>.top.chh>#ha .av{width:38px!important;height:38px!important;font-size:15px!important}
+#app:has(>.top~.msgs)>.top.chh>#hd{font-size:15px!important;padding:0 4px!important}
+#app:has(>.top~.msgs)>.top.chh>#hd .tn{font-size:15px!important}
+#app:has(>.top~.msgs)>.top.chh>#hd #sbt{font-size:12px!important;margin-top:1px!important}
+#app:has(>.top~.msgs)>.top.chh>.ib{width:34px!important;height:38px!important}
+#app:has(>.top~.msgs)>.top.chh>.ib svg{width:20px!important;height:20px!important}
+#app:has(>.top~.msgs)>.msgs{padding:calc(env(safe-area-inset-top,0px) + 70px) 10px calc(env(safe-area-inset-bottom,0px) + 70px)!important}
 
 #app .msgs .b,#app .msgs .post{font-size:calc(14.5px*min(var(--tz,1),1.06))!important}
 #app .msgs .b{padding:6px 11px 5px!important;border-radius:18px!important}
@@ -2573,13 +2573,13 @@ html.dnswp #app>*{animation:none!important}
 #app .msgs .b.me{background:var(--mb,#7a5cf5)!important}
 html:not([data-theme=light]):not(.lt) #app .msgs .b:not(.me){background:var(--bi,#2a2a35)!important}
 
-#app:has(>.top+.msgs)>.send.s2{padding:6px 10px calc(env(safe-area-inset-bottom,0px) + 6px)!important;gap:8px!important}
+#app:has(>.top~.msgs)>.send.s2{padding:6px 10px calc(env(safe-area-inset-bottom,0px) + 6px)!important;gap:8px!important}
 #app .s2 .pl2{min-height:50px!important;padding:0 6px!important}
-#app:has(>.top+.msgs)>.send.s2 .pl2 textarea{font-size:16px!important;padding:12px 6px!important}
-#app:has(>.top+.msgs)>.send.s2 .pl2 .ib{width:34px!important;height:34px!important}
+#app:has(>.top~.msgs)>.send.s2 .pl2 textarea{font-size:16px!important;padding:12px 6px!important}
+#app:has(>.top~.msgs)>.send.s2 .pl2 .ib{width:34px!important;height:34px!important}
 #app .s2 .pl2 .ib svg{width:21px!important;height:21px!important}
 #app .s2 .pl2 .aa{font-size:15px!important;width:28px!important}
-#app:has(>.top+.msgs)>.send.s2>#mic,#app:has(>.top+.msgs)>.send.s2>#sd{width:50px!important;height:50px!important}
+#app:has(>.top~.msgs)>.send.s2>#mic,#app:has(>.top~.msgs)>.send.s2>#sd{width:50px!important;height:50px!important}
 #app .s2>#mic svg{width:22px!important;height:22px!important}
 </style>
 <style id="dn-v3c">
