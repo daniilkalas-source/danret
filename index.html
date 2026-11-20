@@ -1500,7 +1500,7 @@ function chatView(){
  chatX(c);if(cmDraw)cmDraw();
 }
 let stPin=[],mpD=null,stRaw=[],usg='',T0=0,cmDraw=null;const NT={},NTm={};
-const APP_VER='202611201410',OFFC=['danretofficial','danretconru'];
+const APP_VER='202611201425',OFFC=['danretofficial','danretconru'];
 const PRD={msg:1,media:1,add:1,pin:0,prof:0},PRM=[['msg','Отправка сообщений'],['media','Отправка фото и видео'],['add','Добавление участников'],['pin','Закрепление сообщений'],['prof','Изменение профиля группы']],ADR=[['del','Удаление сообщений'],['pin','Закрепление сообщений'],['add','Добавление участников'],['prof','Изменение профиля']];
 const isAd=(c,u,r)=>{if(!c||!u)return false;if(c.owner===u)return true;const a=c.am&&c.am[u];return !!a&&(!r||!a.r||a.r[r]!==0)};
 const pm=(c,k)=>(c.perm&&c.perm[k]!==undefined)?c.perm[k]:PRD[k];
@@ -2511,7 +2511,7 @@ document.addEventListener('pointerdown',askNotif,true);
 </script>
 <script id="dn-v8">
 function dnTick(c){try{if(c.type!=='dm'||!c.last||!c.members||c.members.length!==2)return '';var ch=c.last.slice(-1);if(ch!=='\u200B'&&ch!=='\u200C')return '';var sm=c.members.slice().sort();if((sm[0]===uid)!==(ch==='\u200B'))return '';var p=c.members.find(function(x){return x!==uid});if(!p)return '';
-var rd=!(c['u_'+p]>0),P=rd?'<path d="M1.5 12.5l4.5 4.5L15 7M9.5 15.5l1.5 1.5L21 7"/>':'<path d="M5 12.5l4.5 4.5L19 7"/>';
+var pu=(typeof users!=='undefined'&&users&&users[p])||{},rd=!(c['u_'+p]>0)&&!!pu.ls&&pu.ls>=(c.lastTs||0)-120000,P=rd?'<path d="M1.5 12.5l4.5 4.5L15 7M9.5 15.5l1.5 1.5L21 7"/>':'<path d="M5 12.5l4.5 4.5L19 7"/>';
 return '<svg class="i" viewBox="0 0 24 24" style="width:19px;height:19px;flex:none;color:'+(rd?'var(--ac)':'inherit')+'">'+P+'</svg>'}catch(e){return ''}}
 </script>
 <style id="dn-v9">
