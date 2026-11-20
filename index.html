@@ -525,6 +525,9 @@ html.glass body{background:none}
 /* circles: autoplay muted in background, tap = sound */
 .cpl{display:none!important}
 .cvw .vc{cursor:pointer;-webkit-tap-highlight-color:transparent}
+
+.botc .b{white-space:pre-wrap}
+.botft{padding:10px 14px calc(12px + env(safe-area-inset-bottom,0px));text-align:center;color:var(--mu);font-size:13px;flex:none}
 </style></head><body><div id="spl"><svg viewBox="0 0 120 120" width="108" height="108"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#bfeaff"/><stop offset="1" stop-color="#4f8bff"/></linearGradient></defs><path fill="url(#g1)" fill-rule="evenodd" d="M30 16h30c27 0 46 19 46 44S87 104 60 104H30c-8 0-14-6-14-14V30c0-8 6-14 14-14zM41 38v44h19c15 0 25-9 25-22S75 38 60 38z"/><path fill="url(#g1)" d="M30 104l-14 12v-26z" opacity=".9"/></svg><b>DANRET</b><div class="spb"><i></i></div></div><script>(function(){var t0=Date.now(),d=false;function hide(){if(d)return;d=true;var e=document.getElementById('spl');if(!e)return;var w=Math.max(0,1300-(Date.now()-t0));setTimeout(function(){e.classList.add('off');setTimeout(function(){e.remove()},400)},w)}addEventListener('load',function(){setTimeout(hide,200)});setTimeout(hide,4000)})()</script><div id="app"></div>
 <script>if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("firebase-messaging-sw.js").catch(()=>{}))</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -625,8 +628,8 @@ function start(){
  db.collection('calls').where('from','==',uid).onSnapshot(q=>{c1=q.docs.map(d=>d.data());setCl()},er0);
  db.collection('calls').where('to','==',uid).onSnapshot(q=>{c2=q.docs.map(d=>d.data());setCl()},er0);
  const t=setTimeout(()=>{if(!me)A.innerHTML='<div class="empty">Не удалось загрузить. Обновите страницу.</div>'},10000);
- db.collection('users').onSnapshot(s=>{clearTimeout(t);uLd=true;const nu={};s.docs.forEach(d=>nu[d.id]=d.data());users=nu;me=users[uid]||null;theme();autoJoin();if(me&&!phL){phL=1;loadPh()}stf();const sg2=JSON.stringify(Object.entries(nu).map(([i,u])=>{const r={...u};delete r.ls;return[i,r]}));if(me&&sg2===usg){upSub();return}usg=sg2;render()},er0);
- const setChats=()=>{const m=new Map();[...cm,...cp,...cp2].forEach(c=>m.set(c.id,c));chats=[...m.values()];autoJoin();chkNotif();stf();fav();hash();ibSync();try{if(cur&&!inf&&!document.hidden)rdU(cur)}catch(e){}render();updBadge();updWatch()};
+ db.collection('users').onSnapshot(s=>{clearTimeout(t);uLd=true;const nu={};s.docs.forEach(d=>nu[d.id]=d.data());users=nu;me=users[uid]||null;try{botSync()}catch(e){}theme();autoJoin();if(me&&!phL){phL=1;loadPh()}stf();const sg2=JSON.stringify(Object.entries(nu).map(([i,u])=>{const r={...u};delete r.ls;return[i,r]}));if(me&&sg2===usg){upSub();return}usg=sg2;render()},er0);
+ const setChats=()=>{const m=new Map();[...cm,...cp,...cp2].forEach(c=>m.set(c.id,c));chats=[...m.values()];try{botSync()}catch(e){}autoJoin();chkNotif();stf();fav();hash();ibSync();try{if(cur&&!inf&&!document.hidden)rdU(cur)}catch(e){}render();updBadge();updWatch()};
  db.collection('chats').where('members','array-contains',uid).onSnapshot(s=>{cm=s.docs.map(d=>({id:d.id,...d.data()}));if(!s.metadata.fromCache)cmReady=true;setChats()},er0);
  db.collection('chats').where('pub','==',true).onSnapshot(s=>{cp=s.docs.map(d=>({id:d.id,...d.data()}));setChats()},er0);
  db.collection('chats').where('link','==',DEFCH).onSnapshot(s=>{cp2=s.docs.map(d=>({id:d.id,...d.data()}));setChats()},er0);
@@ -1813,6 +1816,89 @@ function packCreator(done){
  ov.onclick=e=>{if(e.target===ov)close()};
  paint();document.body.appendChild(ov);
 }
+
+/* ===== бот Danret: уведомления о входах в аккаунт (виртуальный чат у всех пользователей) ===== */
+const BOT_SVG="<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#8b5cf6'/><stop offset='1' stop-color='#3b82f6'/></linearGradient></defs><rect width='100' height='100' fill='url(#g)'/><circle cx='50' cy='20' r='5' fill='#fff'/><rect x='48' y='22' width='4' height='10' fill='#fff'/><rect x='22' y='32' width='56' height='44' rx='16' fill='#fff'/><circle cx='38' cy='52' r='6' fill='#6d4aff'/><circle cx='62' cy='52' r='6' fill='#6d4aff'/><rect x='40' y='64' width='20' height='4' rx='2' fill='#6d4aff'/></svg>";
+const BOT_AV='data:image/svg+xml;utf8,'+encodeURIComponent(BOT_SVG);
+let botLogged=0,botPrevN=-1;
+const botDid=()=>{try{let d=localStorage.dvid;if(!d){d='d'+Date.now().toString(36)+rid(4);localStorage.dvid=d}return d}catch(e){return 'dx'}};
+function botDev(){
+ const u=navigator.userAgent||'',p=navigator.platform||'';let d='Устройство',o='';
+ if(/iPhone/.test(u)){d='iPhone';const m=u.match(/OS (\d+)[_.](\d+)/);o='iOS'+(m?' '+m[1]+'.'+m[2]:'')}
+ else if(/iPad/.test(u)||(p==='MacIntel'&&navigator.maxTouchPoints>1)){d='iPad';o='iPadOS'}
+ else if(/Android/.test(u)){const m=u.match(/Android ([\d.]+)/),mo=u.match(/;\s*([^;)]+?)\s+Build/);d=(mo&&mo[1])||'Android';o='Android'+(m?' '+m[1]:'')}
+ else if(/Windows/.test(u)){d='Компьютер';o='Windows'}
+ else if(/Macintosh/.test(u)){d='Mac';o='macOS'}
+ else if(/Linux/.test(u)){d='Компьютер';o='Linux'}
+ let b='Браузер';
+ if(/EdgA|EdgiOS|Edg\//.test(u))b='Edge';else if(/OPR\/|OPT\//.test(u))b='Opera';else if(/SamsungBrowser/.test(u))b='Samsung Internet';else if(/YaBrowser/.test(u))b='Яндекс Браузер';else if(/CriOS|Chrome\//.test(u))b='Chrome';else if(/FxiOS|Firefox\//.test(u))b='Firefox';else if(/Safari\//.test(u))b='Safari';
+ let app=0;try{app=(navigator.standalone||matchMedia('(display-mode:standalone)').matches)?1:0}catch(e){}
+ return {d,o,b,m:app}
+}
+function botEvs(){
+ let L=(me&&me.logins)||[],loc=[];try{loc=JSON.parse(localStorage.bevs||'[]')}catch(e){}
+ const k=new Set(),out=[];[...L,...loc].forEach(e=>{if(!e||!e.ts)return;const key=e.ts+'_'+e.id;if(k.has(key))return;k.add(key);out.push(e)});
+ return out.sort((a,b)=>a.ts-b.ts)
+}
+function botMsgs(){
+ const L=botEvs(),seen=new Set(),vk='v_'+uid,out=[];
+ out.push({id:'bw',from:'danretbot',ts:L.length?L[0].ts-1000:Date.now(),kind:'text',[vk]:1,text:'Привет! Я Danret 👋\nЯ сообщаю о каждом входе в ваш аккаунт: с какого устройства, из какого браузера и когда.\nЕсли вход был не ваш — сразу смените пароль.'});
+ L.forEach((e,i)=>{
+  const nw=i>0&&!seen.has(e.id);seen.add(e.id);
+  const dt=new Date(e.ts).toLocaleString('ru',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  out.push({id:'b'+e.ts+'_'+String(e.id).slice(-4),from:'danretbot',ts:e.ts,kind:'text',[vk]:1,
+   text:'🔐 Вход в аккаунт\n📱 '+(e.d||'Устройство')+(e.o?' · '+e.o:'')+'\n🌐 '+(e.b||'Браузер')+(e.m?' (приложение с экрана «Домой»)':'')+'\n🕒 '+dt+(e.id===botDid()?'\n✅ Это устройство':'')+(nw?'\n⚠️ Новое устройство. Если это не вы — смените пароль.':'')});
+ });
+ return out
+}
+function botChat(){
+ const L=botEvs(),last=L[L.length-1],bs=+localStorage.botSeen||0;
+ const un=(bs?0:1)+L.filter(e=>e.ts>bs&&e.id!==botDid()).length;
+ return {id:'bot_'+uid,type:'bot',bot:1,ver:1,title:'Danret',members:[uid],owner:'danretbot',created:0,
+  lastTs:last?last.ts:Date.now(),last:last?'🔐 Вход: '+(last.d||'устройство')+' · '+(last.b||''):'Привет! Я Danret 👋',['u_'+uid]:un,ph:BOT_AV}
+}
+function botSeenSet(){try{localStorage.botSeen=Date.now()}catch(e){}const c=chats.find(x=>x.bot);if(c)c['u_'+uid]=0;try{updBadge()}catch(e){}}
+async function botLog(){
+ try{
+  const lt=+localStorage.blgT||0;if(Date.now()-lt<600000)return;
+  localStorage.blgT=Date.now();
+  const e={ts:Date.now(),id:botDid(),...botDev()};
+  let loc=[];try{loc=JSON.parse(localStorage.bevs||'[]')}catch(x){}
+  loc.push(e);try{localStorage.bevs=JSON.stringify(loc.slice(-30))}catch(x){}
+  botSync();
+  await setU({logins:((me&&me.logins)||[]).concat([e]).slice(-30)})
+ }catch(x){}
+}
+function botBanner(e){
+ try{const d=document.createElement('div');d.className='nb';d.innerHTML='<b>Danret · новый вход</b><div>'+E((e.d||'Устройство')+' · '+(e.b||'')+' · '+tm(e.ts))+'</div>';
+  d.onclick=()=>{d.remove();openChat('bot_'+uid)};document.body.appendChild(d);setTimeout(()=>d.remove(),7000);try{navigator.vibrate&&navigator.vibrate(30)}catch(x){}}catch(x){}
+}
+function botSync(){
+ if(!me||!uid)return;
+ const c=botChat();chats=chats.filter(x=>!x.bot);chats.push(c);
+ const L=botEvs();
+ if(botPrevN>=0&&L.length>botPrevN){const e=L[L.length-1];if(e&&e.id!==botDid())botBanner(e)}
+ const chg=L.length!==botPrevN;botPrevN=L.length;
+ if(cur==='bot_'+uid&&chg){msgs=botMsgs();botSeenSet();if($('.msgs'))chatView()}
+ if(!botLogged){botLogged=1;setTimeout(botLog,800)}
+}
+const _oc0=openChat;openChat=function(id,fc){
+ if(String(id).slice(0,4)!=='bot_')return _oc0(id,fc);
+ dmCh=null;cur=id;pk=null;if(unM){try{unM()}catch(e){}}unM=null;msgs=botMsgs();botSeenSet();chatView()};
+const _rd0=rdU;rdU=function(id){if(String(id).slice(0,4)==='bot_'){botSeenSet();return}return _rd0(id)};
+const _cx0=chatX;chatX=function(c){
+ const bt=c&&c.bot;
+ if(bt)A.querySelectorAll('.b[data-id]').forEach(b=>b.removeAttribute('data-id'));
+ _cx0(c);
+ if(bt){
+  const mm=A.querySelector('.msgs');if(mm)mm.classList.add('botc');
+  const sn=A.querySelector('.send');if(sn)sn.remove();
+  const sb=A.querySelector('#sbt');if(sb)sb.textContent='бот · уведомления о входах';
+  const hd=A.querySelector('#hd'),ha=A.querySelector('#ha');if(hd)hd.onclick=null;if(ha)ha.onclick=null;
+  if(!A.querySelector('.botft')){const f=document.createElement('div');f.className='botft';f.textContent='Служебный бот Danret · отвечать ему нельзя';A.appendChild(f)}
+  if(mm)mm.scrollTop=mm.scrollHeight
+ }
+};
 const ACC=['#7b5cff','#5b8cff','#3b82f6','#00b8c4','#1f9d78','#30c85a','#ffc83d','#ff9f3d','#ff6b4a','#d6527f','#e5527a','#a855f7'];
 const _th=theme;theme=function(){_th();if(!me)return;const r=document.documentElement,s=r.style;
  if(me.acc){s.setProperty('--ac',me.acc);s.setProperty('--me',me.acc)}
