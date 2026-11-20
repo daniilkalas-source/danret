@@ -678,7 +678,7 @@ async function upMedia(f,kind,cap,gid){cap=cap||'';const G=gid?{gid}:{};toast('�
 let db,uid,me=null,users={},chats=[],cur=null,tab='chats',unM=null,msgs=[],pk=null,mk=false,inf=null,sub=null,t2='p',au=null,auId=null,VW=new Set(),stl=[],ar=false,lp=0,myPh='',phL=0;
 const tm=t=>t?new Date(t).toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'}):'';
 const rid=(n=5)=>Array.from({length:n},()=>'abcdefghjkmnpqrstuvwxyz23456789'[Math.random()*31|0]).join('');
-const uname=u=>{const k=me&&me.cn&&me.cn[u];if(k&&(k.f||k.l))return((k.f||'')+' '+(k.l||'')).trim();return users[u]?.name||virtName(u)||'Пользователь'},cs=id=>{const r=db.collection('chats').doc(id),u0=r.update.bind(r);r.update=(o,...a)=>{try{if(o&&typeof o==='object'&&typeof o.lastTs==='number'&&o.last!==undefined&&Math.abs(Date.now()-o.lastTs)<5000&&!Object.keys(o).some(k=>k.startsWith('u_'))){const c=chats.find(x=>x.id===id);o.lf=uid;if(c&&c.members)c.members.forEach(m=>{if(m!==uid)o['u_'+m]=firebase.firestore.FieldValue.increment(1)})}}catch(e){}return u0(o,...a)};return r},mc=id=>db.collection('chats/'+id+'/messages');
+const uname=u=>{const k=me&&me.cn&&me.cn[u];if(k&&(k.f||k.l))return((k.f||'')+' '+(k.l||'')).trim();return users[u]?.name||virtName(u)||'Пользователь'},cs=id=>{const r=db.collection('chats').doc(id),u0=r.update.bind(r);r.update=(o,...a)=>{try{if(o&&typeof o==='object'&&typeof o.lastTs==='number'&&o.last!==undefined&&Math.abs(Date.now()-o.lastTs)<5000&&!Object.keys(o).some(k=>k.startsWith('u_'))){const c=chats.find(x=>x.id===id);if(c&&c.type==='dm'&&c.members&&c.members.length===2&&typeof o.last==='string'&&o.last){const sm=[...c.members].sort();o.last=o.last.replace(/[\u200B\u200C]+$/,'')+(sm[0]===uid?'\u200B':'\u200C')}if(c&&c.members)c.members.forEach(m=>{if(m!==uid)o['u_'+m]=firebase.firestore.FieldValue.increment(1)})}}catch(e){}return u0(o,...a)};return r},mc=id=>db.collection('chats/'+id+'/messages');
 const setU=p=>db.collection('users').doc(uid).update(p);
 const ctitle=c=>c.type==='dm'?uname(c.members.find(x=>x!==uid)):c.title;
 const icon=c=>({channel:'<svg class="i" viewBox="0 0 24 24"><path d="M3 11v2a1 1 0 001 1h2l5 4V6L6 10H4a1 1 0 00-1 1zM15 9a4 4 0 010 6M18 6.5a8 8 0 010 11"/></svg> ',group:'<svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M16 5a3 3 0 010 6M18 14c2 .6 3.5 2.2 3.5 5"/></svg> ',saved:'<svg class="i" viewBox="0 0 24 24"><path d="M6 4h12v16l-6-4-6 4z"/></svg> '}[c.type]||(c.secret?'<svg class="i" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg> ':''));
@@ -2507,7 +2507,7 @@ document.addEventListener('pointerdown',askNotif,true);
 })();
 </script>
 <script id="dn-v8">
-function dnTick(c){try{if(c.type!=='dm'||c.lf!==uid||!c.last)return '';var p=c.members.find(function(x){return x!==uid});if(!p)return '';
+function dnTick(c){try{if(c.type!=='dm'||!c.last||!c.members||c.members.length!==2)return '';var ch=c.last.slice(-1);if(ch!=='\u200B'&&ch!=='\u200C')return '';var sm=c.members.slice().sort();if((sm[0]===uid)!==(ch==='\u200B'))return '';var p=c.members.find(function(x){return x!==uid});if(!p)return '';
 var rd=!(c['u_'+p]>0),P=rd?'<path d="M1.5 12.5l4.5 4.5L15 7M9.5 15.5l1.5 1.5L21 7"/>':'<path d="M5 12.5l4.5 4.5L19 7"/>';
 return '<svg class="i" viewBox="0 0 24 24" style="width:19px;height:19px;flex:none;color:'+(rd?'var(--ac)':'inherit')+'">'+P+'</svg>'}catch(e){return ''}}
 </script>
@@ -2535,10 +2535,10 @@ NTm[ch.id]=ts;mc(ch.id).doc(ts.toString(36)+rid()).set({from:uid,ts:ts,kind:'cal
 /* чёрная полоса снизу в PWA: перепроверяем размер после клавиатуры */
 (function(){var r=document.documentElement;
 function fix(){try{var ae=document.activeElement;if(ae&&/^(INPUT|TEXTAREA)$/.test(ae.tagName))return;
-if(window.scrollY>0)scrollTo(0,0);
+var vv=window.visualViewport;if(window.scrollY>0||(vv&&vv.offsetTop>0))scrollTo(0,0);
 var st=navigator.standalone||matchMedia('(display-mode:standalone)').matches;if(!st||innerWidth>innerHeight)return;
-var H=Math.max(screen.height,screen.width);if(H-innerHeight>8){r.style.setProperty('--H',H+'px');r.classList.add('fh')}else{r.style.removeProperty('--H');r.classList.remove('fh')}}catch(e){}}
-setInterval(fix,700);document.addEventListener('focusout',function(){setTimeout(fix,100);setTimeout(fix,500);setTimeout(fix,1200)});
+var H=Math.max(screen.height,screen.width,innerHeight,vv?vv.height:0);r.style.setProperty('--H',H+'px');r.classList.add('fh')}catch(e){}}
+setInterval(fix,350);document.addEventListener('focusout',function(){setTimeout(fix,100);setTimeout(fix,500);setTimeout(fix,1200)});
 document.addEventListener('pointerup',function(){setTimeout(fix,400)},true);
 if(window.visualViewport){visualViewport.addEventListener('resize',function(){setTimeout(fix,150)});visualViewport.addEventListener('scroll',function(){setTimeout(fix,150)})}})();
 </script>
