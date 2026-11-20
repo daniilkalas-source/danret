@@ -1502,7 +1502,7 @@ function chatView(){
  chatX(c);if(cmDraw)cmDraw();
 }
 let stPin=[],mpD=null,stRaw=[],usg='',T0=0,cmDraw=null;const NT={},NTm={};
-const APP_VER='202611201510',OFFC=['danretofficial','danretconru'];
+const APP_VER='202611201545',OFFC=['danretofficial','danretconru'];
 const PRD={msg:1,media:1,add:1,pin:0,prof:0},PRM=[['msg','Отправка сообщений'],['media','Отправка фото и видео'],['add','Добавление участников'],['pin','Закрепление сообщений'],['prof','Изменение профиля группы']],ADR=[['del','Удаление сообщений'],['pin','Закрепление сообщений'],['add','Добавление участников'],['prof','Изменение профиля']];
 const isAd=(c,u,r)=>{if(!c||!u)return false;if(c.owner===u)return true;const a=c.am&&c.am[u];return !!a&&(!r||!a.r||a.r[r]!==0)};
 const pm=(c,k)=>(c.perm&&c.perm[k]!==undefined)?c.perm[k]:PRD[k];
@@ -2614,18 +2614,22 @@ function vmPlay(id){var m=msgs.find(function(x){return x.id===id});if(!m||!m.a)r
 function vmSpeed(){VSP=VSP===1?1.5:VSP===1.5?2:1;if(au)au.playbackRate=VSP;document.querySelectorAll('.vsp').forEach(function(b){b.textContent=VSPL()})}
 /* расшифровка (Whisper в браузере, модель грузится один раз) */
 var ASRp=null;
-function asrLoad(cb){if(ASRp)return ASRp;ASRp=import('https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2').then(function(T){T.env.allowLocalModels=false;return T.pipeline('automatic-speech-recognition','Xenova/whisper-base',{progress_callback:function(p){try{cb&&cb(p)}catch(e){}}})});ASRp.catch(function(){ASRp=null});return ASRp}
+function asrLoad(cb){if(ASRp)return ASRp;ASRp=import('https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2').then(function(T){T.env.allowLocalModels=false;try{T.env.backends.onnx.wasm.numThreads=1}catch(e){}return T.pipeline('automatic-speech-recognition','Xenova/whisper-tiny',{progress_callback:function(p){try{cb&&cb(p)}catch(e){}}})});ASRp.catch(function(){ASRp=null});return ASRp}
 function vmPcm(src){return vmDecode(src).then(function(ab){if(ab.sampleRate===16000&&ab.numberOfChannels===1)return ab.getChannelData(0);
  var OC=window.OfflineAudioContext||window.webkitOfflineAudioContext,oc=new OC(1,Math.max(1,Math.ceil(ab.duration*16000)),16000),s=oc.createBufferSource();s.buffer=ab;s.connect(oc.destination);s.start(0);
  return new Promise(function(ok,no){var p=oc.startRendering();if(p&&p.then)p.then(ok,no);else oc.oncomplete=function(e){ok(e.renderedBuffer)}}).then(function(r){return r.getChannelData(0)})})}
 function vxSet(id,t){VTRs[id]=t;var e=document.getElementById('vx'+id);if(e)e.textContent=t}
-function vmTr(m){var id=m.id,cid=cur;if(VTRs.busy===id)return;VTRs.busy=id;vxSet(id,'Готовлю расшифровку…');
+function vmTr(m){var id=m.id,cid=cur;if(VTRs.busy===id)return;
+ var G=function(){try{return localStorage.dnAsrCrash}catch(e){return ''}},S=function(v){try{if(v)localStorage.dnAsrCrash=v;else localStorage.removeItem('dnAsrCrash')}catch(e){}};
+ if(G()===APP_VER){vxSet(id,'\u0420\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430 \u043D\u0435 \u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0435\u0442\u0441\u044F \u043D\u0430 \u044D\u0442\u043E\u043C \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0435 (\u043D\u0435 \u0445\u0432\u0430\u0442\u0430\u0435\u0442 \u043F\u0430\u043C\u044F\u0442\u0438).');return}
+ if((m.d||0)>90){vxSet(id,'\u0413\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u0435 \u0434\u043B\u0438\u043D\u043D\u0435\u0435 90 \u0441\u0435\u043A\u0443\u043D\u0434 \u2014 \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u0430\u0442\u044C \u043D\u0435 \u043C\u043E\u0433\u0443.');return}
+ S(APP_VER);VTRs.busy=id;vxSet(id,'Готовлю расшифровку…');
  var pr=0;asrLoad(function(p){if(p&&p.status==='progress'&&typeof p.progress==='number'){var v=Math.round(p.progress);if(v>pr||v<pr-40){pr=v;vxSet(id,'Загрузка модели для расшифровки… '+v+'% (только в первый раз)')}}})
  .then(function(asr){vxSet(id,'Расшифровываю…');return vmPcm(m.a).then(function(pcm){return asr(pcm,{language:'russian',task:'transcribe',chunk_length_s:30,stride_length_s:5})})})
  .then(function(r){var t=String((r&&r.text)||'').trim()||'(речь не распознана)';VTR[id]=t;VTRs[id]='';var e=document.getElementById('vx'+id);if(e)e.textContent=t;
   try{if(t.charAt(0)!=='(')mc(cid).doc(id).update({tr:t}).catch(function(){})}catch(e2){}})
  .catch(function(e){console.error(e);vxSet(id,'Не удалось расшифровать (нужен интернет). Нажмите «Аа» ещё раз.');delete VTRo[id]})
- .then(function(){VTRs.busy=0})}
+ .then(function(){VTRs.busy=0;S('')})}
 document.addEventListener('click',function(e){var t=e.target;if(!t||!t.closest)return;
  var b=t.closest('.vm2 .pl');if(b){e.stopPropagation();e.preventDefault();vmPlay(b.getAttribute('data-a'));return}
  if(t.closest('#vmp')){e.stopPropagation();if(au){if(au.paused)au.play().catch(function(){});else au.pause();vmUI(auId)}return}
