@@ -911,10 +911,16 @@ const sig=(t,x={})=>room.emit('sig',{t,id:call.id,to:call.peer,from:uid,...x});
 function tickCall(){if(!call)return;clearInterval(call.ti);const f=()=>{if(!call||!$('#cs'))return;const q=Math.floor((Date.now()-call.t0)/1000);$('#cs').textContent=(call.kind==='video'?'Видеозвонок':'Аудиозвонок')+' · '+String(Math.floor(q/60)).padStart(2,'0')+':'+String(q%60).padStart(2,'0')};f();call.ti=setInterval(f,1000)}
 function showCall(st,inc){let d=$('#cu');if(!d){d=document.createElement('div');d.id='cu';document.body.appendChild(d)}
  const n=uname(call.peer),v=call.kind==='video',S=p=>`<svg class="i" viewBox="0 0 24 24">${p}</svg>`,PH=S('<path d="M6.6 10.8a15 15 0 006.6 6.6l2.2-2.2a1 1 0 011-.25c1.1.37 2.3.57 3.6.57a1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.6a1 1 0 01-.25 1z"/>'),MIC='<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/>',CAM='<rect x="3" y="6" width="12" height="12" rx="3"/><path d="M15 10l6-3v10l-6-3"/>';
- d.className='cu'+(v?' vd':'');
- d.innerHTML=`<video id="rv" autoplay playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:${v?'block':'none'}"></video><video id="lv" autoplay muted playsinline style="position:absolute;right:14px;top:60px;width:100px;border-radius:12px;display:${v?'block':'none'};z-index:2"></video><audio id="ra" autoplay></audio>
- <div class="cuc"><div class="cur">${av(n,call.peer,98)}</div><h2>${E(n)}</h2><div id="cs">${st}</div></div>
- <div class="cub">${inc?`<button class="cb g" id="ac">${PH}</button>`:`<button class="cb" id="mt">${S(MIC)}</button><button class="cb" id="cm">${S(CAM)}</button>`}<button class="cb r" id="hg"><span style="display:inline-block;transform:rotate(135deg)">${PH}</span></button></div>`;
+ d.className='cu'+(v?' vd':'')+' cn2';
+ const HP='<path d="M4 15v-3a8 8 0 0116 0v3M4 15a2 2 0 002 2h1v-5H6a2 2 0 00-2 2zM20 15a2 2 0 01-2 2h-1v-5h1a2 2 0 012 2z"/>',DT='<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>';
+ d.innerHTML=`<div class="cbg">${av(n,call.peer,300)}</div><video id="rv" autoplay playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:${v?'block':'none'}"></video><video id="lv" autoplay muted playsinline style="position:absolute;right:14px;top:calc(env(safe-area-inset-top,0px) + 64px);width:100px;border-radius:16px;display:${v?'block':'none'};z-index:2"></video><audio id="ra" autoplay></audio>
+ <div class="cq" id="cq"><i></i><i></i><i></i><i></i><span id="cqt">${inc?'Входящий':'Связь…'}</span></div>
+ <div class="cuc"><div class="cur">${av(n,call.peer,104)}</div><h2>${E(n)}</h2><div id="cs">${st}</div></div>
+ ${inc?`<div class="cub"><button class="cb r" id="hg"><span style="display:inline-block;transform:rotate(135deg)">${PH}</span></button><button class="cb g" id="ac">${PH}</button></div>`:`<div class="cmn" id="cmn" hidden><button id="mf">${S('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>')}<span>Сменить камеру</span></button><button id="ms">${S(HP)}<span id="mst">Выключить звук собеседника</span></button></div><div class="cdk"><button class="cb" id="mt">${S(MIC)}</button><button class="cb" id="cm">${S(CAM)}</button><button class="cb" id="sp">${S(HP)}</button><button class="cb" id="mo">${S(DT)}</button><span class="csp"></span><button class="cb r" id="hg"><span style="display:inline-block;transform:rotate(135deg)">${PH}</span></button></div>`}`;
+ if($('#mo')){$('#mo').onclick=e=>{e.stopPropagation();$('#cmn').hidden=!$('#cmn').hidden};d.onclick=e=>{if($('#cmn')&&!e.target.closest('#mo,#cmn'))$('#cmn').hidden=true};
+  const mut=()=>{const a=$('#ra');if(!a)return;a.muted=!a.muted;$('#sp').classList.toggle('off',a.muted);$('#mst').textContent=a.muted?'Включить звук собеседника':'Выключить звук собеседника';$('#cmn').hidden=true};$('#sp').onclick=mut;$('#ms').onclick=mut;
+  $('#mf').onclick=async()=>{$('#cmn').hidden=true;if(!call||call.kind!=='video'||!call.stream)return toast('Камера доступна только в видеозвонке');try{call.fm=call.fm==='environment'?'user':'environment';const ns=await navigator.mediaDevices.getUserMedia({video:{facingMode:call.fm}}),nt=ns.getVideoTracks()[0],ot=call.stream.getVideoTracks()[0];if(call.pc){const sn=call.pc.getSenders().find(x=>x.track&&x.track.kind==='video');sn&&await sn.replaceTrack(nt)}ot&&(call.stream.removeTrack(ot),ot.stop());call.stream.addTrack(nt);$('#lv').srcObject=call.stream}catch(er){toast('Не удалось сменить камеру')}}}
+ if(call.t0)$('#cqt').textContent='Отличная связь';
  if(call.stream)$('#lv').srcObject=call.stream;if(call.remote){$('#rv').srcObject=call.remote;$('#ra').srcObject=call.remote}
  $('#hg').onclick=()=>{if(call.role==='b'&&!call.stream){sig('decline');endCall()}else{sig('end');endCall()}};
  const tg=(id,k,msg)=>{if($(id))$(id).onclick=()=>{const t=call.stream&&call.stream[k]()[0];if(!t)return toast(msg);t.enabled=!t.enabled;$(id).classList.toggle('off',!t.enabled)}};tg('#mt','getAudioTracks','Нет микрофона');tg('#cm','getVideoTracks','Камера доступна только в видеозвонке');
@@ -1095,7 +1101,7 @@ function openStory(u,list,sid){const items=(list||stl.filter(x=>x.uid===u)).sort
   if(u!==uid){const bar=document.createElement('div');bar.className='srp';bar.innerHTML=`<input id="sri" placeholder="Ответить сообщением…" autocomplete="off"><button id="srh" class="${x['r_'+uid]?'on':''}"><svg class="i" viewBox="0 0 24 24"><path d="M12 20s-8-5-8-11a4.5 4.5 0 018-2.5A4.5 4.5 0 0120 9c0 6-8 11-8 11z"/></svg></button>`;d.appendChild(bar);const inp=bar.querySelector('#sri');
    inp.onfocus=()=>{clearTimeout(tmr);const vv=d.querySelector('video');vv&&vv.pause()};
    inp.onkeydown=async e=>{if(e.key!=='Enter'||!inp.value.trim())return;const t=inp.value.trim(),c=chats.find(z=>z.type==='dm'&&!z.secret&&z.members.includes(u)&&z.members.includes(uid));if(!c)return toast('Сначала откройте чат с этим человеком');inp.value='';inp.blur();try{const ts=Date.now();await mc(c.id).doc(ts.toString(36)+rid()).set({from:uid,ts,kind:'text',text:'Ответ на историю: '+t});await cs(c.id).update({last:t.slice(0,80),lastTs:ts});toast('Отправлено')}catch(er){toast('Не удалось отправить')}const vv=d.querySelector('video');vv?vv.play().catch(()=>{}):tmr=setTimeout(nx,5000)};
-   bar.querySelector('#srh').onclick=async e=>{const b=e.currentTarget,on=!!x['r_'+uid];x['r_'+uid]=on?undefined:'❤️';b.classList.toggle('on',!on);if(!on){const f=document.createElement('div');f.textContent='❤️';f.style.cssText='position:absolute;left:50%;bottom:90px;font-size:60px;z-index:5;pointer-events:none;margin-left:-30px;animation:fl 1.1s ease-out forwards';d.appendChild(f);setTimeout(()=>f.remove(),1200)}try{await db.collection('stories').doc(x.id).update({['r_'+uid]:on?firebase.firestore.FieldValue.delete():'❤️'})}catch(er){toast('Не удалось отправить реакцию')}}}
+   bar.querySelector('#srh').onclick=async e=>{const b=e.currentTarget,on=!!x['r_'+uid];x['r_'+uid]=on?undefined:'❤️';b.classList.toggle('on',!on);if(!on){const f=document.createElement('div');f.textContent='❤️';f.style.cssText='position:absolute;left:50%;bottom:90px;font-size:60px;z-index:5;pointer-events:none;margin-left:-30px;animation:fl 1.1s ease-out forwards';d.appendChild(f);setTimeout(()=>f.remove(),1200)}try{await db.collection('stories').doc(x.id).update({['r_'+uid]:on?firebase.firestore.FieldValue.delete():'❤️'})}catch(er){x['r_'+uid]=on?'❤️':undefined;if(!on){try{const c=chats.find(z=>z.type==='dm'&&!z.secret&&z.members.includes(u)&&z.members.includes(uid));if(c){const ts=Date.now();await mc(c.id).doc(ts.toString(36)+rid()).set({from:uid,ts,kind:'text',text:'❤️ Реакция на вашу историю'});await cs(c.id).update({last:'❤️ Реакция на вашу историю',lastTs:ts});b.classList.add('on');toast('Реакция отправлена');return}}catch(e2){}}b.classList.toggle('on',on);console.warn('story reaction',er);toast('Не удалось отправить реакцию ('+(er.code||'ошибка')+')')}}}
   d.querySelector('#sm3').onclick=ev=>{ev.stopPropagation();clearTimeout(tmr);const vv=d.querySelector('video');vv&&vv.pause();const mi=u===uid,AUD={all:'Все',contacts:'Контакты',close:'Близкие друзья',sel:'Выбранные'},url=location.origin+location.pathname,
     I=[mi&&['pin',x.pin?'Удалить из профиля':'Оставить в профиле','<path d="M6 4h12M9 4v6l-3 4h12l-3-4V4M12 14v6"/>'],mi&&['aud','Кто видит историю','<path d="M4 10v4h3l7 4V6L7 10z"/>',AUD[x.aud]||'Все'],(mi||x.ss!==false)&&x.kind!=='text'&&['save','Сохранить в галерею','<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>'],['link','Копировать ссылку','<path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1"/>'],['share','Поделиться','<path d="M14 4l7 6-7 6v-4c-6 0-9 2-11 6 1-7 5-10 11-10z"/>'],mi&&['del','Удалить историю','<path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13"/>',0,1]].filter(Boolean),o=document.createElement('div');o.className='pov';
     o.innerHTML='<div class="pop">'+I.map(k=>(k[0]==='del'?'<hr>':'')+`<button data-m="${k[0]}" class="${k[4]?'rd':''}"><svg class="i" viewBox="0 0 24 24">${k[2]}</svg><span>${k[1]}${k[3]?`<small>${k[3]}</small>`:''}</span></button>`).join('')+'</div>';d.appendChild(o);
@@ -2469,6 +2475,30 @@ html:not([data-theme=light]):not(.lt) #app .msgs .b:not(.me){background:var(--bi
 @keyframes cacc{0%{box-shadow:0 0 0 0 rgba(52,199,89,.55);transform:scale(1)}50%{transform:scale(1.07)}100%{box-shadow:0 0 0 22px rgba(52,199,89,0);transform:scale(1)}}
 .cu.inc #ac svg{animation:cshk 1.3s ease-in-out infinite}
 @keyframes cshk{0%,60%,100%{transform:rotate(0)}10%,30%,50%{transform:rotate(-14deg)}20%,40%{transform:rotate(14deg)}}
+/* v10: звонки — новый вид */
+.cu.cn2{background:#07070d!important;overflow:hidden;padding:calc(env(safe-area-inset-top,0px) + 70px) 20px calc(env(safe-area-inset-bottom,0px) + 34px)}
+.cn2 .cbg{position:absolute;inset:-20%;z-index:0;opacity:.55;filter:blur(70px) saturate(1.5);transform:scale(1.2);pointer-events:none}
+.cn2 .cbg>*{width:100%!important;height:100%!important;border-radius:0!important}
+.cn2::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,7,13,.55),rgba(7,7,13,.78));z-index:0;pointer-events:none}
+.cn2.vd::after{display:none}
+.cn2>.cuc,.cn2>.cub,.cn2>.cdk,.cn2>.cmn,.cn2>.cq{z-index:3}
+.cn2 .cq{position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:22px;background:rgba(255,255,255,.1);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.14);font-size:14px;font-weight:600;color:#fff;white-space:nowrap}
+.cn2 .cq i{display:inline-block;width:3px;border-radius:2px;background:#ffffff55;align-self:flex-end}.cn2 .cq i:nth-child(1){height:5px}.cn2 .cq i:nth-child(2){height:8px}.cn2 .cq i:nth-child(3){height:11px}.cn2 .cq i:nth-child(4){height:14px}
+.cn2 .cq[data-q="3"] i{background:#5eead4}.cn2 .cq[data-q="2"] i:nth-child(-n+3){background:#facc15}.cn2 .cq[data-q="1"] i:nth-child(1){background:#f87171}
+.cn2 .cq[data-q="3"] span{color:#5eead4}.cn2 .cq[data-q="2"] span{color:#facc15}.cn2 .cq[data-q="1"] span{color:#f87171}
+.cn2 .cur{padding:0;background:none;border-radius:34px;overflow:hidden;box-shadow:0 0 0 6px rgba(255,255,255,.08),0 20px 60px rgba(94,234,212,.18);margin-bottom:22px;width:104px;height:104px}
+.cn2 .cur>*{width:104px!important;height:104px!important;border-radius:0!important}
+.cn2 .cuc h2{font-size:28px;font-weight:700;margin:0 0 8px}
+.cn2.inc .cur{overflow:visible}.cn2.inc .cur::before,.cn2.inc .cur::after{border-radius:38px;border-color:rgba(94,234,212,.55)}
+.cn2.inc .cur>*{border-radius:34px!important}
+.cn2.vd .cur,.cn2.vd .cuc h2{display:none}.cn2.vd #cs{position:absolute;top:calc(env(safe-area-inset-top,0px) + 62px);left:0;right:0;text-align:center;font-size:15px}
+.cn2 .cdk{display:flex;align-items:center;gap:8px;padding:9px;border-radius:38px;background:rgba(255,255,255,.1);backdrop-filter:blur(26px) saturate(1.5);-webkit-backdrop-filter:blur(26px) saturate(1.5);border:1px solid rgba(255,255,255,.15);box-shadow:0 14px 40px rgba(0,0,0,.4)}
+.cn2 .cdk .cb{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;padding:0}
+.cn2 .cdk .cb svg{width:25px;height:25px}.cn2 .cdk .cb.r{width:78px;border-radius:30px;background:#ef4458}
+.cn2 .cdk .cb.off{background:#fff;color:#15151f}.cn2 .csp{width:1px;height:28px;background:rgba(255,255,255,.2);margin:0 2px}
+.cn2 .cmn{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 118px);min-width:270px;padding:8px;border-radius:24px;background:rgba(30,30,44,.82);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,.14)}
+.cn2 .cmn[hidden]{display:none}.cn2 .cmn button{display:flex;gap:14px;align-items:center;width:100%;background:none;border:0;color:#fff;font-size:16px;padding:12px 14px;text-align:left}.cn2 .cmn svg{width:22px;height:22px;flex:none}
+.cn2 .cub{gap:64px;margin-bottom:6px}.cn2 .cub .cb{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0}
 </style>
 <script id="dn-v7j">
 (function(){
@@ -2478,15 +2508,18 @@ if(s!==window.__ol){window.__ol=s;if(me&&!document.hidden&&tab==='chats'&&!cur&&
 
 /* --- рингтон, вибрация, мигающий заголовок --- */
 var RA=null,TB=0,T0t=null;
-function ringStop(){if(RA){clearInterval(RA.iv);clearInterval(RA.vb);try{RA.a.close()}catch(e){}RA=null}try{navigator.vibrate&&navigator.vibrate(0)}catch(e){}
+function ringStop(){if(RA){clearInterval(RA.iv);clearInterval(RA.vb);clearInterval(RA.ck);try{RA.g&&RA.g.disconnect()}catch(e){}RA=null}try{navigator.vibrate&&navigator.vibrate(0)}catch(e){}
 clearInterval(TB);if(T0t!==null){document.title=T0t;T0t=null}}
-function ringStart(){ringStop();
-try{var AC=window.AudioContext||window.webkitAudioContext,a=new AC();RA={a:a,iv:0,vb:0};if(a.state==='suspended')a.resume().catch(function(){});
-var note=function(f,t,d,v){var o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.value=f;o.connect(g);g.connect(a.destination);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.02);g.gain.exponentialRampToValueAtTime(.0008,t+d);o.start(t);o.stop(t+d+.03)};
-var ph=function(){var t=a.currentTime+.03;[[659,0],[784,.16],[988,.32],[784,.5],[988,.7],[1175,.86]].forEach(function(x){note(x[0],t+x[1],.36,.24)})};ph();RA.iv=setInterval(ph,2600)}catch(e){}
-if(!RA)RA={a:{close:function(){}},iv:0,vb:0};
-var vb=function(){try{navigator.vibrate&&navigator.vibrate([500,250,500,250,500])}catch(e){}};vb();RA.vb=setInterval(vb,2600);
-T0t=document.title;var k=0;TB=setInterval(function(){document.title=(k++%2)?T0t:'📞 Входящий звонок'},900)}
+function ringStart(out){ringStop();
+RA={iv:0,vb:0,ck:0,g:null};
+try{var a=window.DNA.ctx();if(a){var g=a.createGain();g.gain.value=1;g.connect(a.destination);RA.g=g;
+var bell=function(f,t,d,v){[[1,1],[2,.28],[3.01,.1]].forEach(function(h){var o=a.createOscillator(),e=a.createGain();o.type='sine';o.frequency.value=f*h[0];o.connect(e);e.connect(g);e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(v*h[1],t+.012);e.gain.exponentialRampToValueAtTime(.0006,t+d);o.start(t);o.stop(t+d+.05)})};
+if(out){var tone=function(){var t=a.currentTime+.05;[0,.5].forEach(function(x){[425,450].forEach(function(f){var o=a.createOscillator(),e=a.createGain();o.type='sine';o.frequency.value=f;o.connect(e);e.connect(g);e.gain.setValueAtTime(0,t+x);e.gain.linearRampToValueAtTime(.07,t+x+.04);e.gain.setValueAtTime(.07,t+x+.34);e.gain.linearRampToValueAtTime(0,t+x+.4);o.start(t+x);o.stop(t+x+.45)})})};tone();RA.iv=setInterval(tone,3200);
+RA.ck=setInterval(function(){if(!call||call.pc||call.t0||call.ok)ringStop()},400)}
+else{var mel=function(){var t=a.currentTime+.05,N=[[784,0],[988,.22],[1175,.44],[1568,.66],[1175,.98],[988,1.2],[1175,1.42],[1318,1.74],[1047,2.1],[1319,2.32],[1568,2.54],[2093,2.76]];N.forEach(function(x){bell(x[0],t+x[1],.9,.22)})};mel();RA.iv=setInterval(mel,3900)}}}catch(e){}
+if(!out){var vb=function(){try{navigator.vibrate&&navigator.vibrate([500,250,500,250,500])}catch(e){}};vb();RA.vb=setInterval(vb,3900);
+T0t=document.title;var k=0;TB=setInterval(function(){document.title=(k++%2)?T0t:'📞 Входящий звонок'},900)}}
+
 
 /* --- системное уведомление о звонке (когда приложение свёрнуто) --- */
 function closeCallNotif(){try{navigator.serviceWorker.getRegistration().then(function(r){r&&r.getNotifications({tag:'dn-call'}).then(function(l){l.forEach(function(x){x.close()})})}).catch(function(){})}catch(e){}}
@@ -2500,7 +2533,7 @@ document.addEventListener('visibilitychange',function(){if(!document.hidden)clos
 
 /* --- подключаем к существующей логике звонков --- */
 var _sc=showCall;showCall=function(st,inc){_sc.apply(this,arguments);var d=document.getElementById('cu');if(!d)return;
-var i=!!inc&&call&&call.role==='b'&&!call.stream;d.classList.toggle('inc',i);if(i){if(!RA)ringStart()}else ringStop()};
+var i=!!inc&&call&&call.role==='b'&&!call.stream;d.classList.toggle('inc',i);if(i){if(!RA)ringStart()}else if(call&&call.role==='a'&&!call.pc&&!call.t0&&!call.ok){if(!RA)ringStart(1)}else ringStop();window.dnQ&&window.dnQ()};
 var _ec=endCall;endCall=function(){var c=call;ringStop();closeCallNotif();var r=_ec.apply(this,arguments);try{if(c&&c.role==='a')postCallMsg(c)}catch(e){}return r};
 var _os=onSig;onSig=async function(d){try{if(d&&(d.t==='decline'||d.t==='busy')&&call&&call.id===d.id)call.rej=d.t}catch(e){}var r=await _os.apply(this,arguments);
 try{if(d&&d.t==='ring'&&call&&call.id===d.id&&call.role==='b')callNotify()}catch(e){}return r};
@@ -2640,5 +2673,23 @@ document.addEventListener('click',function(e){var t=e.target;if(!t||!t.closest)r
   if(VTRo[id]){var tx=VTR[id]||m.tr;if(tx){if(bx)bx.textContent=tx}else vmTr(m)}return}
  var w=t.closest('.wv');if(w){var wid=w.getAttribute('data-w');if(auId===wid&&au&&au.duration&&isFinite(au.duration)){e.stopPropagation();var r=w.getBoundingClientRect();au.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*au.duration}else{e.stopPropagation();vmPlay(wid)}}
 },true);
+</script>
+<script id="dn-v10">
+(function(){
+var C=null;function ctx(){try{if(!C){var A=window.AudioContext||window.webkitAudioContext;C=new A()}if(C.state==='suspended')C.resume().catch(function(){})}catch(e){}return C}
+['touchstart','touchend','pointerdown','mousedown','click','keydown'].forEach(function(e){document.addEventListener(e,ctx,{passive:true,capture:true})});
+window.DNA={ctx:ctx};
+function drop(){try{if(typeof me!=='undefined'&&me&&me.nosnd)return;var a=ctx();if(!a)return;var t=a.currentTime+.01,m=a.createGain();m.gain.value=.9;m.connect(a.destination);
+var v=function(f0,f1,d,vol,dl){var o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.setValueAtTime(f0,t+dl);o.frequency.exponentialRampToValueAtTime(f1,t+dl+d*.45);g.gain.setValueAtTime(0,t+dl);g.gain.linearRampToValueAtTime(vol,t+dl+.006);g.gain.exponentialRampToValueAtTime(.0005,t+dl+d);o.connect(g);g.connect(m);o.start(t+dl);o.stop(t+dl+d+.02)};
+v(520,1500,.2,.34,0);v(1040,2800,.12,.07,0);v(360,980,.22,.1,.13)}catch(e){}}
+window.dnDrop=drop;
+try{postMsg=(function(f){return function(){drop();return f.apply(this,arguments)}})(postMsg)}catch(e){}
+try{postTo=(function(f){return function(){drop();return f.apply(this,arguments)}})(postTo)}catch(e){}
+try{sendSticker=(function(f){return function(){drop();return f.apply(this,arguments)}})(sendSticker)}catch(e){}
+window.dnQ=function(){clearInterval(window.__qi);var up=function(){var cq=document.getElementById('cq'),t=document.getElementById('cqt');if(!cq||!t||typeof call==='undefined'||!call)return;
+if(!call.pc||!call.t0){t.textContent=(call.role==='b'&&!call.stream)?'Входящий':'Связь…';cq.dataset.q='';return}
+call.pc.getStats().then(function(st){var rtt=null,lost=0;st.forEach(function(r){if(r.type==='candidate-pair'&&r.state==='succeeded'&&r.nominated&&r.currentRoundTripTime!=null)rtt=r.currentRoundTripTime;if(r.type==='inbound-rtp'&&r.packetsLost>lost)lost=r.packetsLost});
+var q=rtt==null?3:(rtt<.2&&lost<50)?3:rtt<.5?2:1;cq.dataset.q=q;t.textContent=q===3?'Отличная связь':q===2?'Нормальная связь':'Слабая связь'}).catch(function(){})};up();window.__qi=setInterval(function(){if(typeof call==='undefined'||!call){clearInterval(window.__qi);return}up()},2500)}
+})();
 </script>
 </body></html>
