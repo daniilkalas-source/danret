@@ -475,6 +475,37 @@ html,body{width:100%;margin:0;padding:0;overflow:hidden;overscroll-behavior:none
 body{position:fixed;top:0;left:0;right:0;bottom:0;height:auto;min-height:0}
 html.glass body{background:radial-gradient(circle at 15% 10%,#5b21b6 0,transparent 45%),radial-gradient(circle at 90% 80%,#0ea5e9 0,transparent 45%),#0b1020;background-attachment:scroll}
 #app{height:100%;padding-top:env(safe-area-inset-top,0px);padding-bottom:0}
+
+/* ===== animated emoji / stickers ===== */
+.b:has(.emo,.stk){background:none!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;padding:2px 4px!important}
+.b:has(.emo,.stk)::before,.b:has(.emo,.stk)::after{display:none!important}
+.b:has(.emo,.stk) i{display:block;text-align:right;margin:2px 4px 0}
+.emo{display:inline-flex;gap:4px;align-items:center}.emo img{display:block;object-fit:contain;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.emt{font-size:84px;line-height:1.1}
+.stk{display:block;width:150px;height:150px;object-fit:contain;-webkit-touch-callout:none}
+.stl{width:100%;height:100%}.stl svg{display:block;width:100%;height:100%}
+.pop{animation:stpop .5s cubic-bezier(.2,1.5,.4,1) both;transform-origin:bottom right}
+@keyframes stpop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+.emi.sti{padding:4px}.emi.sti img,.emi.sti .stl{width:58px;height:58px;object-fit:contain;display:block;margin:auto}
+.pkcm{width:28px;height:28px;display:inline-block;margin-right:8px;vertical-align:middle}.pkcm img,.pkcm .stl{width:100%;height:100%;object-fit:contain}
+.pkv{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 16px) 16px calc(env(safe-area-inset-bottom,0px) + 16px);animation:pkin .2s ease-out}
+@keyframes pkin{from{opacity:0}to{opacity:1}}
+.pkd{width:100%;max-width:420px;max-height:100%;overflow:auto;background:#0f0d1a;color:#fff;border:1px solid rgba(255,255,255,.14);border-radius:30px;padding:22px 22px 20px;box-shadow:0 20px 60px #000a}
+.pkd.dg{border-color:#7b5cff}
+.pkh{display:flex;align-items:center;justify-content:space-between}.pkh b{font-size:22px;font-weight:800}
+.pkx{background:none;border:0;color:#fff;font-size:20px;padding:6px;opacity:.8}
+.pkcv{width:128px;height:128px;margin:14px auto 8px;border-radius:30px;background:#221e3f;border:1.5px solid #4b3fb0;display:flex;align-items:center;justify-content:center;padding:18px;cursor:pointer;font-size:44px}
+.pkcv img,.pkcv .stl{width:100%;height:100%;object-fit:contain}
+.pkhint{text-align:center;color:#a5a2b8;font-size:14px}.pkhint.l{text-align:left;margin:4px 0 10px}
+.pkn{width:100%;margin:16px 0 14px;background:#14121f!important;border:1px solid rgba(255,255,255,.14)!important;border-radius:22px!important;padding:14px 18px!important;color:#fff;font-size:17px}
+.pkl{display:flex;gap:10px;align-items:baseline;font-size:16px}.pkl span{color:#a5a2b8}
+.pkg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.pki,.pka{position:relative;aspect-ratio:1;border-radius:22px;background:#14121f;border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;padding:14px}
+.pki img,.pki .stl{width:100%;height:100%;object-fit:contain}
+.pkr{position:absolute;top:-6px;right:-6px;width:26px;height:26px;border-radius:50%;border:0;background:#e5484d;color:#fff;font-size:13px;padding:0}
+.pka{flex-direction:column;gap:2px;background:#221e3f;border:1.5px solid #4b3fb0;color:#a99cff;font-weight:600;font-size:13px}.pka span{font-size:30px;line-height:1}
+.pkb{display:flex;gap:12px}.pkb button{flex:1;height:48px;border-radius:24px;font-size:17px;font-weight:700;border:1px solid rgba(255,255,255,.14);background:#14121f;color:#bbb}
+.pkb .pko{background:linear-gradient(135deg,#7b5cff,#5b3df0);color:#fff;border:0}
 </style></head><body><div id="spl"><svg viewBox="0 0 120 120" width="108" height="108"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#bfeaff"/><stop offset="1" stop-color="#4f8bff"/></linearGradient></defs><path fill="url(#g1)" fill-rule="evenodd" d="M30 16h30c27 0 46 19 46 44S87 104 60 104H30c-8 0-14-6-14-14V30c0-8 6-14 14-14zM41 38v44h19c15 0 25-9 25-22S75 38 60 38z"/><path fill="url(#g1)" d="M30 104l-14 12v-26z" opacity=".9"/></svg><b>DANRET</b><div class="spb"><i></i></div></div><script>(function(){var t0=Date.now(),d=false;function hide(){if(d)return;d=true;var e=document.getElementById('spl');if(!e)return;var w=Math.max(0,1300-(Date.now()-t0));setTimeout(function(){e.classList.add('off');setTimeout(function(){e.remove()},400)},w)}addEventListener('load',function(){setTimeout(hide,200)});setTimeout(hide,4000)})()</script><div id="app"></div>
 <script>if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("firebase-messaging-sw.js").catch(()=>{}))</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1312,7 +1343,7 @@ function chatView(){
  const ch=c.type==='channel',ro=ch&&!isAd(c,uid,'post'),blk=c.type==='group'&&!pm(c,'msg')&&!isAd(c,uid),mdOk=!(c.type==='group'&&!pm(c,'media')&&!isAd(c,uid)),inM=c.members.includes(uid),mu0=(me.muted||[]).includes(c.id),roBar=()=>(c.dmc!==false?'<div class="send"><textarea id="gi" rows="1" placeholder="Сообщение каналу" autocomplete="off"></textarea><button class="btn" id="sd"><svg class="i" viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-3-6.5z"/></svg></button></div>':'')+(!inM?'<div class="send"><button class="btn" id="sbs" style="flex:1">Подписаться</button></div>':'<div class="send"><button class="btn" id="mt2" style="flex:1;background:var(--sf);color:var(--ac)">'+(mu0?'Вкл. звук':'Убрать звук')+'</button></div>'),old=$('#gi')?$('#gi').value:'',t=fv?(c['in_'+dmCh]||'Канал'):ctitle(c);
  const rx=m=>`<div class="rs">${Object.entries(virtM(m,c)).map(([e,a])=>`<button class="chip ${a.includes(uid)?'on':''}" data-r="${m.id}" data-e="${e}">${e} ${a.length}</button>`).join('')}${!ch||!(c.rx||EM).length?'':pk===m.id?(c.rx||EM).map(e=>`<button class="chip" data-r="${m.id}" data-e="${e}">${e}</button>`).join(''):`<button class="chip" data-p="${m.id}"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 14a4 4 0 007 0M9 9.5v.1M15 9.5v.1"/></svg>＋</button>`}${ch?dl(m):''}</div>`;
  const vc=m=>Object.keys(m).filter(k=>k.startsWith('v_')).length+virtV(m,c),dl=m=>((m.from===uid&&m.kind==='text')?`<button class="chip" data-ed="${m.id}"><svg class="i" viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19zM14 7l3 3"/></svg></button>`:'')+((m.from===uid||c.owner===uid)?`<button class="chip" data-del="${m.id}"><svg class="i" viewBox="0 0 24 24"><path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13"/></svg></button>`:'');
- const bd0=m=>m.al&&m.al.length>1?albH(m):m.kind==='poll'?pollH(m):m.kind==='file'?fileH(m):m.kind==='geo'?geoH(m):m.kind==='contact'?ctH(m):m.kind==='photo'?`<img class="ph" src="${m.u}" data-ph="${m.u}">`:m.kind==='video'?`<video class="ph" src="${m.u}" controls playsinline preload="metadata"></video>`:m.kind==='voice'?`<div class="vm"><button class="pl" data-a="${m.id}">${auId===m.id?'⏸':'▶'}</button><div class="col"><div class="bar"><i id="pb${m.id}"></i></div><div class="sub">${fmt(m.d||0)}</div></div></div>`:m.kind==='circle'?`<div class="cvw"><video class="vc" src="${m.u}" playsinline muted loop autoplay preload="auto" data-vc="1"></video><button class="pl cpl" data-cp="${m.id}">▶</button></div>`:LK(m.text),cp=m=>m.text&&(m.kind==='photo'||m.kind==='video')?`<div class="cap">${E(m.text)}</div>`:'',bd=m=>bd0(m)+cp(m);
+ const bd0=m=>m.al&&m.al.length>1?albH(m):m.kind==='poll'?pollH(m):m.kind==='file'?fileH(m):m.kind==='geo'?geoH(m):m.kind==='contact'?ctH(m):m.kind==='photo'?`<img class="ph" src="${m.u}" data-ph="${m.u}">`:m.kind==='video'?`<video class="ph" src="${m.u}" controls playsinline preload="metadata"></video>`:m.kind==='voice'?`<div class="vm"><button class="pl" data-a="${m.id}">${auId===m.id?'⏸':'▶'}</button><div class="col"><div class="bar"><i id="pb${m.id}"></i></div><div class="sub">${fmt(m.d||0)}</div></div></div>`:m.kind==='circle'?`<div class="cvw"><video class="vc" src="${m.u}" playsinline muted loop autoplay preload="auto" data-vc="1"></video><button class="pl cpl" data-cp="${m.id}">▶</button></div>`:stH(m),cp=m=>m.text&&(m.kind==='photo'||m.kind==='video')?`<div class="cap">${E(m.text)}</div>`:'',bd=m=>bd0(m)+cp(m);
  A.innerHTML=`<div class="top"><button class="ib" id="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="t" id="hd" style="cursor:pointer">${icon(c)}<span class="tn">${E(t)}${isV(c)?vb():''}${c.type==='dm'&&gone(c.members.find(x=>x!==uid))?FZ:''}</span><div class="sub" id="sbt" style="font-weight:400;font-size:12px">${fv?'Сообщения':c.type==='dm'?seenText(c.members.find(x=>x!==uid)):c.type==='saved'?'только для вас':(c.members.length+virtN(c))+(ch?' подписч.':' участн.')}</div></div>${ch&&c.owner===uid?'<button class="ib" id="ibx"><svg class="i" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg></button>':''}<div id="ha">${av(t,fv?dmCh:c.id,38)}</div></div>
  <div class="msgs">${ML.length?grp(ML).map((m,i,ar)=>dsep(m,ar[i-1])+(ch?`<div class="post" data-pid="${m.id}"><div class="ph">${av(c.title,c.id)}${E(c.title)}</div>${bd(m)}<i style="display:block;color:var(--mu);font-size:11px;text-align:right;font-style:normal">${ch?'<svg class="i" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg> '+'<span data-vv="'+m.id+'">'+vc(m)+'</span>'+' · ':''}${m.ed?'изм. ':''}${tm(m.ts)}</i>${rx(m)}${cmBar(m)}</div>`:`<div class="b ${m.from===uid?'me':''} ${m.kind==='circle'?'cv':''}" data-id="${m.id}">${c.type==='group'&&m.from!==uid?`<small>${E(uname(m.from))}</small>`:''}${m.fw?`<div class="qt" style="cursor:default"><b>Переслано от ${E(m.fw)}</b></div>`:''}${m.rp?qt(m.rp):''}${bd(m)}<i>${m.ed?'изм. ':''}${tm(m.ts)}${tk(m,c)}</i>${m.re?rx(m):''}</div>`)).join(''):'<div class="empty">Сообщений пока нет</div>'}</div>
  ${blk?'<div class="send"><div class="sub" style="flex:1;text-align:center;padding:14px 8px">Администратор ограничил отправку сообщений</div></div>':ro?roBar():fv?'<div class="send"><textarea id="gi" rows="1" placeholder="Сообщение каналу" autocomplete="off"></textarea><button class="btn" id="sd"><svg class="i" viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-3-6.5z"/></svg></button></div>':`${rpBar()}<div class="send">${mdOk?`<button class="ib" id="at"><svg class="i" viewBox="0 0 24 24"><path d="M20 11l-8 8a5 5 0 01-7-7l8-8a3.4 3.4 0 015 5l-8 8a1.7 1.7 0 01-2.5-2.5l7-7"/></svg></button>`:''}<textarea id="gi" rows="1" placeholder="${ch?'Написать пост':'Сообщение'}" autocomplete="off"></textarea>${mdOk?`<button class="ib" id="mic"><svg class="i" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></button><button class="ib" id="cam"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></button>`:''}<button class="btn" id="sd"><svg class="i" viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-3-6.5z"/></svg></button></div>`}`;
@@ -1632,21 +1663,103 @@ function cv3(){
 function openEmojiPanel(g,sn){
  const old=A.querySelector('.emp');if(old){old.remove();return}
  const EMO=['😀','😃','😄','😁','😆','😅','😂','🤣','😊','😇','🙂','😉','😍','🥰','😘','😗','😋','😜','🤪','😝','🤑','🤗','🤭','🤫','🤔','🤐','🤨','😐','😑','😶','😏','😒','🙄','😬','😮','😯','😲','😳','🥺','😢','😭','😤','😠','😡','🤬','😈','👿','💀','💩','🤡','👻','👽','🤖','😺','😸','😹','😻','😼','😽','🙀','😿','😾','👍','👎','👏','🙌','🤝','🙏','💪','✌️','🤞','🤟','🤘','👌','🤌','🤏','👈','👉','👆','👇','☝️','✋','🤚','🖐️','🖖','👋','🤙','💋','❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❣️','💕','💞','💓','💗','💖','💘','💝','🔥','⭐','✨','🌟','💫','🎉','🎊','🎈','🎁','🏆','🥇','🎯','💯'];
- const STK=JSON.parse(localStorage.stk||'[]');
+ const STK=stkLoad();
  const packs=[{n:'Danret',s:['🫡','🔥','💜','✨','🚀','😎','🤖','💫']},...STK];
+ packs.forEach(pk=>pk.s.forEach(e=>{if(typeof e==='string')emoPre(e)}));
  const p=document.createElement('div');p.className='emp';
  const draw=(tab)=>{
   p.innerHTML=`<div class="empt"><button data-t="e" class="${tab==='e'?'on':''}">Эмодзи</button><button data-t="s" class="${tab==='s'?'on':''}">Стикеры</button><button data-t="g" class="${tab==='g'?'on':''}">GIF</button></div>
-  <div class="emps">${tab==='e'?`<div class="emg">${EMO.map(e=>`<button class="emi">${e}</button>`).join('')}</div>`:tab==='s'?`<div class="esk">${packs.map((pk,i)=>`<div class="esp"><div class="esph"><b>${E(pk.n)}</b>${i?`<button class="esx" data-i="${i-1}">✕</button>`:''}</div><div class="esg">${(pk.s||[]).map(e=>`<button class="emi">${e}</button>`).join('')}</div></div>`).join('')}<button class="esc" id="esc">＋ Новый набор</button>`:`<div class="empty" style="padding:30px">GIF скоро — пока используй эмодзи 😊</div>`}</div>`;
+  <div class="emps">${tab==='e'?`<div class="emg">${EMO.map(e=>`<button class="emi">${e}</button>`).join('')}</div>`:tab==='s'?`<div class="esk">${packs.map((pk,i)=>`<div class="esp"><div class="esph">${pk.cv?`<span class="pkcm">${stkEl(pk.cv)}</span>`:''}<b>${E(pk.n)}</b>${i?`<button class="esx" data-i="${i-1}">✕</button>`:''}</div><div class="esg">${pk.s.map((e,j)=>typeof e==='string'?`<button class="emi es1" data-e="${E(e)}">${E(e)}</button>`:`<button class="emi sti" data-p="${i}" data-j="${j}">${stkEl(e)}</button>`).join('')}</div></div>`).join('')}<button class="esc" id="esc">＋ Новый набор</button></div>`:`<div class="empty" style="padding:30px">GIF скоро — пока используй стикеры 😊</div>`}</div>`;
   p.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>draw(b.dataset.t));
-  p.querySelectorAll('.emi').forEach(b=>b.onclick=()=>{g.value+=b.textContent;g.dispatchEvent(new Event('input'));p.remove()});
-  const esc=p.querySelector('#esc');if(esc)esc.onclick=()=>{
-   const name=prompt('Название набора стикеров');if(!name)return;
-   const em=prompt('Эмодзи через пробел (например: 🔥 💜 🚀)');if(!em)return;
-   STK.push({n:name.trim(),s:em.trim().split(/\s+/).filter(Boolean).slice(0,24)});localStorage.stk=JSON.stringify(STK);draw('s')};
-  p.querySelectorAll('.esx').forEach(b=>b.onclick=()=>{STK.splice(+b.dataset.i,1);localStorage.stk=JSON.stringify(STK);draw('s')});
+  p.querySelectorAll('.emg .emi').forEach(b=>b.onclick=()=>{g.value+=b.textContent;g.dispatchEvent(new Event('input'));p.remove()});
+  p.querySelectorAll('.es1').forEach(b=>b.onclick=()=>{const e=b.dataset.e;p.remove();g.value=e;g.dispatchEvent(new Event('input'));const sd=$('#sd');if(sd)sd.click()});
+  p.querySelectorAll('.sti').forEach(b=>b.onclick=()=>{const it=packs[+b.dataset.p].s[+b.dataset.j];p.remove();sendSticker(it)});
+  const esc=p.querySelector('#esc');if(esc)esc.onclick=()=>packCreator(pk=>{STK.push(pk);packs.push(pk);draw('s')});
+  p.querySelectorAll('.esx').forEach(b=>b.onclick=()=>{STK.splice(+b.dataset.i,1);packs.splice(+b.dataset.i+1,1);stkSave(STK);draw('s')});
  };
  draw('e');sn.parentNode.insertBefore(p,sn);
+}
+/* ===== animated emoji stickers + sticker packs ===== */
+const EMR=/\p{Extended_Pictographic}(?:\uFE0F|\p{Emoji_Modifier}|\u200D\p{Extended_Pictographic}\uFE0F?)*/gu;
+function emoList(t){t=String(t||'').trim();if(!t||t.length>40)return null;const m=t.match(EMR);if(!m||m.length>3)return null;if(m.some(x=>x.codePointAt(0)<0x2000))return null;if(t.replace(EMR,'').trim())return null;return m}
+function emoUrl(e,nf){let c=[...e].map(x=>x.codePointAt(0).toString(16));if(nf)c=c.filter(x=>x!=='fe0f');return 'https://fonts.gstatic.com/s/e/notoemoji/latest/'+c.join('_')+'/512.webp'}
+function emoPre(e){try{const m=emoList(e);if(m)m.forEach(x=>{const i=new Image();i.decoding='async';i.src=emoUrl(x)})}catch(_){}}
+const stSeen=new Set();
+function popCls(m){if(!m||!m.id||stSeen.has(m.id))return '';stSeen.add(m.id);return (Date.now()-(+m.ts||0)<5000)?' pop':''}
+function emoH(l,m){const sz=l.length===1?124:l.length===2?88:68;return `<span class="emo${popCls(m)}">${l.map(e=>`<img class="emoi" src="${emoUrl(e)}" data-e="${E(e)}" alt="${E(e)}" width="${sz}" height="${sz}" decoding="async" draggable="false">`).join('')}</span>`}
+function stkEl(it,cls){return it.t==='l'?`<div class="stl ${cls||''}" data-lot="${E(it.u)}"></div>`:`<img class="${cls||''}" src="${E(it.u)}" alt="" draggable="false">`}
+function stH(m){if(m.kind==='sticker'&&m.u){const pc=popCls(m);return m.lt?`<div class="stl stk${pc}" data-lot="${E(m.u)}"></div>`:`<img class="stk${pc}" src="${E(m.u)}" alt="" draggable="false" decoding="async">`}
+ const l=(!m.kind||m.kind==='text')?emoList(m.text):null;return l?emoH(l,m):LK(m.text)}
+document.addEventListener('error',e=>{const i=e.target;if(!i||!i.classList||!i.classList.contains('emoi'))return;
+ if(!i.dataset.r1&&i.src.includes('_fe0f')){i.dataset.r1=1;i.src=emoUrl(i.dataset.e,1);return}
+ const s=document.createElement('span');s.className='emt';s.textContent=i.dataset.e;i.replaceWith(s)},true);
+let lotP=null;
+function lotLib(){if(window.lottie)return Promise.resolve(window.lottie);return lotP||(lotP=new Promise((ok,no)=>{const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js';sc.onload=()=>ok(window.lottie);sc.onerror=()=>{lotP=null;no(new Error('lottie'))};document.head.appendChild(sc)}))}
+function lotMount(el){if(el.dataset.lm)return;el.dataset.lm=1;
+ Promise.all([lotLib(),fetch(el.dataset.lot).then(r=>r.json())]).then(([L,j])=>{if(!el.isConnected)return;L.loadAnimation({container:el,renderer:'svg',loop:true,autoplay:true,animationData:j})}).catch(()=>{el.textContent='🖼'})}
+new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes){if(n.nodeType!==1)continue;if(n.matches&&n.matches('[data-lot]'))lotMount(n);if(n.querySelectorAll)n.querySelectorAll('[data-lot]:not([data-lm])').forEach(lotMount)}}).observe(document.documentElement,{childList:true,subtree:true});
+emoPre('🫡');
+const stkLoad=()=>{try{return JSON.parse(localStorage.stk||'[]')}catch(e){return[]}};
+const stkSave=a=>{try{localStorage.stk=JSON.stringify(a);return true}catch(e){toast('Не хватает места для набора');return false}};
+async function sendSticker(it){
+ const c=chats.find(x=>x.id===cur);if(!c)return;
+ if(c.type==='channel')return toast('В канал стикеры не отправляются');
+ try{
+  if(it.t==='l')return await postMsg({kind:'sticker',lt:1,u:it.u},'🖼 Стикер');
+  let u=it.u;
+  if(u.length>180000){const b=await (await fetch(u)).blob();u=await upl(b)}
+  await postMsg({kind:'sticker',u},'🖼 Стикер')
+ }catch(e){toast('Не удалось отправить стикер')}
+}
+const b64=t=>btoa(unescape(encodeURIComponent(t)));
+function rdText(f){return new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=no;r.readAsText(f)})}
+function rdUrl(f){return new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=no;r.readAsDataURL(f)})}
+async function stkFromFile(f){
+ const nm=(f.name||'').toLowerCase();
+ if(nm.endsWith('.json')||f.type==='application/json'){const t=await rdText(f);let j;try{j=JSON.parse(t)}catch(e){throw new Error('Битый Lottie-файл')}
+  if(!j||!Array.isArray(j.layers))throw new Error('Это не Lottie-анимация');if(t.length>600000)throw new Error('Lottie слишком тяжёлый (до 600 КБ)');
+  return {t:'l',u:'data:application/json;base64,'+b64(JSON.stringify(j))}}
+ if(nm.endsWith('.svg')||f.type==='image/svg+xml'){const t=await rdText(f);if(t.length>200000)throw new Error('SVG слишком тяжёлый');return {t:'i',u:'data:image/svg+xml;base64,'+b64(t)}}
+ if(!f.type.startsWith('image/'))throw new Error('Нужна картинка, SVG или Lottie');
+ const raw=await rdUrl(f);
+ if(f.type==='image/gif'&&raw.length<400000)return {t:'i',u:raw};
+ const img=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>no(new Error('Не удалось открыть картинку'));i.src=raw});
+ const k=Math.min(1,384/Math.max(img.width,img.height)),cv=document.createElement('canvas');cv.width=Math.max(1,Math.round(img.width*k));cv.height=Math.max(1,Math.round(img.height*k));
+ cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+ return {t:'i',u:cv.toDataURL('image/png')}
+}
+function pickFiles(multi,cb){const i=document.createElement('input');i.type='file';i.accept='image/*,.svg,.json,application/json';i.multiple=!!multi;i.style.display='none';i.onchange=()=>{cb([...i.files]);i.remove()};document.body.appendChild(i);i.click()}
+function packCreator(done){
+ const ov=document.createElement('div');ov.className='pkv';
+ let name='',items=[],cover=null;
+ const close=()=>ov.remove();
+ const addFiles=async fs=>{for(const f of fs){if(items.length>=30){toast('Максимум 30 стикеров');break}try{items.push(await stkFromFile(f))}catch(e){toast(e.message||'Ошибка файла')}}paint()};
+ const paint=()=>{
+  const cv=cover||items[0]||null;
+  ov.innerHTML=`<div class="pkd"><div class="pkh"><b>Новый стикерпак</b><button class="pkx" id="pkx">✕</button></div>
+  <div class="pkcv" id="pkcv">${cv?stkEl(cv):'<span>🖼</span>'}</div><div class="pkhint">Нажмите на обложку, чтобы заменить</div>
+  <input class="pkn" id="pkn" maxlength="40" placeholder="Название набора" value="${E(name)}">
+  <div class="pkl"><b>Стикеры в наборе</b><span>${items.length}</span></div>
+  <div class="pkhint l">Перетащите SVG / Lottie сюда или нажмите ＋</div>
+  <div class="pkg">${items.map((it,i)=>`<div class="pki">${stkEl(it)}<button class="pkr" data-r="${i}">✕</button></div>`).join('')}<button class="pka" id="pka"><span>＋</span>Добавить</button></div>
+  <div class="pkb"><button class="pkc" id="pkc">Отмена</button><button class="pko" id="pko">Создать</button></div></div>`;
+  const d=ov.querySelector('.pkd');
+  ov.querySelector('#pkx').onclick=ov.querySelector('#pkc').onclick=close;
+  ov.querySelector('#pkn').oninput=e=>{name=e.target.value};
+  ov.querySelector('#pka').onclick=()=>pickFiles(true,addFiles);
+  ov.querySelector('#pkcv').onclick=()=>pickFiles(false,async fs=>{try{cover=await stkFromFile(fs[0]);paint()}catch(e){toast(e.message||'Ошибка файла')}});
+  ov.querySelectorAll('.pkr').forEach(b=>b.onclick=()=>{const it=items.splice(+b.dataset.r,1)[0];if(cover===it)cover=null;paint()});
+  ov.querySelector('#pko').onclick=()=>{
+   name=ov.querySelector('#pkn').value.trim();
+   if(!name)return toast('Введите название набора');
+   if(!items.length)return toast('Добавьте хотя бы один стикер');
+   const pk={n:name,cv:cover||items[0],s:items},all=stkLoad();all.push(pk);
+   if(!stkSave(all))return;close();done(pk)};
+  d.ondragover=e=>{e.preventDefault();d.classList.add('dg')};d.ondragleave=()=>d.classList.remove('dg');
+  d.ondrop=e=>{e.preventDefault();d.classList.remove('dg');addFiles([...e.dataTransfer.files])};
+ };
+ ov.onclick=e=>{if(e.target===ov)close()};
+ paint();document.body.appendChild(ov);
 }
 const ACC=['#7b5cff','#5b8cff','#3b82f6','#00b8c4','#1f9d78','#30c85a','#ffc83d','#ff9f3d','#ff6b4a','#d6527f','#e5527a','#a855f7'];
 const _th=theme;theme=function(){_th();if(!me)return;const r=document.documentElement,s=r.style;
