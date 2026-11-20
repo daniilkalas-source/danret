@@ -511,6 +511,16 @@ html.glass body{background:radial-gradient(circle at 15% 10%,#5b21b6 0,transpare
 html{height:var(--H,100%)}
 body{height:var(--H,auto)}
 html.fh body{transform:translateZ(0)}
+
+/* voice recording: hide the normal input bar underneath */
+body:has(.vrec) .send,body:has(.vrec) .tabs{visibility:hidden!important}
+.vrec{background:transparent}
+.vrec .vp{background:rgba(40,44,80,.9);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+/* canvas fallback: gradient continues under the bottom edge */
+html{background-color:#0a1022}
+html:not(.glass){background-color:var(--bg)}
+html.glass{background-image:radial-gradient(circle at 15% 10%,#5b21b6 0,transparent 45%),radial-gradient(circle at 90% 80%,#0ea5e9 0,transparent 45%);background-repeat:no-repeat;background-attachment:fixed;background-size:100% 100vh;background-color:#0b1020}
+html.glass body{background:none}
 </style></head><body><div id="spl"><svg viewBox="0 0 120 120" width="108" height="108"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#bfeaff"/><stop offset="1" stop-color="#4f8bff"/></linearGradient></defs><path fill="url(#g1)" fill-rule="evenodd" d="M30 16h30c27 0 46 19 46 44S87 104 60 104H30c-8 0-14-6-14-14V30c0-8 6-14 14-14zM41 38v44h19c15 0 25-9 25-22S75 38 60 38z"/><path fill="url(#g1)" d="M30 104l-14 12v-26z" opacity=".9"/></svg><b>DANRET</b><div class="spb"><i></i></div></div><script>(function(){var t0=Date.now(),d=false;function hide(){if(d)return;d=true;var e=document.getElementById('spl');if(!e)return;var w=Math.max(0,1300-(Date.now()-t0));setTimeout(function(){e.classList.add('off');setTimeout(function(){e.remove()},400)},w)}addEventListener('load',function(){setTimeout(hide,200)});setTimeout(hide,4000)})()</script><div id="app"></div>
 <script>if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("firebase-messaging-sw.js").catch(()=>{}))</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
