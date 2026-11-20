@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icon-192.png">
 <style>
-:root{--bg:#000;--sf:#1c1c1e;--tx:#fff;--mu:#8e8e93;--ac:#3b82f6;--me:#2b5278;--ln:#2c2c2e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{--bg:#000;--sf:#1c1c1e;--tx:#fff;--mu:#8e8e93;--ac:#3b82f6;--me:#2b5278;--ln:#2c2c2e;box-sizing:border-box}
 @media(prefers-color-scheme:light){:root:not([data-theme=dark]){--bg:#f2f2f7;--sf:#fff;--tx:#000;--ln:#e5e5ea;--me:#d9e8ff}}
 :root[data-theme=dark]{--bg:#000;--sf:#1c1c1e;--tx:#fff;--ln:#2c2c2e;--me:#2b5278}
 :root[data-theme=light]{--bg:#f2f2f7;--sf:#fff;--tx:#000;--ln:#e5e5ea;--me:#d9e8ff}
@@ -468,6 +468,13 @@ html[data-theme=light] .aw h1{background:linear-gradient(180deg,#2a1f6b,#6c58f2)
 @keyframes splf{50%{transform:translateY(-6px) scale(1.04)}}
 @media(prefers-color-scheme:dark){#spl{background:radial-gradient(520px 420px at 50% 38%,rgba(110,80,255,.38),transparent 65%),#0d0a1c}#spl b{color:#fff}}
 /* ================= /AURORA ================= */
+
+/* FULLSCREEN FIX: no bottom black strip */
+html{height:100%;min-height:100%;min-height:-webkit-fill-available;background:#0b1020}
+html,body{width:100%;margin:0;padding:0;overflow:hidden;overscroll-behavior:none}
+body{position:fixed;top:0;left:0;right:0;bottom:0;height:auto;min-height:0}
+html.glass body{background:radial-gradient(circle at 15% 10%,#5b21b6 0,transparent 45%),radial-gradient(circle at 90% 80%,#0ea5e9 0,transparent 45%),#0b1020;background-attachment:scroll}
+#app{height:100%;padding-top:env(safe-area-inset-top,0px);padding-bottom:0}
 </style></head><body><div id="spl"><svg viewBox="0 0 120 120" width="108" height="108"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#bfeaff"/><stop offset="1" stop-color="#4f8bff"/></linearGradient></defs><path fill="url(#g1)" fill-rule="evenodd" d="M30 16h30c27 0 46 19 46 44S87 104 60 104H30c-8 0-14-6-14-14V30c0-8 6-14 14-14zM41 38v44h19c15 0 25-9 25-22S75 38 60 38z"/><path fill="url(#g1)" d="M30 104l-14 12v-26z" opacity=".9"/></svg><b>DANRET</b><div class="spb"><i></i></div></div><script>(function(){var t0=Date.now(),d=false;function hide(){if(d)return;d=true;var e=document.getElementById('spl');if(!e)return;var w=Math.max(0,1300-(Date.now()-t0));setTimeout(function(){e.classList.add('off');setTimeout(function(){e.remove()},400)},w)}addEventListener('load',function(){setTimeout(hide,200)});setTimeout(hide,4000)})()</script><div id="app"></div>
 <script>if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("firebase-messaging-sw.js").catch(()=>{}))</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
