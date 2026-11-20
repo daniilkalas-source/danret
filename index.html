@@ -2206,4 +2206,17 @@ window.dnAnim=function(ms,cid){try{
  addEventListener('resize',()=>setTimeout(fit,80));document.addEventListener('focusout',()=>setTimeout(fit,300));setTimeout(fit,500);setTimeout(fit,1500);
 })();
 </script>
+<style id="dn-fh">
+/* FIX: чёрная полоса снизу в PWA на iPhone — вьюпорт iOS на ~43pt короче экрана.
+   Раньше --H перебивалось height:100%!important. Теперь тянем html/body на полную высоту экрана. */
+html.fh{height:var(--H)!important;min-height:var(--H)!important}
+html.fh body{height:var(--H)!important;min-height:var(--H)!important;bottom:auto!important;transform:translateZ(0)}
+html.fh #app{height:100%!important}
+html.fh.glass{background-attachment:scroll!important;background-size:100% var(--H)!important;background-repeat:no-repeat!important}
+html.fh:not(.glass){background-color:var(--bg)}
+</style>
+<script>
+(function(){var r=document.documentElement,fix=function(){try{var st=navigator.standalone||matchMedia('(display-mode:standalone)').matches;if(!st||innerWidth>innerHeight)return;var H=Math.max(screen.height,screen.width);if(H-innerHeight>8){r.style.setProperty('--H',H+'px');r.classList.add('fh')}}catch(e){}};
+document.addEventListener('visibilitychange',function(){setTimeout(fix,100)});addEventListener('pageshow',function(){setTimeout(fix,100)});setTimeout(fix,2200);})();
+</script>
 </body></html>
