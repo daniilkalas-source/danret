@@ -628,12 +628,12 @@ const av=(n,id,sz)=>{const dc=chats.find(c=>c.id===id&&c.type==='dm');if(dc)id=d
 function pickFile(acc,cb,cap){const i=document.createElement('input');i.type='file';i.accept=acc;if(cap)i.capture=cap;i.style.display='none';document.body.appendChild(i);i.onchange=async()=>{const f=i.files[0];i.remove();if(f)try{await cb(f)}catch(e){toast('Ошибка: '+(e.message||e.code||e))}};i.click()}
 const shrink=(f,m)=>new Promise((res,rej)=>{const im=new Image();im.onload=()=>{const k=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);c.toBlob(b=>{if(!b)return rej(new Error('image'));if(b.size>650000&&m>300)return res(shrink(f,Math.round(m*.7)));res(b)},'image/jpeg',.72)};im.onerror=()=>rej(new Error('Не удалось прочитать фото'));im.src=URL.createObjectURL(f)});
 async function upv(b,onp){
- if(b.size>30*1024*1024)throw new Error('Видео больше 30 МБ');
+ if(b.size>1024*1024*1024)throw new Error('Видео больше 1 ГБ');
  if(b.size<=700000)return upl(b);
  if(!window.firebase||!firebase.storage)throw new Error('Хранилище недоступно');
  const t=b.type||'video/mp4',ext=t.includes('webm')?'webm':t.includes('quicktime')?'mov':'mp4';
  const task=firebase.storage().ref('media/'+uid+'/'+Date.now()+'-'+rid(4)+'.'+ext).put(b,{contentType:t});
- await new Promise((ok,no)=>{let last=Date.now();const w=setInterval(()=>{if(Date.now()-last>20000){clearInterval(w);try{task.cancel()}catch(_){}no(new Error('Нет связи, загрузка прервана'))}},1000);
+ await new Promise((ok,no)=>{let last=Date.now();const w=setInterval(()=>{if(Date.now()-last>60000){clearInterval(w);try{task.cancel()}catch(_){}no(new Error('Нет связи, загрузка прервана'))}},1000);
   task.on('state_changed',sn=>{last=Date.now();onp&&onp(Math.round(100*sn.bytesTransferred/sn.totalBytes))},e=>{clearInterval(w);no(e)},()=>{clearInterval(w);ok()})});
  try{trf(b.size)}catch(_){}
  return await task.snapshot.ref.getDownloadURL()
@@ -644,7 +644,7 @@ async function upl(b){
    toast('Загрузка большого файла…');
    try{
     const r=firebase.storage().ref('media/'+uid+'/'+Date.now()+'-'+rid(4)),task=r.put(b,{contentType:b.type||'application/octet-stream'});
-    const t=await new Promise((ok,no)=>{let last=Date.now();const w=setInterval(()=>{if(Date.now()-last>8000){clearInterval(w);try{task.cancel()}catch(_){}no(new Error('timeout'))}},1000);
+    const t=await new Promise((ok,no)=>{let last=Date.now();const w=setInterval(()=>{if(Date.now()-last>60000){clearInterval(w);try{task.cancel()}catch(_){}no(new Error('timeout'))}},1000);
      task.on('state_changed',()=>{last=Date.now()},e=>{clearInterval(w);no(e)},()=>{clearInterval(w);ok(task.snapshot)})});
     trf(b.size);return await t.ref.getDownloadURL()
    }catch(e){}
@@ -673,7 +673,7 @@ function fsbUrl(u){
  return FSU[u]=URL.createObjectURL(new Blob(parts,{type:q.slice(3).join(':')||'video/mp4'}))
 }
 const pickImg=cb=>pickFile('image/*',async f=>{toast('Загрузка…');await cb(await upl(await shrink(f,512)))});
-async function upMedia(f,kind,cap,gid){cap=cap||'';const G=gid?{gid}:{};toast('Загрузка…');if(f.type.startsWith('image/')){const id=await upl(await shrink(f,1280));return postMsg({kind:'photo',u:id,text:cap,...G},'🖼 '+(cap||'Фото'))}const id=await upl(f);await postMsg({kind:kind||'video',u:id,d:0,text:cap,...G},kind==='circle'?'⭕ Видеосообщение':'🎬 '+(cap||'Видео'))}
+async function upMedia(f,kind,cap,gid){cap=cap||'';const G=gid?{gid}:{};toast('Загрузка…');if(f.type.startsWith('image/')){const id=await upl(await shrink(f,1280));return postMsg({kind:'photo',u:id,text:cap,...G},'🖼 '+(cap||'Фото'))}const id=f.type.startsWith('video/')?await upv(f,p=>toast('Загрузка видео… '+p+'%')):await upl(f);await postMsg({kind:kind||'video',u:id,d:0,text:cap,...G},kind==='circle'?'⭕ Видеосообщение':'🎬 '+(cap||'Видео'))}
 
 let db,uid,me=null,users={},chats=[],cur=null,tab='chats',unM=null,msgs=[],pk=null,mk=false,inf=null,sub=null,t2='p',au=null,auId=null,VW=new Set(),stl=[],ar=false,lp=0,myPh='',phL=0;
 const tm=t=>t?new Date(t).toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'}):'';
@@ -966,7 +966,7 @@ const SI={
 const hrs=n=>n+' '+(n%10==1&&n%100!=11?'час':[2,3,4].includes(n%10)&&![12,13,14].includes(n%100)?'часа':'часов');
 function addStory(){storyCam()}
 function storyCam(){
- const MAXB=30*1024*1024,MAXS=60,ic=p=>`<svg viewBox="0 0 24 24">${p}</svg>`;
+ const MAXB=1024*1024*1024,MAXS=60,ic=p=>`<svg viewBox="0 0 24 24">${p}</svg>`;
  let mode='photo',face='environment',st=null,rec=null,ch=[],sz=0,tk=null,t0=0,alive=true;
  const e=document.createElement('div');e.className='scam';
  e.innerHTML=`<div class="scv"><video id="cv" autoplay muted playsinline></video><div class="sct"><span id="ctm" class="tm" hidden>0:00</span><span style="flex:1"></span><button id="cx">${ic('<path d="M6 6l12 12M18 6L6 18"/>')}</button></div><button class="ssh" id="csh"><i></i></button></div><div class="scb"><button class="scg" id="cg">${ic('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="M21 16l-5-5-8 8"/>')}</button><div class="scm"><button data-m="video">ВИДЕО</button><button data-m="photo" class="on">ФОТО</button></div><button class="scf" id="cf">${ic('<path d="M20 11a8 8 0 00-14-4M4 5v3h3M4 13a8 8 0 0014 4M20 19v-3h-3"/>')}</button></div>`;
@@ -979,12 +979,12 @@ function storyCam(){
   try{st=await navigator.mediaDevices.getUserMedia({video:vc,audio:mode==='video'})}catch(x){
    try{st=await navigator.mediaDevices.getUserMedia({video:vc,audio:false});if(mode==='video')toast('Нет доступа к микрофону — видео будет без звука')}catch(y){close();toast('Нет доступа к камере. Выберите файл из галереи.');return pickFile('image/*,video/*',g)}}
   if(!alive){stop();return}vid.srcObject=st;vid.play().catch(()=>{})};
- const g=async f=>{if(f.type.startsWith('video/')&&f.size>30*1024*1024)return toast('Видео слишком большое (до 30 МБ)');close();storyEditor(f.type.startsWith('image/')?'photo':'video',f)};
+ const g=async f=>{if(f.type.startsWith('video/')&&f.size>1024*1024*1024)return toast('Видео слишком большое (до 1 ГБ)');close();storyEditor(f.type.startsWith('image/')?'photo':'video',f)};
  const setMode=m=>{if(rec&&rec.state==='recording')return;mode=m;e.classList.toggle('vd',m==='video');e.querySelectorAll('[data-m]').forEach(b=>b.classList.toggle('on',b.dataset.m===m));start()};
  e.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>setMode(b.dataset.m));
  Q('#cx').onclick=close;Q('#cg').onclick=()=>pickFile('image/*,video/*',g);
  Q('#cf').onclick=()=>{if(rec&&rec.state==='recording')return;face=face==='user'?'environment':'user';start()};
- const fin=()=>{clearInterval(tk);e.classList.remove('rc');Q('#ctm').hidden=true;if(!alive)return;const ty=(rec&&rec.mimeType||'video/mp4').split(';')[0],b=new Blob(ch,{type:ty});if(b.size>30*1024*1024){toast('Видео слишком большое (до 30 МБ), снимите короче');return}close();storyEditor('video',new File([b],'story.'+(ty.includes('mp4')?'mp4':'webm'),{type:ty}))};
+ const fin=()=>{clearInterval(tk);e.classList.remove('rc');Q('#ctm').hidden=true;if(!alive)return;const ty=(rec&&rec.mimeType||'video/mp4').split(';')[0],b=new Blob(ch,{type:ty});if(b.size>1024*1024*1024){toast('Видео слишком большое (до 1 ГБ), снимите короче');return}close();storyEditor('video',new File([b],'story.'+(ty.includes('mp4')?'mp4':'webm'),{type:ty}))};
  Q('#csh').onclick=()=>{
   if(!st||!vid.videoWidth)return;
   if(mode==='photo'){const k=Math.min(1,1280/Math.max(vid.videoWidth,vid.videoHeight)),c=document.createElement('canvas');c.width=Math.round(vid.videoWidth*k);c.height=Math.round(vid.videoHeight*k);c.getContext('2d').drawImage(vid,0,0,c.width,c.height);c.toBlob(b=>{if(!b)return toast('Не удалось снять фото');close();storyEditor('photo',new File([b],'story.jpg',{type:'image/jpeg'}))},'image/jpeg',.85);return}
@@ -1307,7 +1307,7 @@ function attachSheet(){
  const gal=()=>pickMany('image/*,video/*',fs=>{s.remove();mediaSheet(fs)});
  s.querySelector('#tg1').onclick=s.querySelector('#ta1').onclick=gal;
  s.querySelector('#tg2').onclick=()=>pickFile('image/*,video/*',f=>{s.remove();mediaSheet([f])},'environment');
- s.querySelector('#ta2').onclick=()=>pickFile('*/*',async f=>{s.remove();if(f.size>20e6)return toast('Файл больше 20 МБ');toast('Загрузка…');const u=await upl(f);await postMsg({kind:'file',u,nm:f.name,sz:f.size,text:''},'📎 '+f.name)});
+ s.querySelector('#ta2').onclick=()=>pickFile('*/*',async f=>{s.remove();if(f.size>1e9)return toast('Файл больше 1 ГБ');toast('Загрузка…');const u=await upl(f);await postMsg({kind:'file',u,nm:f.name,sz:f.size,text:''},'📎 '+f.name)});
  s.querySelector('#ta3').onclick=()=>{s.remove();ask('Отправить вашу геопозицию?',()=>{if(!navigator.geolocation)return toast('Геолокация не поддерживается');toast('Определяю местоположение…');navigator.geolocation.getCurrentPosition(p=>postMsg({kind:'geo',la:+p.coords.latitude.toFixed(5),lo:+p.coords.longitude.toFixed(5),text:''},'📍 Геопозиция').catch(()=>toast('Не удалось отправить')),()=>toast('Нет доступа к геопозиции. Разрешите её в настройках Safari'),{enableHighAccuracy:true,timeout:12000})},'Отправить')};
  s.querySelector('#ta4').onclick=()=>{s.remove();pollSheet()};
  s.querySelector('#ta5').onclick=()=>{s.remove();const l=[...known()];const p=sheet(hd('Контакт')+(l.length?'':'<div class="empty" style="padding:20px">Пока нет контактов</div>')+l.map(i=>`<div class="row" data-m="${i}">${av(uname(i),i)}<div class="col nm">${E(uname(i))}</div></div>`).join(''));p.querySelectorAll('[data-m]').forEach(r=>r.onclick=async()=>{const i=r.dataset.m;p.remove();await postMsg({kind:'contact',cu:i,text:''},'👤 '+uname(i))})};
