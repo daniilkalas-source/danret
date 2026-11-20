@@ -1086,12 +1086,13 @@ function pickUsers(title,pool,cur,cb){let sel=new Set(cur);const w=sheet(hd(titl
 const canSee=(x,v)=>{if(x.uid===v)return true;const a=x.aud,h=(x.hide||[]).includes(v);return a==='all'?!h:a==='contacts'?(users[x.uid]?.ct||[]).includes(v)&&!h:(a==='close'||a==='sel')?(x.sel||[]).includes(v):false};
 const stAgo=t=>{const m=Math.floor((Date.now()-t)/6e4);if(m<1)return'только что';if(m<60)return pl(m,['минуту','минуты','минут'])+' назад';const a=new Date(t).toDateString(),hm=tm(t);return a===new Date().toDateString()?'сегодня в '+hm:a===new Date(Date.now()-864e5).toDateString()?'вчера в '+hm:new Date(t).toLocaleDateString('ru')+' в '+hm};
 function openStory(u,list,sid){const items=(list||stl.filter(x=>x.uid===u)).sort((a,b)=>a.ts-b.ts);if(!items.length)return;let i=items.findIndex(x=>!x['v_'+uid]);if(i<0)i=0;if(sid){const k=items.findIndex(x=>x.id===sid);if(k>=0)i=k}let tmr;
- const d=document.createElement('div');d.style.cssText='position:fixed;inset:0;background:#000;z-index:12;display:flex;align-items:center;justify-content:center;color:#fff';document.body.appendChild(d);
+ const d=document.createElement('div');d.style.cssText='position:fixed;inset:0;background:#000;z-index:12;display:flex;align-items:center;justify-content:center;color:#fff;animation:sfi .22s ease-out';document.body.appendChild(d);
  const close=()=>{clearTimeout(tmr);d.remove()},nx=()=>{i++;i>=items.length?close():show()},pv=()=>{i=Math.max(0,i-1);show()};
- function show(){clearTimeout(tmr);const x=items[i];if(!x)return close();if(u!==uid&&!x['v_'+uid])db.collection('stories').doc(x.id).update({['v_'+uid]:Date.now()}).catch(()=>{});
+ let rem=5000;const go5=ms=>{clearTimeout(tmr);const g=d.querySelector('#spg');if(g){g.style.transition='none';g.style.width=((1-ms/5000)*100)+'%';void g.offsetWidth;g.style.transition='width '+ms+'ms linear';g.style.width='100%'}tmr=setTimeout(nx,ms)},pz=()=>{clearTimeout(tmr);const g=d.querySelector('#spg');if(g&&!d.querySelector('video')){const f=g.getBoundingClientRect().width/(g.parentNode.getBoundingClientRect().width||1);g.style.transition='none';g.style.width=(f*100)+'%';rem=Math.max(80,5000*(1-f))}};
+ function show(){clearTimeout(tmr);rem=5000;{const _n=items[i+1];if(_n&&_n.kind==='photo'){const _p=new Image();_p.src=_n.u}}const x=items[i];if(!x)return close();if(u!==uid&&!x['v_'+uid])db.collection('stories').doc(x.id).update({['v_'+uid]:Date.now()}).catch(()=>{});
   const vw=Object.keys(x).filter(k=>k.startsWith('v_')).length,T='top:calc(env(safe-area-inset-top,0px) + ';
   d.innerHTML=`${x.kind==='photo'?`<img src="${x.u}" style="max-width:100%;max-height:100%">`:x.kind==='video'?`<video src="${x.u}" autoplay playsinline style="max-width:100%;max-height:100%"></video>`:`<div style="padding:30px;font-size:17px;font:-apple-system-body;text-align:center;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,${x.bg||col(x.id)},#222)">${E(x.text)}</div>`}
-  <div style="position:absolute;${T}8px);left:8px;right:8px;display:flex;gap:4px">${items.map((_,j)=>`<div style="flex:1;height:3px;background:${j<=i?'#fff':'#fff5'};border-radius:2px"></div>`).join('')}</div>
+  <div style="position:absolute;${T}8px);left:8px;right:8px;display:flex;gap:4px">${items.map((_,j)=>`<div style="flex:1;height:3px;background:#ffffff4d;border-radius:2px;overflow:hidden"><div ${j===i?'id="spg"':''} style="height:100%;background:#fff;border-radius:2px;width:${j<i?'100%':'0'}"></div></div>`).join('')}</div>
   ${x.cap?`<div style="position:absolute;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + ${u!==uid?86:84}px);text-align:center;font-size:18px;text-shadow:0 1px 6px #000;z-index:2;pointer-events:none;white-space:pre-wrap;word-break:break-word">${E(x.cap)}</div>`:''}
   <div id="sa" style="position:absolute;left:0;right:0;top:70px;bottom:0;display:flex"><div id="sl" style="width:35%"></div><div id="sr" style="flex:1"></div></div>
   <div class="sh2" style="top:calc(env(safe-area-inset-top,0px) + 20px)">${av(uname(u),u,38)}<div class="shn"><b>${u===uid?'Ваша история':E(uname(u))}</b><span>${stAgo(x.ts)}</span></div><span style="flex:1"></span>${u===uid?`<button class="sp" id="sau"><svg class="i" viewBox="0 0 24 24"><path d="M4 10v4h3l7 4V6L7 10zM17 9a4 4 0 010 6"/></svg><svg class="i" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>`:`<button class="sp" id="spr"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.5"/><path d="M5 20a7 7 0 0114 0"/></svg></button>`}<button class="ib2" id="sm3"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h.01M12 12h.01M16 12h.01"/></svg></button><button class="ib2" id="sx"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
@@ -1099,13 +1100,13 @@ function openStory(u,list,sid){const items=(list||stl.filter(x=>x.uid===u)).sort
   d.querySelector('#sx').onclick=close;
   {const ns=x.ss===false&&u!==uid;d.style.webkitTouchCallout=ns?'none':'';d.style.userSelect=ns?'none':'';d.style.webkitUserSelect=ns?'none':'';d.querySelectorAll('img,video').forEach(z=>z.draggable=false)}
   if(u!==uid){const bar=document.createElement('div');bar.className='srp';bar.innerHTML=`<input id="sri" placeholder="Ответить сообщением…" autocomplete="off"><button id="srh" class="${x['r_'+uid]?'on':''}"><svg class="i" viewBox="0 0 24 24"><path d="M12 20s-8-5-8-11a4.5 4.5 0 018-2.5A4.5 4.5 0 0120 9c0 6-8 11-8 11z"/></svg></button>`;d.appendChild(bar);const inp=bar.querySelector('#sri');
-   inp.onfocus=()=>{clearTimeout(tmr);const vv=d.querySelector('video');vv&&vv.pause()};
-   inp.onkeydown=async e=>{if(e.key!=='Enter'||!inp.value.trim())return;const t=inp.value.trim(),c=chats.find(z=>z.type==='dm'&&!z.secret&&z.members.includes(u)&&z.members.includes(uid));if(!c)return toast('Сначала откройте чат с этим человеком');inp.value='';inp.blur();try{const ts=Date.now();await mc(c.id).doc(ts.toString(36)+rid()).set({from:uid,ts,kind:'text',text:'Ответ на историю: '+t});await cs(c.id).update({last:t.slice(0,80),lastTs:ts});toast('Отправлено')}catch(er){toast('Не удалось отправить')}const vv=d.querySelector('video');vv?vv.play().catch(()=>{}):tmr=setTimeout(nx,5000)};
+   inp.onfocus=()=>{pz();const vv=d.querySelector('video');vv&&vv.pause()};
+   inp.onkeydown=async e=>{if(e.key!=='Enter'||!inp.value.trim())return;const t=inp.value.trim(),c=chats.find(z=>z.type==='dm'&&!z.secret&&z.members.includes(u)&&z.members.includes(uid));if(!c)return toast('Сначала откройте чат с этим человеком');inp.value='';inp.blur();try{const ts=Date.now();await mc(c.id).doc(ts.toString(36)+rid()).set({from:uid,ts,kind:'text',text:'Ответ на историю: '+t});await cs(c.id).update({last:t.slice(0,80),lastTs:ts});toast('Отправлено')}catch(er){toast('Не удалось отправить')}const vv=d.querySelector('video');vv?vv.play().catch(()=>{}):go5(rem)};
    bar.querySelector('#srh').onclick=async e=>{const b=e.currentTarget,on=!!x['r_'+uid];x['r_'+uid]=on?undefined:'❤️';b.classList.toggle('on',!on);if(!on){const f=document.createElement('div');f.textContent='❤️';f.style.cssText='position:absolute;left:50%;bottom:90px;font-size:60px;z-index:5;pointer-events:none;margin-left:-30px;animation:fl 1.1s ease-out forwards';d.appendChild(f);setTimeout(()=>f.remove(),1200)}try{await db.collection('stories').doc(x.id).update({['r_'+uid]:on?firebase.firestore.FieldValue.delete():'❤️'})}catch(er){x['r_'+uid]=on?'❤️':undefined;b.classList.toggle('on',on);console.warn('story reaction',er);toast('Не удалось отправить реакцию ('+(er.code||'ошибка')+')')}}}
-  d.querySelector('#sm3').onclick=ev=>{ev.stopPropagation();clearTimeout(tmr);const vv=d.querySelector('video');vv&&vv.pause();const mi=u===uid,AUD={all:'Все',contacts:'Контакты',close:'Близкие друзья',sel:'Выбранные'},url=location.origin+location.pathname,
+  d.querySelector('#sm3').onclick=ev=>{ev.stopPropagation();pz();const vv=d.querySelector('video');vv&&vv.pause();const mi=u===uid,AUD={all:'Все',contacts:'Контакты',close:'Близкие друзья',sel:'Выбранные'},url=location.origin+location.pathname,
     I=[mi&&['pin',x.pin?'Удалить из профиля':'Оставить в профиле','<path d="M6 4h12M9 4v6l-3 4h12l-3-4V4M12 14v6"/>'],mi&&['aud','Кто видит историю','<path d="M4 10v4h3l7 4V6L7 10z"/>',AUD[x.aud]||'Все'],(mi||x.ss!==false)&&x.kind!=='text'&&['save','Сохранить в галерею','<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>'],['link','Копировать ссылку','<path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1"/>'],['share','Поделиться','<path d="M14 4l7 6-7 6v-4c-6 0-9 2-11 6 1-7 5-10 11-10z"/>'],mi&&['del','Удалить историю','<path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13"/>',0,1]].filter(Boolean),o=document.createElement('div');o.className='pov';
     o.innerHTML='<div class="pop">'+I.map(k=>(k[0]==='del'?'<hr>':'')+`<button data-m="${k[0]}" class="${k[4]?'rd':''}"><svg class="i" viewBox="0 0 24 24">${k[2]}</svg><span>${k[1]}${k[3]?`<small>${k[3]}</small>`:''}</span></button>`).join('')+'</div>';d.appendChild(o);
-    const back=()=>{o.remove();vv?vv.play().catch(()=>{}):tmr=setTimeout(nx,5000)};o.onclick=e2=>{if(e2.target===o)back()};
+    const back=()=>{o.remove();vv?vv.play().catch(()=>{}):go5(rem)};o.onclick=e2=>{if(e2.target===o)back()};
     o.querySelectorAll('[data-m]').forEach(b=>b.onclick=async()=>{const m=b.dataset.m;if(m==='aud')return;o.remove();
      if(m==='pin'){x.pin=!x.pin;db.collection('stories').doc(x.id).update({pin:x.pin}).catch(()=>{});toast(x.pin?'Сохранено в профиле':'Убрано из профиля');return show()}
      if(m==='save'){const a=document.createElement('a');a.href=x.u;a.download='story-'+x.id+(x.kind==='video'?'.mp4':'.jpg');document.body.appendChild(a);a.click();a.remove()}
@@ -1113,10 +1114,10 @@ function openStory(u,list,sid){const items=(list||stl.filter(x=>x.uid===u)).sort
      if(m==='share'){try{await navigator.share({url})}catch(e3){}}
      if(m==='del')return ask('История будет удалена без возможности восстановления.',async()=>{await db.collection('stories').doc(x.id).delete();close()},'Удалить историю');
      back()})}
-  if(u===uid&&d.querySelector('#svw'))d.querySelector('#svw').onclick=()=>{clearTimeout(tmr);const vv=d.querySelector('video');vv&&vv.pause();const vl=Object.keys(x).filter(k=>k.startsWith('v_')&&k.slice(2)!==uid).map(k=>k.slice(2)).sort((a,b)=>(x['v_'+b]||0)-(x['v_'+a]||0)),w=sheet(hd('Просмотры · '+vl.length)+(vl.map(i=>`<div class="row">${av(uname(i),i,42)}<div class="col"><div class="nm">${E(uname(i))}</div><div class="sub">${x['v_'+i]>1?tm(x['v_'+i]):'просмотрено'}</div></div><span style="font-size:28px">${x['r_'+i]||''}</span></div>`).join('')||'<div class="empty" style="padding:20px">Пока никто не смотрел</div>')),rm=w.remove.bind(w);w.style.zIndex=20;w.remove=()=>{rm();show()}};
+  if(u===uid&&d.querySelector('#svw'))d.querySelector('#svw').onclick=()=>{pz();const vv=d.querySelector('video');vv&&vv.pause();const vl=Object.keys(x).filter(k=>k.startsWith('v_')&&k.slice(2)!==uid).map(k=>k.slice(2)).sort((a,b)=>(x['v_'+b]||0)-(x['v_'+a]||0)),w=sheet(hd('Просмотры · '+vl.length)+(vl.map(i=>`<div class="row">${av(uname(i),i,42)}<div class="col"><div class="nm">${E(uname(i))}</div><div class="sub">${x['v_'+i]>1?tm(x['v_'+i]):'просмотрено'}</div></div><span style="font-size:28px">${x['r_'+i]||''}</span></div>`).join('')||'<div class="empty" style="padding:20px">Пока никто не смотрел</div>')),rm=w.remove.bind(w);w.style.zIndex=20;w.remove=()=>{rm();show()}};
 d.querySelector('#sl').onclick=pv;d.querySelector('#sr').onclick=nx;
   if($('#sdl')&&d.querySelector('#sdl'))d.querySelector('#sdl').onclick=()=>ask('История будет удалена без возможности восстановления.',async()=>{await db.collection('stories').doc(x.id).delete();close()},'Удалить историю');
-  const v=d.querySelector('video');if(v){v.onended=nx;v.onerror=nx}else tmr=setTimeout(nx,5000)}
+  const v=d.querySelector('video');if(v){const g=d.querySelector('#spg');v.onended=nx;v.onerror=nx;if(g){g.style.transition='width .25s linear';v.ontimeupdate=()=>{if(v.duration)g.style.width=Math.min(100,v.currentTime/v.duration*100)+'%'}}}else{const im=d.querySelector('img');if(im&&!im.complete){im.onload=()=>go5(5000);im.onerror=nx}else go5(5000)}}
  show()}
 const fmt=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
 const pl=(n,a)=>n+' '+a[n%10==1&&n%100!=11?0:[2,3,4].includes(n%10)&&![12,13,14].includes(n%100)?1:2];
@@ -2177,11 +2178,7 @@ shareStory=function(d,done){
   const q=x=>box.querySelector(x);q('#shx').onclick=()=>s.remove();
   box.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{st.aud=b.dataset.a;draw()});box.querySelectorAll('[data-h]').forEach(b=>b.onclick=()=>{st.dur=+b.dataset.h;draw()});
   q('#ll').onclick=()=>pickUsers(k[1],k[2](),st[k[0]],v=>{st[k[0]]=v;draw()});q('#t2').onclick=()=>{st.pin=!st.pin;draw()};
-  q('#spb').onclick=async ev=>{const b=ev.currentTarget;b.disabled=true;b.textContent='Публикация…';
-   try{let o;if(d.kind==='photo')o={kind:'photo',u:await upl(await shrink(d.f,1080))};else if(d.kind==='video')o={kind:'video',u:await upv(d.f,p=>{b.textContent='Загрузка видео… '+p+'%'})};else o={kind:'text',text:d.text,bg:d.bg};
-    await db.collection('stories').doc(d.id).set({uid,text:'',u:'',ts:Date.now(),aud:st.aud,cap:d.cap||'',dur:st.dur,ss:st.ss,pin:st.pin,hide:st.aud==='all'?st.hA:st.aud==='contacts'?st.hC:[],sel:st.aud==='close'?st.cf:st.aud==='sel'?st.sel:[],...o});
-    setU({stAud:st.aud,stHA:st.hA,stHC:st.hC,cf:st.cf}).catch(()=>{});s.remove();done();toast('История опубликована')}
-   catch(er){b.disabled=false;b.textContent='Опубликовать историю';toast('Не удалось опубликовать: '+(er.code||er.message))}}};
+  q('#spb').onclick=ev=>{ev.currentTarget.disabled=true;const cfg={aud:st.aud,ss:st.ss,pin:st.pin,dur:st.dur,hA:st.hA.slice(),hC:st.hC.slice(),cf:st.cf.slice(),sel:st.sel.slice()};s.remove();done();bgPublish(d,cfg)}};
  draw()};
 if(me)theme();
 </script>
@@ -2691,5 +2688,45 @@ if(!call.pc||!call.t0){t.textContent=(call.role==='b'&&!call.stream)?'Входя
 call.pc.getStats().then(function(st){var rtt=null,lost=0;st.forEach(function(r){if(r.type==='candidate-pair'&&r.state==='succeeded'&&r.nominated&&r.currentRoundTripTime!=null)rtt=r.currentRoundTripTime;if(r.type==='inbound-rtp'&&r.packetsLost>lost)lost=r.packetsLost});
 var q=rtt==null?3:(rtt<.2&&lost<50)?3:rtt<.5?2:1;cq.dataset.q=q;t.textContent=q===3?'Отличная связь':q===2?'Нормальная связь':'Слабая связь'}).catch(function(){})};up();window.__qi=setInterval(function(){if(typeof call==='undefined'||!call){clearInterval(window.__qi);return}up()},2500)}
 })();
+</script>
+<style id="dn-st">
+@keyframes sfi{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+.stup{position:absolute;pointer-events:none;z-index:3;transition:opacity .4s ease;transform:rotate(-90deg)}
+.stup.fd{opacity:0}
+.stup circle{fill:none;stroke-width:3;stroke-linecap:round}
+.stup .t{stroke:rgba(255,255,255,.22)}
+.stup .p{stroke:#fff;transition:stroke-dashoffset .35s ease-out;filter:drop-shadow(0 0 3px rgba(255,255,255,.6))}
+</style>
+<script>
+/* ===== истории: быстрая фоновая публикация + белое кольцо вокруг «Моя история» ===== */
+var stUp=-1,stSh=0,stTm=0;
+function stUpSet(p){stUp=p;if(p<0){stSh=0;clearInterval(stTm);stTm=0;stRingApply();return}
+ stSh=Math.max(stSh,p);if(!stTm)stTm=setInterval(function(){if(stUp<0||stUp>=100)return;if(stSh<92&&stSh<=stUp+25){stSh+=(95-stSh)*.05;stRingApply()}},250);stRingApply()}
+function stRingApply(){
+ var ms=document.getElementById('ms');
+ document.querySelectorAll('.stup').forEach(function(e){if(!ms||!ms.contains(e)||stUp<0)e.remove()});
+ if(!ms||stUp<0)return;
+ var a=ms.firstElementChild;if(!a)return;
+ var r=a.getBoundingClientRect(),m=ms.getBoundingClientRect(),z=Math.round(Math.max(r.width,r.height))+6;if(!r.width)return;
+ var sv=ms.querySelector('.stup'),C=2*Math.PI*(z/2-2),off=C*(1-Math.min(100,stSh)/100);
+ if(!sv){sv=document.createElementNS('http://www.w3.org/2000/svg','svg');sv.setAttribute('class','stup');
+  sv.innerHTML='<circle class="t" cx="'+z/2+'" cy="'+z/2+'" r="'+(z/2-2)+'"/><circle class="p" cx="'+z/2+'" cy="'+z/2+'" r="'+(z/2-2)+'" stroke-dasharray="'+C+'" style="transition:none;stroke-dashoffset:'+off+'"/>';
+  ms.appendChild(sv);void sv.getBoundingClientRect();sv.querySelector('.p').style.transition=''}
+ sv.setAttribute('width',z);sv.setAttribute('height',z);sv.setAttribute('viewBox','0 0 '+z+' '+z);
+ sv.style.left=(r.left-m.left+r.width/2-z/2)+'px';sv.style.top=(r.top-m.top+r.height/2-z/2)+'px';
+ sv.querySelector('.p').style.strokeDashoffset=off;
+ sv.classList.toggle('fd',stUp>=100&&stSh>=100)}
+async function bgPublish(d,c){
+ stSh=0;stUpSet(4);
+ try{var o;
+  if(d.kind==='photo'){var bl=await shrink(d.f,1080);stUpSet(35);o={kind:'photo',u:await upl(bl)};stUpSet(80)}
+  else if(d.kind==='video'){o={kind:'video',u:await upv(d.f,function(p){stUpSet(6+p*.8)})};stUpSet(88)}
+  else{o={kind:'text',text:d.text,bg:d.bg};stUpSet(60)}
+  await db.collection('stories').doc(d.id).set(Object.assign({uid:uid,text:'',u:'',ts:Date.now(),aud:c.aud,cap:d.cap||'',dur:c.dur,ss:c.ss,pin:c.pin,hide:c.aud==='all'?c.hA:c.aud==='contacts'?c.hC:[],sel:c.aud==='close'?c.cf:c.aud==='sel'?c.sel:[]},o));
+  stSh=100;stUpSet(100);
+  try{setU({stAud:c.aud,stHA:c.hA,stHC:c.hC,cf:c.cf}).catch(function(){})}catch(e){}
+  setTimeout(function(){stUpSet(-1)},700);toast('История опубликована')
+ }catch(er){stUpSet(-1);toast('Не удалось опубликовать: '+(er.code||er.message))}}
+{var _mn=main;main=function(){var r=_mn.apply(this,arguments);try{stRingApply()}catch(e){}return r}}
 </script>
 </body></html>
