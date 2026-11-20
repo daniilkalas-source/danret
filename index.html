@@ -1483,7 +1483,7 @@ function chatView(){
  const ch=c.type==='channel',ro=ch&&!isAd(c,uid,'post'),blk=c.type==='group'&&!pm(c,'msg')&&!isAd(c,uid),mdOk=!(c.type==='group'&&!pm(c,'media')&&!isAd(c,uid)),inM=c.members.includes(uid),mu0=(me.muted||[]).includes(c.id),roBar=()=>(c.dmc!==false?'<div class="send"><textarea id="gi" rows="1" placeholder="Сообщение каналу" autocomplete="off"></textarea><button class="btn" id="sd"><svg class="i" viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-3-6.5z"/></svg></button></div>':'')+(!inM?'<div class="send"><button class="btn" id="sbs" style="flex:1">Подписаться</button></div>':'<div class="send"><button class="btn" id="mt2" style="flex:1;background:var(--sf);color:var(--ac)">'+(mu0?'Вкл. звук':'Убрать звук')+'</button></div>'),old=$('#gi')?$('#gi').value:'',t=fv?(c['in_'+dmCh]||'Канал'):ctitle(c);
  const rx=m=>`<div class="rs">${Object.entries(virtM(m,c)).map(([e,a])=>`<button class="chip ${a.includes(uid)?'on':''}" data-r="${m.id}" data-e="${e}">${e} ${a.length}</button>`).join('')}${!ch||!(c.rx||EM).length?'':pk===m.id?(c.rx||EM).map(e=>`<button class="chip" data-r="${m.id}" data-e="${e}">${e}</button>`).join(''):`<button class="chip" data-p="${m.id}"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 14a4 4 0 007 0M9 9.5v.1M15 9.5v.1"/></svg>＋</button>`}${ch?dl(m):''}</div>`;
  const vc=m=>Object.keys(m).filter(k=>k.startsWith('v_')).length+virtV(m,c),dl=m=>((m.from===uid&&m.kind==='text')?`<button class="chip" data-ed="${m.id}"><svg class="i" viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19zM14 7l3 3"/></svg></button>`:'')+((m.from===uid||c.owner===uid)?`<button class="chip" data-del="${m.id}"><svg class="i" viewBox="0 0 24 24"><path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13"/></svg></button>`:'');
- const bd0=m=>m.al&&m.al.length>1?albH(m):m.kind==='poll'?pollH(m):m.kind==='file'?fileH(m):m.kind==='geo'?geoH(m):m.kind==='contact'?ctH(m):m.kind==='photo'?`<img class="ph" src="${m.u}" data-ph="${m.u}">`:m.kind==='video'?`<video class="ph" src="${m.u}" controls playsinline preload="metadata"></video>`:m.kind==='voice'?`<div class="vm"><button class="pl" data-a="${m.id}">${auId===m.id?'⏸':'▶'}</button><div class="col"><div class="bar"><i id="pb${m.id}"></i></div><div class="sub">${fmt(m.d||0)}</div></div></div>`:m.kind==='circle'?`<div class="cvw"><video class="vc" src="${m.u}" playsinline muted loop autoplay preload="auto" data-vc="1"></video><button class="pl cpl" data-cp="${m.id}">▶</button></div>`:stH(m),cp=m=>m.text&&(m.kind==='photo'||m.kind==='video')?`<div class="cap">${E(m.text)}</div>`:'',bd=m=>bd0(m)+cp(m);
+ const bd0=m=>m.al&&m.al.length>1?albH(m):m.kind==='poll'?pollH(m):m.kind==='file'?fileH(m):m.kind==='geo'?geoH(m):m.kind==='contact'?ctH(m):m.kind==='photo'?`<img class="ph" src="${m.u}" data-ph="${m.u}">`:m.kind==='video'?`<video class="ph" src="${m.u}" controls playsinline preload="metadata"></video>`:m.kind==='voice'?voiceH(m):m.kind==='circle'?`<div class="cvw"><video class="vc" src="${m.u}" playsinline muted loop autoplay preload="auto" data-vc="1"></video><button class="pl cpl" data-cp="${m.id}">▶</button></div>`:stH(m),cp=m=>m.text&&(m.kind==='photo'||m.kind==='video')?`<div class="cap">${E(m.text)}</div>`:'',bd=m=>bd0(m)+cp(m);
  A.innerHTML=`<div class="top"><button class="ib" id="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="t" id="hd" style="cursor:pointer">${icon(c)}<span class="tn">${E(t)}${isV(c)?vb():''}${c.type==='dm'&&gone(c.members.find(x=>x!==uid))?FZ:''}</span><div class="sub" id="sbt" style="font-weight:400;font-size:12px">${fv?'Сообщения':c.type==='dm'?seenText(c.members.find(x=>x!==uid)):c.type==='saved'?'только для вас':(c.members.length+virtN(c))+(ch?' подписч.':' участн.')}</div></div>${ch&&c.owner===uid?'<button class="ib" id="ibx"><svg class="i" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg></button>':''}<div id="ha">${av(t,fv?dmCh:c.id,38)}</div></div>
  <div class="msgs">${ML.length?grp(ML).map((m,i,ar)=>dsep(m,ar[i-1])+(ch?`<div class="post" data-pid="${m.id}"><div class="ph">${av(c.title,c.id)}${E(c.title)}</div>${bd(m)}<i style="display:block;color:var(--mu);font-size:11px;text-align:right;font-style:normal">${ch?'<svg class="i" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg> '+'<span data-vv="'+m.id+'">'+vc(m)+'</span>'+' · ':''}${m.ed?'изм. ':''}${tm(m.ts)}</i>${rx(m)}${cmBar(m)}</div>`:`<div class="b ${m.from===uid?'me':''} ${m.kind==='circle'?'cv':''}" data-id="${m.id}">${c.type==='group'&&m.from!==uid?`<small>${E(uname(m.from))}</small>`:''}${m.fw?`<div class="qt" style="cursor:default"><b>Переслано от ${E(m.fw)}</b></div>`:''}${m.rp?qt(m.rp):''}${bd(m)}<i>${m.ed?'изм. ':''}${tm(m.ts)}${tk(m,c)}</i>${m.re?rx(m):''}</div>`)).join(''):'<div class="empty">Сообщений пока нет</div>'}</div>
  ${blk?'<div class="send"><div class="sub" style="flex:1;text-align:center;padding:14px 8px">Администратор ограничил отправку сообщений</div></div>':ro?roBar():fv?'<div class="send"><textarea id="gi" rows="1" placeholder="Сообщение каналу" autocomplete="off"></textarea><button class="btn" id="sd"><svg class="i" viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-3-6.5z"/></svg></button></div>':`${rpBar()}<div class="send">${mdOk?`<button class="ib" id="at"><svg class="i" viewBox="0 0 24 24"><path d="M20 11l-8 8a5 5 0 01-7-7l8-8a3.4 3.4 0 015 5l-8 8a1.7 1.7 0 01-2.5-2.5l7-7"/></svg></button>`:''}<textarea id="gi" rows="1" placeholder="${ch?'Написать пост':'Сообщение'}" autocomplete="off"></textarea>${mdOk?`<button class="ib" id="mic"><svg class="i" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></button><button class="ib" id="cam"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></button>`:''}<button class="btn" id="sd"><svg class="i" viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-3-6.5z"/></svg></button></div>`}`;
@@ -1496,13 +1496,13 @@ function chatView(){
  markRead(c);
  A.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>react(msgs.find(m=>m.id===b.dataset.r),b.dataset.e));
  A.querySelectorAll('[data-vc]').forEach(v=>{v.onerror=()=>vfix(v,v.getAttribute('src'))});A.querySelectorAll('[data-vc]').forEach(v=>v.onclick=()=>{v.muted=!v.muted;v.currentTime=0;v.play()});A.querySelectorAll('[data-cm]').forEach(b=>b.onclick=()=>openCm(b.dataset.cm));A.querySelectorAll('[data-cp]').forEach(b=>b.onclick=e=>{e.stopPropagation();const m=msgs.find(x=>x.id===b.dataset.cp);if(m)playCircle(m)});
- A.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const m=msgs.find(x=>x.id===b.dataset.a),same=auId===m.id;if(au){au.pause();au=null;auId=null;A.querySelectorAll('[data-a]').forEach(x=>x.textContent='▶')}if(same)return;au=new Audio(m.a);auId=m.id;b.textContent='⏸';au.ontimeupdate=()=>{const p=$('#pb'+m.id);if(p)p.style.width=(au.currentTime/(au.duration||m.d||1)*100)+'%'};au.onended=()=>{au=null;auId=null;if(cur&&!inf&&!$('.sheet'))chatView()};au.play().catch(()=>toast('Не удалось воспроизвести'))});
+ 
  const send=async()=>{const x=$('#gi').value.trim();if(!x)return;if(c.type==='dm'&&(me.blk||[]).includes(c.members.find(k=>k!==uid)))return toast('Вы заблокировали этого пользователя. Разблокируйте его в профиле.');$('#gi').value='';$('#gi').style.height='';if(fv)return chMsg(chats.find(k=>k.id===dmCh)||{id:dmCh,title:c['in_'+dmCh],owner:c['io_'+dmCh]},x);if(ro)return chMsg(c,x);if(ed){const id=ed;ed=null;await mc(cur).doc(id).update({text:x,ed:1}).catch(e=>toast('Ошибка: '+(e.code||e.message)));return chatView()}const o={text:x};if(rp&&rp.c===cur){o.rp={id:rp.id,n:rp.n,t:rp.t};rp=null}await postMsg(o)};
  if($('#sbs'))$('#sbs').onclick=async()=>{try{await joinCh(c);for(let i=0;i<30&&!chats.some(x=>x.id===c.id&&x.members.includes(uid));i++)await new Promise(f=>setTimeout(f,100));chatView()}catch(e){toast('Не удалось подписаться')}};if($('#mt2'))$('#mt2').onclick=()=>{const l=me.muted||[];me.muted=mu0?l.filter(x=>x!==c.id):[...l,c.id];setU({muted:me.muted}).catch(()=>{});chatView()};if($('#sd')){$('#sd').onclick=send;const g=$('#gi');g.oninput=()=>{g.style.height='auto';g.style.height=Math.min(g.scrollHeight,140)+'px'};g.onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey&&!matchMedia('(pointer:coarse)').matches){e.preventDefault();send()}};if($('#at')){$('#at').onclick=attachSheet;$('#mic').onclick=()=>rec('voice');$('#cam').onclick=recCircle}}
  chatX(c);if(cmDraw)cmDraw();
 }
 let stPin=[],mpD=null,stRaw=[],usg='',T0=0,cmDraw=null;const NT={},NTm={};
-const APP_VER='202611201445',OFFC=['danretofficial','danretconru'];
+const APP_VER='202611201510',OFFC=['danretofficial','danretconru'];
 const PRD={msg:1,media:1,add:1,pin:0,prof:0},PRM=[['msg','Отправка сообщений'],['media','Отправка фото и видео'],['add','Добавление участников'],['pin','Закрепление сообщений'],['prof','Изменение профиля группы']],ADR=[['del','Удаление сообщений'],['pin','Закрепление сообщений'],['add','Добавление участников'],['prof','Изменение профиля']];
 const isAd=(c,u,r)=>{if(!c||!u)return false;if(c.owner===u)return true;const a=c.am&&c.am[u];return !!a&&(!r||!a.r||a.r[r]!==0)};
 const pm=(c,k)=>(c.perm&&c.perm[k]!==undefined)?c.perm[k]:PRD[k];
@@ -2546,5 +2546,95 @@ var H=Math.max(screen.height,screen.width,innerHeight,vv?vv.height:0);r.style.se
 setInterval(fix,350);document.addEventListener('focusout',function(){setTimeout(fix,100);setTimeout(fix,500);setTimeout(fix,1200)});
 document.addEventListener('pointerup',function(){setTimeout(fix,400)},true);
 if(window.visualViewport){visualViewport.addEventListener('resize',function(){setTimeout(fix,150)});visualViewport.addEventListener('scroll',function(){setTimeout(fix,150)})}})();
+</script>
+<style id="dn-voice-css">
+.vm2{min-width:236px;max-width:100%}
+.vm2 .vr{display:flex;align-items:center;gap:10px}
+.vm2 .pl{background:rgba(255,255,255,.26);color:inherit;width:42px;height:42px;font-size:15px;-webkit-tap-highlight-color:transparent}
+.b:not(.me) .vm2 .pl{background:var(--ac);color:#fff}
+.vm2 .vcol{flex:1;min-width:0}
+.wv{display:flex;align-items:center;gap:2px;height:30px;cursor:pointer}
+.wv i{flex:1;min-width:2px;max-width:4px;border-radius:2px;background:currentColor;opacity:.38;transition:opacity .12s}
+.wv i.on{opacity:1}
+.vi{display:flex;align-items:center;justify-content:space-between;margin-top:3px;font-size:12px}
+.vi .vt{opacity:.8;font-variant-numeric:tabular-nums}
+.vsp{border:0;border-radius:10px;padding:2px 9px;font-size:12px;font-weight:700;background:rgba(255,255,255,.22);color:inherit;min-width:36px}
+.b:not(.me) .vsp{background:rgba(127,127,127,.2)}
+.vaa{width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.18);color:inherit;font-weight:700;font-size:14px;flex:none}
+.b:not(.me) .vaa{background:rgba(127,127,127,.2)}
+.vaa.on{background:rgba(255,255,255,.42)}
+.vtx{margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.18);font-size:14px;line-height:1.38;white-space:pre-wrap;word-break:break-word}
+#vmini{position:fixed;left:12px;right:12px;top:calc(env(safe-area-inset-top,0px) + 74px);z-index:60;display:flex;align-items:center;gap:10px;padding:7px 10px 7px 8px;border-radius:24px;background:rgba(28,24,58,.94);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:#fff;border:1px solid rgba(255,255,255,.14);box-shadow:0 8px 24px rgba(0,0,0,.35);overflow:hidden}
+#vmini .vmp{width:36px;height:36px;border-radius:50%;border:0;background:var(--ac,#6a5cff);color:#fff;font-size:14px;flex:none}
+#vmini .vmn{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2}
+#vmini .vmn b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#vmini .vmn span{font-size:12px;opacity:.7}
+#vmini .vsp{background:rgba(255,255,255,.2);color:#fff}
+#vmini .vmx{border:0;background:none;color:#fff;opacity:.7;font-size:18px;padding:4px 6px}
+#vmini .vmb{position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--ac,#6a5cff)}
+</style>
+<script id="dn-voice">
+var VSP=1,VWD={},VWQ=[],VWB=0,VWS={},VTR={},VTRo={},VTRs={};
+function VSPL(){return (VSP===1?'1':String(VSP))+'x'}
+function vwFake(id){var h=0,i,a=[];for(i=0;i<String(id).length;i++)h=(h*31+String(id).charCodeAt(i))>>>0;for(i=0;i<40;i++){h=(h*1664525+1013904223)>>>0;a.push(.22+.62*(((h>>>8)%100)/100))}return a}
+function vwBars(w,k){return w.map(function(v,i){return '<i class="'+(i<k?'on':'')+'" style="height:'+Math.max(3,Math.round(v*28))+'px"></i>'}).join('')}
+function voiceH(m){var id=m.id,w=VWD[id]||vwFake(id),pl=auId===id&&au,k=0,cur2=m.d||0;
+ if(pl){var d=au.duration&&isFinite(au.duration)?au.duration:(m.d||1);k=Math.floor(au.currentTime/d*w.length);cur2=au.currentTime}
+ vwQueue(m);
+ var txt=VTR[id]||m.tr||VTRs[id]||'';
+ return '<div class="vm2" data-vm="'+id+'"><div class="vr"><button class="pl" data-a="'+id+'">'+(pl?'⏸':'▶')+'</button><div class="vcol"><div class="wv" data-w="'+id+'">'+vwBars(w,k)+'</div><div class="vi"><span class="vt" id="vt'+id+'">'+fmt(cur2)+'</span><button class="vsp" data-sp="1">'+VSPL()+'</button></div></div><button class="vaa'+(VTRo[id]?' on':'')+'" data-tr="'+id+'">Аа</button></div><div class="vtx" id="vx'+id+'" style="display:'+(VTRo[id]?'block':'none')+'">'+E(txt)+'</div></div>'}
+/* реальная волна из аудио */
+function vwQueue(m){if(!m.a||VWD[m.id]||VWS[m.id])return;VWS[m.id]=1;VWQ.push(m);setTimeout(vwNext,300)}
+function vwNext(){if(VWB||!VWQ.length)return;VWB=1;var m=VWQ.shift();
+ vmDecode(m.a).then(function(ab){var ch=ab.getChannelData(0),n=40,sz=Math.max(1,Math.floor(ch.length/n)),o=[],mx=0,i,j;
+  for(i=0;i<n;i++){var s=0,c=0;for(j=i*sz;j<Math.min(ch.length,(i+1)*sz);j+=Math.max(1,sz>>6)){s+=ch[j]*ch[j];c++}var r=c?Math.sqrt(s/c):0;o.push(r);if(r>mx)mx=r}
+  o=o.map(function(v){return .12+.88*Math.pow(mx?v/mx:0,.65)});VWD[m.id]=o;
+  document.querySelectorAll('.wv[data-w="'+m.id+'"]').forEach(function(e){var k=e.querySelectorAll('i.on').length;e.innerHTML=vwBars(o,k)})
+ }).catch(function(){}).then(function(){VWB=0;setTimeout(vwNext,50)})}
+function vmDecode(src){return fetch(src).then(function(r){return r.arrayBuffer()}).then(function(buf){var AC=window.AudioContext||window.webkitAudioContext,ac=new AC();
+ return new Promise(function(ok,no){var p=ac.decodeAudioData(buf,ok,no);if(p&&p.catch)p.catch(no)}).then(function(ab){try{ac.close()}catch(e){}return ab},function(e){try{ac.close()}catch(x){}throw e})})}
+/* прогресс / интерфейс */
+function vmUI(id){document.querySelectorAll('.vm2[data-vm="'+id+'"] .pl').forEach(function(b){b.textContent=(auId===id&&au)?'⏸':'▶'});var mp=document.getElementById('vmp');if(mp)mp.textContent=(auId&&au&&!au.paused)?'⏸':'▶'}
+function vmProg(m,a){var w=document.querySelector('.wv[data-w="'+m.id+'"]'),d=a&&a.duration&&isFinite(a.duration)?a.duration:(m.d||1),f=a?a.currentTime/d:0;
+ if(w){var is=w.children,k=Math.floor(f*is.length),i;for(i=0;i<is.length;i++){var on=i<k;if(is[i].classList.contains('on')!==on)is[i].classList.toggle('on',on)}}
+ var t=document.getElementById('vt'+m.id);if(t)t.textContent=fmt(a?a.currentTime:(m.d||0));
+ var b=document.querySelector('#vmini .vmb');if(b)b.style.width=(f*100)+'%'}
+function vmMini(on,m){var d=document.getElementById('vmini');if(!on){if(d)d.remove();return}
+ if(!d){d=document.createElement('div');d.id='vmini';document.body.appendChild(d)}
+ d.innerHTML='<button class="vmp" id="vmp">⏸</button><div class="vmn"><b>'+E(uname(m.from))+'</b><span>Голосовое сообщение</span></div><button class="vsp" data-sp="1">'+VSPL()+'</button><button class="vmx" id="vmx">✕</button><div class="vmb"></div>'}
+function vmStop(){var o=auId,m;if(au){try{au.pause()}catch(e){}}au=null;auId=null;vmMini(false);if(o){vmUI(o);m=msgs.find(function(x){return x.id===o});if(m)vmProg(m,null)}}
+function vmPlay(id){var m=msgs.find(function(x){return x.id===id});if(!m||!m.a)return;var same=auId===id;
+ if(same&&au){if(au.paused){au.play().catch(function(){});}else au.pause();vmUI(id);return}
+ if(auId)vmStop();
+ var a=new Audio(m.a);au=a;auId=id;a.playbackRate=VSP;try{a.preservesPitch=true;a.webkitPreservesPitch=true}catch(e){}
+ a.ontimeupdate=function(){vmProg(m,a)};a.onplaying=function(){a.playbackRate=VSP;vmUI(id)};a.onpause=function(){vmUI(id)};
+ a.onended=function(){if(au===a){au=null;auId=null}vmProg(m,null);vmUI(id);vmMini(false)};
+ a.play().then(function(){a.playbackRate=VSP}).catch(function(){toast('Не удалось воспроизвести');if(au===a){au=null;auId=null}vmUI(id);vmMini(false)});
+ vmUI(id);vmMini(true,m)}
+function vmSpeed(){VSP=VSP===1?1.5:VSP===1.5?2:1;if(au)au.playbackRate=VSP;document.querySelectorAll('.vsp').forEach(function(b){b.textContent=VSPL()})}
+/* расшифровка (Whisper в браузере, модель грузится один раз) */
+var ASRp=null;
+function asrLoad(cb){if(ASRp)return ASRp;ASRp=import('https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2').then(function(T){T.env.allowLocalModels=false;return T.pipeline('automatic-speech-recognition','Xenova/whisper-base',{progress_callback:function(p){try{cb&&cb(p)}catch(e){}}})});ASRp.catch(function(){ASRp=null});return ASRp}
+function vmPcm(src){return vmDecode(src).then(function(ab){if(ab.sampleRate===16000&&ab.numberOfChannels===1)return ab.getChannelData(0);
+ var OC=window.OfflineAudioContext||window.webkitOfflineAudioContext,oc=new OC(1,Math.max(1,Math.ceil(ab.duration*16000)),16000),s=oc.createBufferSource();s.buffer=ab;s.connect(oc.destination);s.start(0);
+ return new Promise(function(ok,no){var p=oc.startRendering();if(p&&p.then)p.then(ok,no);else oc.oncomplete=function(e){ok(e.renderedBuffer)}}).then(function(r){return r.getChannelData(0)})})}
+function vxSet(id,t){VTRs[id]=t;var e=document.getElementById('vx'+id);if(e)e.textContent=t}
+function vmTr(m){var id=m.id,cid=cur;if(VTRs.busy===id)return;VTRs.busy=id;vxSet(id,'Готовлю расшифровку…');
+ var pr=0;asrLoad(function(p){if(p&&p.status==='progress'&&typeof p.progress==='number'){var v=Math.round(p.progress);if(v>pr||v<pr-40){pr=v;vxSet(id,'Загрузка модели для расшифровки… '+v+'% (только в первый раз)')}}})
+ .then(function(asr){vxSet(id,'Расшифровываю…');return vmPcm(m.a).then(function(pcm){return asr(pcm,{language:'russian',task:'transcribe',chunk_length_s:30,stride_length_s:5})})})
+ .then(function(r){var t=String((r&&r.text)||'').trim()||'(речь не распознана)';VTR[id]=t;VTRs[id]='';var e=document.getElementById('vx'+id);if(e)e.textContent=t;
+  try{if(t.charAt(0)!=='(')mc(cid).doc(id).update({tr:t}).catch(function(){})}catch(e2){}})
+ .catch(function(e){console.error(e);vxSet(id,'Не удалось расшифровать (нужен интернет). Нажмите «Аа» ещё раз.');delete VTRo[id]})
+ .then(function(){VTRs.busy=0})}
+document.addEventListener('click',function(e){var t=e.target;if(!t||!t.closest)return;
+ var b=t.closest('.vm2 .pl');if(b){e.stopPropagation();e.preventDefault();vmPlay(b.getAttribute('data-a'));return}
+ if(t.closest('#vmp')){e.stopPropagation();if(au){if(au.paused)au.play().catch(function(){});else au.pause();vmUI(auId)}return}
+ if(t.closest('#vmx')){e.stopPropagation();vmStop();return}
+ if(t.closest('.vsp')){e.stopPropagation();e.preventDefault();vmSpeed();return}
+ var tr=t.closest('.vaa');if(tr){e.stopPropagation();e.preventDefault();var id=tr.getAttribute('data-tr'),m=msgs.find(function(x){return x.id===id});if(!m)return;
+  VTRo[id]=!VTRo[id];tr.classList.toggle('on',!!VTRo[id]);var bx=document.getElementById('vx'+id);if(bx)bx.style.display=VTRo[id]?'block':'none';
+  if(VTRo[id]){var tx=VTR[id]||m.tr;if(tx){if(bx)bx.textContent=tx}else vmTr(m)}return}
+ var w=t.closest('.wv');if(w){var wid=w.getAttribute('data-w');if(auId===wid&&au&&au.duration&&isFinite(au.duration)){e.stopPropagation();var r=w.getBoundingClientRect();au.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*au.duration}else{e.stopPropagation();vmPlay(wid)}}
+},true);
 </script>
 </body></html>
