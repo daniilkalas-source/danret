@@ -4065,4 +4065,57 @@ function tr(){
 var t=0;new MutationObserver(function(){if(t)return;t=requestAnimationFrame(function(){t=0;folders();tr()})}).observe(document.body,{childList:true,subtree:true});
 })();
 </script>
+<style id="dn-song">
+.dnsg{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.dnsg:active{opacity:.7}
+.dnsp{width:40px;height:40px;border-radius:50%;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:15px}
+.dnsg .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dnsg.pl .dnsp{animation:dnPulse 1.4s ease-in-out infinite}
+@keyframes dnPulse{50%{transform:scale(1.1);box-shadow:0 0 0 7px #3b82f633}}
+</style>
+<script id="dn-song-js">
+(function(){
+var au=new Audio();au.preload='none';au.setAttribute('playsinline','');var cu='';
+function paint(){document.querySelectorAll('.dnsg[data-u]').forEach(function(r){var on=r.dataset.u===cu&&!au.paused;r.classList.toggle('pl',on);r.querySelector('.dnsp').textContent=on?'❚❚':'▶'})}
+['play','pause','ended'].forEach(function(e){au.addEventListener(e,paint)});
+au.addEventListener('error',function(){if(cu)toast('Не удалось воспроизвести песню')});
+function play(u){if(cu===u){au.paused?au.play().catch(function(){}):au.pause();return}
+ try{document.querySelectorAll('audio,video').forEach(function(m){if(m!==au)m.pause()})}catch(e){}
+ cu=u;au.src=u;au.play().catch(function(){toast('Не удалось воспроизвести песню')});paint()}
+function row(u,name,own){var d=document.createElement('div');d.className='grp dnsg';d.id='dnsong';d.dataset.u=u;
+ d.innerHTML='<span class="dnsp">▶</span><div class="col"><div class="nm"></div><div class="sub">Песня в профиле</div></div>'+(own?'<span class="sub" style="font-size:13px">нажмите ▶</span>':'');
+ d.querySelector('.nm').textContent='♪ '+(name||'Песня');d.onclick=function(){play(u)};
+ var r=d;setTimeout(paint,0);return r}
+/* загрузка в хранилище, без раздувания документа пользователя */
+function pick(){var i=document.createElement('input');i.type='file';i.accept='audio/*,.mp3,.m4a,.wav,.ogg,.aac';i.style.display='none';document.body.appendChild(i);
+ i.onchange=async function(){var f=i.files[0];i.remove();if(!f)return;
+  if(f.size>20*1048576)return toast('Файл больше 20 МБ');
+  try{toast('Загружаю песню…');var ext=(f.name.split('.').pop()||'mp3').toLowerCase().slice(0,5);
+   var ref=firebase.storage(window.FBAPP).ref('media/'+uid+'/song-'+Date.now()+'.'+ext);
+   await ref.put(f,{contentType:f.type||'audio/mpeg'});var url=await ref.getDownloadURL();
+   await setU({song:url,songName:f.name.replace(/\.[^.]+$/,'').slice(0,60)});toast('Песня добавлена')}
+  catch(e){toast('Не удалось загрузить: '+(e.code||e.message))}};
+ i.click()}
+function menu(){var o=document.createElement('div');o.className='sheet';var has=!!me.song;
+ o.innerHTML='<div><b style="font-size:18px">Песня в профиле</b>'+(has?'<p class="sub" id="dnn"></p>':'<p class="sub">Прикрепите аудиофайл: он появится в вашем профиле, и по нажатию будет играть музыка.</p>')+
+ '<div class="row k" id="dn1"><div class="col nm">'+(has?'Заменить файл':'Выбрать файл')+'</div></div>'+(has?'<div class="row k" id="dn2"><div class="col nm">Слушать</div></div><div class="row k" id="dn3"><div class="col nm" style="color:#e5484d">Убрать песню</div></div>':'')+'</div>';
+ document.body.appendChild(o);if(has)o.querySelector('#dnn').textContent='♪ '+(me.songName||'Песня');
+ o.onclick=function(e){if(e.target===o)o.remove()};
+ o.querySelector('#dn1').onclick=function(){o.remove();pick()};
+ if(has){o.querySelector('#dn2').onclick=function(){o.remove();play(me.song)};
+  o.querySelector('#dn3').onclick=async function(){o.remove();if(cu===me.song){au.pause()}try{await setU({song:'',songName:''});toast('Песня убрана')}catch(e){toast('Не удалось')}}}}
+function inject(){
+ var A=document.getElementById('app');if(!A)return;
+ var b=A.querySelector('#s_bio');
+ if(b&&!A.querySelector('#s_song')){var r=document.createElement('div');r.className='row k';r.id='s_song';
+  r.innerHTML='<span class="dic" style="background:#ec4899"><svg class="i" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13M9 18a3 3 0 11-6 0 3 3 0 016 0zM20 16a3 3 0 11-6 0 3 3 0 016 0z"/></svg></span><div class="col nm">Песня в профиле</div><span class="sub"></span>';
+  r.lastChild.textContent=me.song?'♪ '+(me.songName||'есть'):'прикрепить';r.onclick=menu;b.insertAdjacentElement('afterend',r)}
+ var acts=A.querySelector('.acts');
+ if(acts&&!A.querySelector('#dnsong')){
+  try{var c=chats.find(function(x){return x.id===inf});if(!c)return;
+   var o=c.type==='saved'?me:(c.type==='dm'?users[c.members.find(function(x){return x!==uid})]:null);
+   if(o&&o.song)acts.insertAdjacentElement('afterend',row(o.song,o.songName,c.type==='saved'))}catch(e){}}}
+var t=0;new MutationObserver(function(){if(t)return;t=requestAnimationFrame(function(){t=0;inject()})}).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
 </body></html>
