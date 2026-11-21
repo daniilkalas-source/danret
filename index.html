@@ -2280,6 +2280,7 @@ let mto;new MutationObserver(()=>{clearTimeout(mto);mto=setTimeout(scanMedia,400
 .ss.s3 .lnk2{color:var(--ac);font-size:14px;padding:8px 8px 0;cursor:pointer}
 
 /* gifts */
+.gfch{display:flex;gap:8px;padding:0 12px 12px;overflow-x:auto}.gfch button{border:0;border-radius:18px;padding:8px 14px;background:var(--sf);color:var(--mu);font-weight:600;font-size:14px;white-space:nowrap}.gfch button.on{background:var(--ac);color:#fff}
 .gfs{position:fixed;inset:0;z-index:40;background:var(--bg);color:var(--tx);overflow:auto;padding:calc(env(safe-area-inset-top,0px) + 12px) 14px 30px}
 .gfh{display:flex;align-items:center;justify-content:space-between;gap:8px}.gft0{font-size:19px;font-weight:700;flex:1;text-align:center}
 .gfx,.gfx2{width:40px;height:40px;border-radius:50%;border:0;background:var(--sf);color:var(--tx);font-size:18px}
@@ -3586,9 +3587,16 @@ async function giftLoad(A,oid){
  L=L.filter(x=>!x.hide&&!x.conv).sort((a,b)=>b.ts-a.ts);
  if(!box.isConnected)return;
  if(!L.length){box.innerHTML='<div class="empty" style="padding:30px">Подарков пока нет</div>';return}
- box.innerHTML='<div class="gfpg">'+L.map(x=>{const g=GF[x.gid]||{e:'🎁',n:'Подарок',c:0};return '<div class="gfpk'+(g.c?' col':'')+'" data-gi="'+x.id+'" style="'+gfBg(g)+'"><span class="gfav">'+av(uname(x.from),x.from,22)+'</span>'+(g.c&&x.no?'<i class="gfr">#'+x.no+'</i>':'')+'<div class="gfe">'+g.e+'</div></div>'}).join('')+'</div>';
- box.querySelectorAll('[data-gi]').forEach(k=>k.onclick=()=>{const x=L.find(y=>y.id===k.dataset.gi),g=GF[x.gid]||{e:'🎁',n:'Подарок',c:0};
-  sheet(hd(E(g.n))+'<div class="gfbig" style="margin:6px auto 12px;'+gfBg(g)+'">'+g.e+'</div><div class="gfinf"><div><span>От</span><b>'+E(uname(x.from))+'</b></div><div><span>Дата</span><b>'+gfDate(x.ts)+'</b></div>'+(x.no?'<div><span>Номер</span><b>#'+x.no+'</b></div>':'')+'</div>'+(x.cmt?'<div class="gfcm" style="text-align:center;margin-top:8px">«'+E(x.cmt)+'»</div>':''))})}
+ const isC=x=>!!(GF[x.gid]&&GF[x.gid].c),nC=L.filter(isC).length;let f=box._f||'all';
+ const draw=()=>{box._f=f;
+  const V=(f==='col'?L.filter(isC):L.slice().sort((a,b)=>isC(b)-isC(a)));
+  box.innerHTML='<div class="gfch"><button data-f="all" class="'+(f==='all'?'on':'')+'">Все подарки '+L.length+'</button><button data-f="col" class="'+(f==='col'?'on':'')+'">Коллекционные '+nC+'</button></div>'+
+  (V.length?'<div class="gfpg">'+V.map(x=>{const g=GF[x.gid]||{e:'🎁',n:'Подарок',c:0};return '<div class="gfpk'+(g.c?' col':'')+'" data-gi="'+x.id+'" style="'+gfBg(g)+'"><span class="gfav">'+av(uname(x.from),x.from,22)+'</span>'+(g.c&&x.no?'<i class="gfr">#'+x.no+'</i>':'')+'<div class="gfe">'+g.e+'</div></div>'}).join('')+'</div>':'<div class="empty" style="padding:30px">Коллекционных подарков пока нет</div>');
+  box.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{f=b.dataset.f;draw()});
+  box.querySelectorAll('[data-gi]').forEach(k=>k.onclick=()=>{const x=L.find(y=>y.id===k.dataset.gi),g=GF[x.gid]||{e:'🎁',n:'Подарок',c:0};
+   sheet(hd(E(g.n))+'<div class="gfbig" style="margin:6px auto 12px;'+gfBg(g)+'">'+g.e+'</div><div class="gfinf"><div><span>От</span><b>'+E(uname(x.from))+'</b></div><div><span>Дата</span><b>'+gfDate(x.ts)+'</b></div>'+(x.no?'<div><span>Номер</span><b>#'+x.no+'</b></div>':'')+'</div>'+(x.cmt?'<div class="gfcm" style="text-align:center;margin-top:8px">«'+E(x.cmt)+'»</div>':''))})};
+ draw()
+}
 
 </script>
 </body></html>
