@@ -4327,13 +4327,6 @@ async function capCheck(){if(capBusy||typeof uid==='undefined'||!uid||!window.db
 setInterval(capCheck,60000);setTimeout(capCheck,6000);
 /* ---------- анонимные вопросы ---------- */
 var link=function(){return location.origin+location.pathname+'#ask-'+uid};
-async function anonSheet(){var o=sh('<b style="font-size:18px">Анонимные вопросы</b><p class="sub">Отправьте ссылку друзьям — они смогут задать вопрос, не раскрывая себя.</p><button class="btn" id="dnal" style="width:100%">Скопировать ссылку</button><div id="dnaq" style="margin-top:10px"><p class="sub">Загрузка…</p></div>');
- o.querySelector('#dnal').onclick=function(){try{copy(link())}catch(e){navigator.clipboard&&navigator.clipboard.writeText(link())}toast('Ссылка скопирована')};
- try{var q=await db.collection('anon').where('to','==',uid).get(),a=[];q.forEach(function(d){a.push(d)});a.sort(function(x,y){return y.data().ts-x.data().ts});
-  var box=o.querySelector('#dnaq');box.innerHTML=a.length?'':'<p class="sub">Пока нет вопросов</p>';
-  a.forEach(function(d){var r=document.createElement('div');r.className='post';r.style.marginBottom='8px';r.innerHTML='<div></div><div class="sub" style="margin-top:6px"><span style="color:var(--ac)">Удалить</span></div>';
-   r.firstChild.textContent=d.data().q;r.querySelector('span').onclick=async function(){try{await d.ref.delete();r.remove()}catch(e){toast('Не удалось')}};box.appendChild(r)})}
- catch(e){o.querySelector('#dnaq').innerHTML='<p class="sub">Не удалось загрузить: '+ESC(e.code||e.message)+'</p>'}}
 var asked=false;
 function askCheck(){var m=/^#ask-(.+)$/.exec(location.hash);if(!m||asked||typeof me==='undefined'||!me)return;var id=m[1];
  if(!users[id]||id===uid){if(users[id]||id===uid){asked=true;history.replaceState(null,'',location.pathname)}return}asked=true;
@@ -4341,7 +4334,62 @@ function askCheck(){var m=/^#ask-(.+)$/.exec(location.hash);if(!m||asked||typeof
  history.replaceState(null,'',location.pathname);
  o.querySelector('#dnqs').onclick=async function(){var t=o.querySelector('#dnqt').value.trim();if(!t)return;
   var last=+(localStorage.getItem('dn_aq')||0);if(Date.now()-last<30000)return toast('Подождите немного перед следующим вопросом');
-  try{await db.collection('anon').add({to:id,q:t,ts:Date.now()});localStorage.setItem('dn_aq',Date.now());toast('Вопрос отправлен 🤫');o.remove()}catch(e){toast('Не удалось: '+(e.code||e.message))}}}
+  try{await db.collection('anon').add({to:id,q:t,ts:Date.now(),f:uid});localStorage.setItem('dn_aq',Date.now());toast('Вопрос отправлен 🤫');o.remove()}catch(e){toast('Не удалось: '+(e.code||e.message))}}}
+/* ---------- бот «Анонимные вопросы» ---------- */
+var AQ=[],aInit=0,aFirst=1;
+var A_STK='data:image/svg+xml;utf8,'+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#a855f7'/><stop offset='1' stop-color='#6366f1'/></linearGradient></defs><rect width='200' height='200' rx='56' fill='url(#g)'/><text x='100' y='146' font-size='140' font-weight='700' font-family='Arial,Helvetica,sans-serif' text-anchor='middle' fill='#fff'>?</text></svg>");
+var A_AV='data:image/svg+xml;utf8,'+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='#a855f7'/><text x='50' y='72' font-size='64' font-weight='700' font-family='Arial,sans-serif' text-anchor='middle' fill='#fff'>?</text></svg>");
+var aid=function(){return 'abot_'+uid};
+function aLS(k,d){try{return JSON.parse(localStorage.getItem(k)||d)}catch(e){return JSON.parse(d)}}
+function aMsgs(){var vk='v_'+uid,T=+localStorage.dn_a0||0;if(!T){T=Date.now();try{localStorage.dn_a0=T}catch(e){}}
+ var o=[{id:'aw0',from:'anonbot',ts:T,kind:'sticker',u:A_STK,[vk]:1},
+ {id:'aw1',from:'anonbot',ts:T+1,kind:'text',[vk]:1,text:'❓ Анонимные вопросы\n\nЗдесь вы получаете вопросы от друзей — они не узнают, что вы видите, и вы не узнаете, кто спрашивал.\n\nКак это работает:\n1. Нажмите «Сгенерировать ссылку».\n2. Поделитесь ссылкой с друзьями.\n3. Тот, кто откроет её, задаст вопрос анонимно.\n4. Вопрос придёт сюда. Чтобы ответить — смахните сообщение вправо.'}];
+ aLS('dn_alg','[]').forEach(function(t){o.push({id:'al'+t,from:'anonbot',ts:t,kind:'text',[vk]:1,text:'🔗 Ваша ссылка для анонимных вопросов:\n'+link()})});
+ var ans=aLS('dn_aa','{}');
+ AQ.forEach(function(d){var r=d.r;
+  o.push({id:(r?'ar':'aq')+d.id,from:'anonbot',ts:d.ts||0,kind:'text',[vk]:1,text:r?'💬 Вам ответили на ваш анонимный вопрос\n\nВаш вопрос: '+(d.re||'')+'\n\nОтвет: '+d.q:'📩 Вам пришло анонимное сообщение\n\n'+d.q});
+  var a=ans[d.id];if(!r&&a)o.push({id:'am'+d.id,from:uid,ts:a.ts,kind:'text',[vk]:1,text:a.t,rp:{id:'aq'+d.id,n:'Анонимный вопрос',t:String(d.q||'').slice(0,60)}})});
+ return o.sort(function(a,b){return a.ts-b.ts})}
+function aChat(){var L=aMsgs(),l=L[L.length-1],sn=+localStorage.dn_as||0,un=AQ.filter(function(d){return (d.ts||0)>sn}).length;
+ return {id:aid(),type:'bot',abot:1,title:'Анонимные вопросы',members:[uid],owner:'anonbot',created:0,lastTs:l?l.ts:Date.now(),last:(l.kind==='sticker'?'❓':String(l.text||'').split('\n').filter(Boolean).slice(-1)[0]||'').slice(0,80),['u_'+uid]:un,ph:A_AV}}
+function aSeen(){try{localStorage.dn_as=Date.now()}catch(e){}var c=chats.find(function(x){return x.abot});if(c)c['u_'+uid]=0;try{updBadge()}catch(e){}}
+function aRefresh(){if(typeof cur!=='undefined'&&cur===aid()){msgs=aMsgs();aSeen();if(document.querySelector('.msgs'))chatView()}else{try{botSync()}catch(e){}}}
+function aBanner(d){try{var b=document.createElement('div');b.className='nb';b.innerHTML='<b>Анонимные вопросы</b><div>'+(d.r?'Вам ответили на вопрос':'Вам пришло анонимное сообщение')+'</div>';b.onclick=function(){b.remove();openChat(aid())};document.body.appendChild(b);setTimeout(function(){b.remove()},7000);try{navigator.vibrate&&navigator.vibrate(30)}catch(e){}}catch(e){}}
+setInterval(function(){if(aInit||!window.db||typeof uid==='undefined'||!uid)return;aInit=1;
+ db.collection('anon').where('to','==',uid).onSnapshot(function(q){var sn=+localStorage.dn_as||0;
+  AQ=q.docs.map(function(d){return Object.assign({id:d.id},d.data())});
+  if(!aFirst)q.docChanges().forEach(function(c){if(c.type==='added'&&(c.doc.data().ts||0)>sn&&!(typeof cur!=='undefined'&&cur===aid()))aBanner(c.doc.data())});
+  aFirst=0;aRefresh()},function(e){console.error(e)})},1500);
+var _bs1=botSync;botSync=function(){_bs1.apply(this,arguments);try{if(!uid||!me)return;chats=chats.filter(function(x){return !x.abot});chats.push(aChat())}catch(e){}};
+var _oc1=openChat;openChat=function(id,fc){if(String(id).slice(0,5)!=='abot_')return _oc1(id,fc);
+ dmCh=null;cur=id;pk=null;if(unM){try{unM()}catch(e){}}unM=null;rp=null;ed=null;msgs=aMsgs();aSeen();chatView()};
+var _rd1=rdU;rdU=function(id){if(String(id).slice(0,5)==='abot_'){aSeen();return}return _rd1(id)};
+var _sr1=setReply;setReply=function(id){if(typeof cur==='undefined'||cur!==aid())return _sr1(id);
+ var m=msgs.find(function(x){return x.id===id});if(!m||!/^aq/.test(id))return;ed=null;rp={c:cur,id:id,n:'Анонимный вопрос',t:String(m.text||'').split('\n\n').slice(1).join(' ').slice(0,60)};chatView();var i=document.getElementById('gi');i&&i.focus()};
+async function aSend(){var g=document.getElementById('gi'),x=g&&g.value.trim();if(!x)return;
+ if(!(rp&&rp.c===cur&&/^aq/.test(rp.id)))return toast('Смахните вопрос вправо, чтобы ответить');
+ var q=AQ.find(function(d){return 'aq'+d.id===rp.id});if(!q||!q.f){rp=null;return toast('Этому вопросу ответить нельзя')}
+ var ts=Date.now();
+ try{await db.collection('anon').add({to:q.f,q:x,re:String(q.q||'').slice(0,200),r:1,ts:ts});g.value='';g.style.height='';
+  var m=aLS('dn_aa','{}');m[q.id]={t:x,ts:ts};localStorage.dn_aa=JSON.stringify(m);rp=null;aRefresh();toast('Ответ отправлен 🤫')}catch(e){toast('Не отправилось: '+(e.code||e.message))}}
+function aShare(){var u=link();if(navigator.share)navigator.share({title:'Анонимные вопросы',text:'Задай мне анонимный вопрос',url:u}).catch(function(){});else{try{copy(u)}catch(e){navigator.clipboard&&navigator.clipboard.writeText(u)}toast('Ссылка скопирована')}}
+function aBtns(b,list){var r=document.createElement('div');r.className='abr';list.forEach(function(x){var e=document.createElement('button');e.textContent=x[0];e.onclick=function(ev){ev.stopPropagation();x[1]()};r.appendChild(e)});b.appendChild(r)}
+(function(){var s=document.createElement('style');s.textContent='.abr{display:flex;gap:6px;margin-top:10px}.abr button{flex:1;border:0;border-radius:10px;padding:10px;background:var(--ac);color:#fff;font:inherit;font-weight:600}';document.head.appendChild(s)})();
+var _cx1=chatX;chatX=function(c){var ab=c&&c.abot,Ap=document.getElementById('app');
+ if(ab)Ap.querySelectorAll('.b[data-id]').forEach(function(b){if(!/^aq/.test(b.dataset.id))b.removeAttribute('data-id')});
+ _cx1(c);
+ if(!ab)return;
+ var mm=Ap.querySelector('.msgs');if(mm)mm.classList.add('botc');
+ ['#at','#mic','#cam'].forEach(function(q){var e=Ap.querySelector(q);if(e)e.remove()});
+ var sb=Ap.querySelector('#sbt');if(sb)sb.textContent='бот · анонимные вопросы';
+ var hd=Ap.querySelector('#hd'),ha=Ap.querySelector('#ha');if(hd)hd.onclick=null;if(ha)ha.onclick=null;
+ var sd=Ap.querySelector('#sd'),gi=Ap.querySelector('#gi');
+ if(sd)sd.onclick=aSend;if(gi){gi.placeholder='Ответ на вопрос…';gi.onkeydown=function(e){if(e.key==='Enter'&&!e.shiftKey&&!matchMedia('(pointer:coarse)').matches){e.preventDefault();aSend()}}}
+ var gen=function(){var L=aLS('dn_alg','[]');L.push(Date.now());try{localStorage.dn_alg=JSON.stringify(L)}catch(e){}msgs=aMsgs();chatView()};
+ Ap.querySelectorAll('.b').forEach(function(b){var t=b.textContent||'';
+  if(t.indexOf('Как это работает')>-1)aBtns(b,[['Сгенерировать ссылку',gen]]);
+  else if(t.indexOf('Ваша ссылка для анонимных')>-1)aBtns(b,[['Скопировать',function(){try{copy(link())}catch(e){navigator.clipboard&&navigator.clipboard.writeText(link())}toast('Ссылка скопирована')}],['Поделиться',aShare]])});
+ if(mm)mm.scrollTop=mm.scrollHeight};
 /* ---------- обложка профиля ---------- */
 var G=['linear-gradient(135deg,#8a63ff,#3fa9ff)','linear-gradient(135deg,#ff5f6d,#ffc371)','linear-gradient(135deg,#11998e,#38ef7d)','linear-gradient(135deg,#f953c6,#b91d73)','linear-gradient(135deg,#0f2027,#2c5364)','linear-gradient(135deg,#fc4a1a,#f7b733)','linear-gradient(135deg,#7f00ff,#e100ff)','linear-gradient(135deg,#00c6ff,#0072ff)'];
 function covSheet(){var cur0=me.cov,o=sh('<b style="font-size:18px">Обложка профиля</b><p class="sub">Показывается на вашей странице у собеседников.</p><div>'+G.map(function(g,i){return '<span class="dnsq'+(i===cur0?' on':'')+'" data-i="'+i+'" style="background:'+g+'"></span>'}).join('')+'</div>'+(cur0!=null?'<button class="btn red" id="dncr" style="width:100%;margin-top:10px">Убрать</button>':''));
@@ -4353,7 +4401,6 @@ function cover(){var A=document.getElementById('app'),acts=A&&A.querySelector('.
  var d=document.createElement('div');d.className='dncov';d.style.background=G[o.cov];acts.insertAdjacentElement('beforebegin',d)}
 /* ---------- строки в настройках ---------- */
 var ROWS=[['s_cap','#0ea5e9','Капсула времени','M12 7v5l3 2M3 12a9 9 0 1018 0 9 9 0 00-18 0',function(){return 'письмо себе'},capSheet],
- ['s_anon','#a855f7','Анонимные вопросы','M12 3a6 6 0 00-6 6v3l-2 4h16l-2-4V9a6 6 0 00-6-6zM10 20a2 2 0 004 0',function(){return '›'},anonSheet],
  ['s_cov','#f43f5e','Обложка профиля','M3 5h18v14H3zM3 15l5-4 4 3 3-2 6 4',function(){return me.cov!=null?'есть':'выбрать'},covSheet]];
 function rows(){var A=document.getElementById('app');if(!A)return;var ref=['#s_md','#s_ar','#s_acc','#s_th'].map(function(q){return A.querySelector(q)}).find(Boolean);if(!ref)return;
  ROWS.forEach(function(R){var ex=A.querySelector('#'+R[0]);if(ex){var s=ex.querySelector('.sub'),t=R[4]();if(s.textContent!==t)s.textContent=t;ref=ex;return}
