@@ -4079,21 +4079,38 @@ var au=new Audio();au.preload='none';au.setAttribute('playsinline','');var cu=''
 function paint(){document.querySelectorAll('.dnsg[data-u]').forEach(function(r){var on=r.dataset.u===cu&&!au.paused;r.classList.toggle('pl',on);r.querySelector('.dnsp').textContent=on?'❚❚':'▶'})}
 ['play','pause','ended'].forEach(function(e){au.addEventListener(e,paint)});
 au.addEventListener('error',function(){if(cu)toast('Не удалось воспроизвести песню')});
-function play(u){if(cu===u){au.paused?au.play().catch(function(){}):au.pause();return}
+var C={};
+async function res(u){if(u.slice(0,3)!=='sg:')return u;if(C[u])return C[u];var q=u.split(':'),o=q[1],n=+q[2],mt=q[3],v=q[4],ps=[];
+ toast('Загружаю песню…');
+ for(var i=0;i<n;i++){var d=await db.collection('songs').doc(o+'_'+v+'_'+i).get();if(!d.exists)throw new Error('часть файла не найдена');ps.push(Uint8Array.from(atob(d.data().d),function(c){return c.charCodeAt(0)}))}
+ return C[u]=URL.createObjectURL(new Blob(ps,{type:mt}))}
+function play(u){if(cu===u&&au.src){au.paused?au.play().catch(function(){}):au.pause();return}
  try{document.querySelectorAll('audio,video').forEach(function(m){if(m!==au)m.pause()})}catch(e){}
- cu=u;au.src=u;au.play().catch(function(){toast('Не удалось воспроизвести песню')});paint()}
+ cu=u;paint();
+ res(u).then(function(url){if(cu!==u)return;au.src=url;return au.play().catch(function(){toast('Нажмите ▶ ещё раз')})}).catch(function(e){cu='';au.removeAttribute('src');paint();toast('Не удалось: '+(e.code||e.message))})}
 function row(u,name,own){var d=document.createElement('div');d.className='grp dnsg';d.id='dnsong';d.dataset.u=u;
  d.innerHTML='<span class="dnsp">▶</span><div class="col"><div class="nm"></div><div class="sub">Песня в профиле</div></div>'+(own?'<span class="sub" style="font-size:13px">нажмите ▶</span>':'');
  d.querySelector('.nm').textContent='♪ '+(name||'Песня');d.onclick=function(){play(u)};
  var r=d;setTimeout(paint,0);return r}
-/* загрузка в хранилище, без раздувания документа пользователя */
+/* загрузка: Storage, а если не отвечает — кусками в Firestore (как делает само приложение) */
+async function drop(u){try{if(!u||u.slice(0,3)!=='sg:')return;var q=u.split(':');if(q[1]!==uid)return;for(var i=0;i<+q[2];i++)await db.collection('songs').doc(uid+'_'+q[4]+'_'+i).delete()}catch(e){}}
+async function store(f){var mt=f.type||'audio/mpeg',ext=(f.name.split('.').pop()||'mp3').toLowerCase().slice(0,5),task=null;
+ try{if(!window.firebase||!firebase.storage)throw new Error('no storage');
+  task=firebase.storage(window.FBAPP).ref('media/'+uid+'/song-'+Date.now()+'.'+ext).put(f,{contentType:mt});
+  await new Promise(function(ok,no){var last=Date.now(),w=setInterval(function(){if(Date.now()-last>8000){clearInterval(w);try{task.cancel()}catch(e){}no(new Error('timeout'))}},1000);
+   task.on('state_changed',function(sn){last=Date.now();toast('Загрузка песни… '+Math.round(100*sn.bytesTransferred/(sn.totalBytes||1))+'%')},function(e){clearInterval(w);no(e)},function(){clearInterval(w);ok()})});
+  return await task.snapshot.ref.getDownloadURL()}
+ catch(e){
+  if(f.size>9000000)throw new Error('Хранилище недоступно, максимум 9 МБ');
+  var rd=await new Promise(function(ok,no){var r=new FileReader();r.onload=function(){ok(r.result)};r.onerror=function(){no(new Error('не удалось прочитать файл'))};r.readAsDataURL(f)});
+  var data=rd.slice(rd.indexOf(',')+1),CH=700000,n=Math.ceil(data.length/CH),v=Date.now().toString(36);
+  for(var i=0;i<n;i++){toast('Загрузка песни… '+(i+1)+'/'+n);await db.collection('songs').doc(uid+'_'+v+'_'+i).set({d:data.slice(i*CH,(i+1)*CH),ts:Date.now()})}
+  return 'sg:'+uid+':'+n+':'+mt.split(';')[0]+':'+v}}
 function pick(){var i=document.createElement('input');i.type='file';i.accept='audio/*,.mp3,.m4a,.wav,.ogg,.aac';i.style.display='none';document.body.appendChild(i);
  i.onchange=async function(){var f=i.files[0];i.remove();if(!f)return;
   if(f.size>20*1048576)return toast('Файл больше 20 МБ');
-  try{toast('Загружаю песню…');var ext=(f.name.split('.').pop()||'mp3').toLowerCase().slice(0,5);
-   var ref=firebase.storage(window.FBAPP).ref('media/'+uid+'/song-'+Date.now()+'.'+ext);
-   await ref.put(f,{contentType:f.type||'audio/mpeg'});var url=await ref.getDownloadURL();
-   await setU({song:url,songName:f.name.replace(/\.[^.]+$/,'').slice(0,60)});toast('Песня добавлена')}
+  try{toast('Загружаю песню…');var old=me.song,url=await store(f);
+   await setU({song:url,songName:f.name.replace(/\.[^.]+$/,'').slice(0,60)});drop(old);toast('Песня добавлена ✓')}
   catch(e){toast('Не удалось загрузить: '+(e.code||e.message))}};
  i.click()}
 function menu(){var o=document.createElement('div');o.className='sheet';var has=!!me.song;
@@ -4103,7 +4120,7 @@ function menu(){var o=document.createElement('div');o.className='sheet';var has=
  o.onclick=function(e){if(e.target===o)o.remove()};
  o.querySelector('#dn1').onclick=function(){o.remove();pick()};
  if(has){o.querySelector('#dn2').onclick=function(){o.remove();play(me.song)};
-  o.querySelector('#dn3').onclick=async function(){o.remove();if(cu===me.song){au.pause()}try{await setU({song:'',songName:''});toast('Песня убрана')}catch(e){toast('Не удалось')}}}}
+  o.querySelector('#dn3').onclick=async function(){o.remove();var od=me.song;if(cu===od){au.pause();cu=''}try{await setU({song:'',songName:''});drop(od);toast('Песня убрана')}catch(e){toast('Не удалось')}}}}
 function inject(){
  var A=document.getElementById('app');if(!A)return;
  var b=A.querySelector('#s_bio');
