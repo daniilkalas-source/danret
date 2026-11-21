@@ -1,4 +1,4 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>Danret</title>
+<!doctype html><html lang="ru"><head><script>var __FS=new URLSearchParams(location.search).get("fs");var __IN=__FS!==null&&window.top!==window;var __SLOT=__IN?__FS:(function(){try{return localStorage.dn_slot||""}catch(e){return ""}})();</script><meta charset="utf-8"><title>Danret</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0e0b1f">
@@ -723,7 +723,7 @@ const ferr=e=>({'auth/email-already-in-use':'Username занят','auth/weak-pas
 function init(){
  A.innerHTML='<div class="empty">Загрузка…</div>';
  if(!window.firebase||String(FIREBASE_CONFIG.apiKey).startsWith('ВСТАВЬ')){A.innerHTML=window.firebase?'<div class="empty">Сервер ещё не настроен (нет Firebase-конфига).</div>':'<div class="empty">Не загрузились скрипты Firebase (сеть блокирует сайты Google или окно не поддерживается). Откройте ссылку в Safari/Chrome или смените сеть.<br><br><button class="btn" onclick="location.reload()">Повторить</button></div>';return}
- var __sl='';try{__sl=localStorage.dn_slot||''}catch(e){}window.FBAPP=firebase.initializeApp(FIREBASE_CONFIG,__sl||undefined);fbAuth=firebase.auth(FBAPP);db=firebase.firestore(FBAPP);{const _so=fbAuth.signOut.bind(fbAuth);fbAuth.signOut=function(){try{const a=JSON.parse(localStorage.dn_accs||'{}'),c=localStorage.dn_slot||'';delete a[c];localStorage.dn_accs=JSON.stringify(a);const k=Object.keys(a);localStorage.dn_slot=k.length?k[0]:''}catch(e){}return _so()}}db.settings({ignoreUndefinedProperties:true,experimentalAutoDetectLongPolling:true});
+ var __sl='';__sl=__SLOT;window.FBAPP=firebase.initializeApp(FIREBASE_CONFIG,__sl||undefined);fbAuth=firebase.auth(FBAPP);db=firebase.firestore(FBAPP);{const _so=fbAuth.signOut.bind(fbAuth);fbAuth.signOut=function(){try{const a=JSON.parse(localStorage.dn_accs||'{}'),c=__SLOT;delete a[c];localStorage.dn_accs=JSON.stringify(a);const k=Object.keys(a);localStorage.dn_slot=k.length?k[0]:'';if(__IN){try{if(k.length)parent.__swap(k[0],{drop:__SLOT});else parent.location.reload()}catch(e){}}}catch(e){}return _so()}}db.settings({ignoreUndefinedProperties:true,experimentalAutoDetectLongPolling:true});
  fbAuth.onAuthStateChanged(u=>{if(!u){if(started)return location.reload();return authForm()}if(started)return;started=true;uid=u.uid;start()});
 }
 const er0=e=>console.error(e);
@@ -3216,12 +3216,19 @@ settingsPage=function(){
 </style>
 <script>
 (function(){
-var MAX=3,L=function(){try{return JSON.parse(localStorage.dn_accs||'{}')}catch(e){return {}}},cur0=function(){return localStorage.dn_slot||''};
+var MAX=3,L=function(){try{return JSON.parse(localStorage.dn_accs||'{}')}catch(e){return {}}},cur0=function(){return __SLOT};
 var plus='<path d="M12 5v14M5 12h14"/>';
 function save(){try{if(typeof uid==='undefined'||typeof me==='undefined'||!uid||!me)return;var a=L();a[cur0()]={uid:uid,name:me.name||'',username:me.username||''};localStorage.dn_accs=JSON.stringify(a);
  if(localStorage.dn_adding){localStorage.removeItem('dn_adding');localStorage.removeItem('dn_prev')}}catch(e){}}
 setInterval(function(){try{save()}catch(e){}},2000);
-function go(slot){try{localStorage.dn_slot=slot}catch(e){}location.reload()}
+var FR={};
+function mkFrame(slot){var f=FR[slot];if(f)return f;f=document.createElement('iframe');f.src=location.pathname+'?fs='+encodeURIComponent(slot);f.setAttribute('allow','camera;microphone;geolocation;autoplay;clipboard-write');f.style.cssText='position:fixed;left:0;top:0;width:100%;height:100%;border:0;z-index:5000;background:#0b0818;visibility:hidden;pointer-events:none';document.body.appendChild(f);FR[slot]=f;return f}
+window.__swap=function(slot,o){o=o||{};try{localStorage.dn_slot=slot}catch(e){}
+ if(o.drop&&FR[o.drop]){FR[o.drop].remove();delete FR[o.drop]}
+ if(slot!==__SLOT)mkFrame(slot);
+ Object.keys(FR).forEach(function(k){var f=FR[k],on=k===slot;f.style.visibility=on?'visible':'hidden';f.style.pointerEvents=on?'auto':'none'})};
+if(window.top===window)setInterval(function(){try{if(window.__pl||typeof me==='undefined'||!me)return;window.__pl=1;setTimeout(function(){Object.keys(L()).forEach(function(k){if(k!==__SLOT)mkFrame(k)})},2500)}catch(e){}},1000);
+function go(slot,drop){try{localStorage.dn_slot=slot}catch(e){}try{var T=window.top;if(T.__swap){T.__swap(slot,drop?{drop:drop}:undefined);return}}catch(e){}location.reload()}
 function addAcc(){
  var a=L();if(Object.keys(a).length>=MAX)return toast('Можно добавить до '+MAX+' аккаунтов');
  save();var ns='s'+Date.now().toString(36);
@@ -3231,7 +3238,7 @@ function addAcc(){
 setInterval(function(){
  try{var has=document.querySelector('.abk9'),aw=document.querySelector('#app .aw');
   if(localStorage.dn_adding&&aw&&!has){var b=document.createElement('button');b.className='abk9';b.textContent='← К моему аккаунту';
-   b.onclick=function(){var p=localStorage.dn_prev||'';localStorage.removeItem('dn_adding');localStorage.removeItem('dn_prev');go(p)};document.body.appendChild(b)}
+   b.onclick=function(){var p=localStorage.dn_prev||'';localStorage.removeItem('dn_adding');localStorage.removeItem('dn_prev');go(p,__IN?__SLOT:undefined)};document.body.appendChild(b)}
   else if(has&&!aw)has.remove()}catch(e){}},500);
 var _dr=drawer;
 drawer=function(){
