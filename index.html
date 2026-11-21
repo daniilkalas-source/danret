@@ -4039,6 +4039,13 @@ function picker(){
 var F=LS('dn_f')||'all',N={all:'Все',dm:'Личные',group:'Группы',channel:'Каналы',bot:'Боты'};
 function type(id){try{var c=chats.find(function(x){return x.id===id});return c?c.type:''}catch(e){return ''}}
 function folders(){
+ var bar=document.getElementById('dnf');if(bar)bar.remove();
+ document.querySelectorAll('.dnh').forEach(function(r){r.classList.remove('dnh')});
+ var A=document.getElementById('app'),t=A&&A.querySelector('#s_th');
+ if(t&&!A.querySelector('#s_acc')){var r=document.createElement('div');r.className='row k';r.id='s_acc';
+  r.innerHTML='<span class="dic" style="background:#ec4899"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></span><div class="col nm">Акцентный цвет и авто-тема</div><span class="sub">›</span>';
+  r.onclick=picker;t.insertAdjacentElement('afterend',r)}}
+function foldersOld(){
  var rows=document.querySelectorAll('#app .row[data-c]');if(!rows.length){return}
  var first=rows[0],box=first.parentNode,have={};
  rows.forEach(function(r){have[type(r.dataset.c)]=1});
