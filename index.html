@@ -3174,6 +3174,12 @@ chatView=function(){
 .pay9 button{width:100%;border:0;border-radius:18px;padding:16px;font-size:17px;font-weight:800;color:#fff;background:linear-gradient(135deg,#7c5cff,#b04bff 55%,#ff6bb5);box-shadow:0 8px 24px rgba(124,92,255,.4);transition:transform .16s}
 .pay9 button:active{transform:scale(.97)}
 .pay9.bp9 button{font-size:15px;padding:13px}
+.rul9{font-size:13px;line-height:1.5;color:var(--mu);margin:10px 0 14px;padding-left:18px}
+.rul9 li{margin-bottom:6px}
+.rul9b{font-size:17px;font-weight:800}
+.adm9 input{width:100%;margin:0 0 10px;font-size:15px}
+.adm9 .btn{width:100%;margin-bottom:8px;font-size:15px}
+.adm9 .rs9{font-size:13px;color:var(--mu);min-height:20px;margin-top:4px}
 .blt9{text-align:center;padding:30px 20px 140px}
 .blt9 svg{display:block;margin:0 auto}
 .bn9{font-size:36px;font-weight:800;margin-top:8px;line-height:1.1}
@@ -3211,7 +3217,27 @@ function premPage(){
  var w=pgs(hp('Danret Premium')+'<div class="prp9"><div class="hero9"><div class="hs9">'+STAR+'</div><h2>Danret Premium</h2><div class="hd9">Больше возможностей для общения</div></div><div class="grp">'
  +F.map(function(f){return '<div class="fr9"><div class="fi9">'+IC[f[0]]+'</div><div class="ft9"><b>'+f[1]+(f[3]?'<i class="sn9" style="font-style:normal">скоро</i>':'')+'</b><span>'+f[2]+'</span></div></div>'}).join('')
  +'</div><div class="sub" style="text-align:center;padding:12px 20px">Часть функций появится в ближайших обновлениях.</div></div>');var pe=document.createElement("footer");pe.className="pay9";pe.innerHTML='<button type="button" id="pay9">Оплатить 150₽</button>';w.appendChild(pe);
- var b=w.querySelector('#pay9');if(b)b.onclick=function(){toast('Оплата пока не подключена')};
+ var b=w.querySelector('#pay9');if(b){var act0=typeof me!=='undefined'&&me&&me.prem>Date.now();if(act0){b.textContent='Premium активен до '+new Date(me.prem).toLocaleDateString('ru-RU');b.disabled=true;b.style.opacity='.7'}else b.onclick=function(){payRules(w)}}
+}
+function payRules(pg){
+ var s=sheet('<div class="rul9b">Правила оплаты</div><ol class="rul9"><li>Danret Premium стоит 150 ₽. Оплата — переводом по номеру телефона или карте.</li><li>После подтверждения откроется личный чат с владельцем Danret. Реквизиты для перевода он пришлёт там.</li><li>Переведите 150 ₽ и отправьте в этот чат чек (скриншот перевода).</li><li>Владелец проверит перевод и включит Premium вручную, обычно в течение суток.</li><li>Переводите только по реквизитам из этого чата. За переводы другим людям Danret не отвечает.</li><li>Если вам нет 18 лет, оплачивайте с согласия родителей.</li><li>Условия возврата уточняйте в чате с владельцем.</li></ol><div style="display:flex;gap:10px"><button class="btn" id="pr_c" style="flex:1;background:var(--sf);color:var(--tx);font-size:15px">Отмена</button><button class="btn" id="pr_o" style="flex:1.4;font-size:15px">Согласен, подтвердить</button></div>');
+ s.querySelector('#pr_c').onclick=function(){s.remove()};
+ s.querySelector('#pr_o').onclick=function(){
+  var ch=chats.find(function(c){return c.type==='channel'&&String(c.link||'').toLowerCase()==='danretofficial'}),ow=ch&&ch.owner;
+  if(!ow)return toast('Владелец не найден. Попробуйте позже');
+  if(ow===uid)return toast('Вы и есть владелец');
+  s.remove();try{pg.remove()}catch(e){}
+  openDM(ow).then(function(){toast('Отправьте в этот чат чек после перевода')}).catch(function(){toast('Не удалось открыть чат')});
+ };
+}
+function adminPage(){
+ var w=pgs(hp('Выдать Premium')+'<div class="grp adm9" style="padding:14px"><input id="gu" placeholder="@username" autocomplete="off" autocapitalize="off"><input id="gd" type="number" value="30" min="1" placeholder="Дней"><button class="btn" id="gg">Выдать Premium</button><button class="btn" id="gt" style="background:var(--sf);color:var(--tx)">Забрать Premium</button><div class="rs9" id="gr"></div></div><div class="sub" style="padding:8px 20px;font-size:12px">Введите username человека, который прислал чек, и число дней.</div>');
+ var msg=function(t){w.querySelector('#gr').textContent=t};
+ var find=function(){var u=w.querySelector('#gu').value.replace(/^@/,'').trim().toLowerCase();return Object.keys(users).find(function(i){return (users[i].username||'').toLowerCase()===u})};
+ w.querySelector('#gg').onclick=function(){var id=find();if(!id)return msg('Пользователь не найден');var d=Math.max(1,+w.querySelector('#gd').value||30),t=Math.max(Date.now(),users[id].prem||0)+d*864e5;
+  db.collection('users').doc(id).update({prem:t}).then(function(){msg('Готово: @'+users[id].username+' — Premium до '+new Date(t).toLocaleDateString('ru-RU'))}).catch(function(){msg('Не удалось. Проверьте правила Firestore')})};
+ w.querySelector('#gt').onclick=function(){var id=find();if(!id)return msg('Пользователь не найден');
+  db.collection('users').doc(id).update({prem:0}).then(function(){msg('Premium у @'+users[id].username+' снят')}).catch(function(){msg('Не удалось. Проверьте правила Firestore')})};
 }
 function boltsPage(){
  var bal=(typeof me!=='undefined'&&me&&me.bolts)||0;
@@ -3227,9 +3253,10 @@ settingsPage=function(){
   var pgsAll=document.querySelectorAll('.pg'),w=pgsAll[pgsAll.length-1],g=w&&w.querySelector('.grp');
   if(!g||w.querySelector('.prg9'))return;
   var ic9=function(bg,p){return '<span class="dic" style="background:'+bg+'"><svg class="i" viewBox="0 0 24 24">'+p+'</svg></span>'};
-  var bal=(typeof me!=='undefined'&&me&&me.bolts)||0;
+  var bal=(typeof me!=='undefined'&&me&&me.bolts)||0,act=typeof me!=='undefined'&&me&&me.prem>Date.now();
   var d=document.createElement('div');d.className='grp prg9';
-  d.innerHTML='<div class="row k" id="s_pm">'+ic9('linear-gradient(135deg,#8a63ff,#c04bff)','<path d="M12 2.5l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17l-5.9 3.3 1.3-6.5L2.5 9.3l6.6-.8z" fill="#fff" stroke="none"/>')+'<div class="col nm">Danret Premium</div><span class="sub">›</span></div><div class="row k" id="s_bl">'+ic9('linear-gradient(135deg,#ffb020,#ff7a18)','<path d="M13 2L4 14h7l-1 8 9-12h-7z" fill="#fff" stroke="none"/>')+'<div class="col nm">Мои молнии</div><span class="sub">'+bal+' ›</span></div>';
+  d.innerHTML='<div class="row k" id="s_pm">'+ic9('linear-gradient(135deg,#8a63ff,#c04bff)','<path d="M12 2.5l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17l-5.9 3.3 1.3-6.5L2.5 9.3l6.6-.8z" fill="#fff" stroke="none"/>')+'<div class="col nm">Danret Premium</div><span class="sub">'+(act?'Активен ':'')+'›</span></div><div class="row k" id="s_bl">'+ic9('linear-gradient(135deg,#ffb020,#ff7a18)','<path d="M13 2L4 14h7l-1 8 9-12h-7z" fill="#fff" stroke="none"/>')+'<div class="col nm">Мои молнии</div><span class="sub">'+bal+' ›</span></div>';
+  if(typeof isAdm==='function'&&isAdm()){var r=document.createElement('div');r.className='row k';r.id='s_gv';r.innerHTML=ic9('#34c759','<path d="M12 5v14M5 12h14"/>')+'<div class="col nm">Выдать Premium</div><span class="sub">›</span>';d.appendChild(r);r.onclick=adminPage}
   d.querySelector('#s_pm').onclick=premPage;d.querySelector('#s_bl').onclick=boltsPage;
   var grs=w.querySelectorAll('.grp'),ref=grs[2]||grs[grs.length-1];ref.parentNode.insertBefore(d,ref);
  }catch(e){console.error(e)}
