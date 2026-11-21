@@ -2297,8 +2297,9 @@ let mto;new MutationObserver(()=>{clearTimeout(mto);mto=setTimeout(scanMedia,400
 .gfmc h3{margin:4px 0}.gfsub2{color:var(--mu);font-size:14px;margin-bottom:12px}
 .gfmc input{width:100%;box-sizing:border-box;margin-bottom:10px}
 .gfsend{width:100%;border:0;border-radius:16px;padding:14px;background:linear-gradient(135deg,#ffb020,#ff7a18);color:#fff;font-weight:700;font-size:16px}
-.b.gft,.b.me.gft{background:none!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;padding:0!important;align-self:center!important;max-width:100%!important;width:100%;color:var(--tx)!important;display:flex;flex-direction:column;align-items:center;animation:none}
-.b.gft>i{display:none}
+#app .msgs .b.gft,#app .msgs .b.me.gft,#app .msgs .b.gft:not(.me){background:none!important;background-image:none!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;padding:0!important;align-self:center!important;max-width:100%!important;width:100%!important;color:var(--tx)!important;display:flex!important;flex-direction:column!important;align-items:center!important;animation:none}
+#app .msgs .b.gft>i{display:none}
+.b.gft .gfc{margin:0 auto;text-align:center}.gfc>*{text-align:center}
 .gfl{background:rgba(0,0,0,.35);color:#fff;border-radius:14px;padding:4px 12px;font-size:14px;margin:4px 0 10px;text-align:center;font-weight:500}
 .gfc{position:relative;overflow:hidden;width:232px;border-radius:22px;background:rgba(80,80,120,.7);color:#fff;text-align:center;padding:16px 14px 14px;white-space:normal;backdrop-filter:blur(10px)}
 .gfce{font-size:84px;line-height:1.1;margin-bottom:6px}.gfct{font-weight:700;font-size:16px}.gfcm{font-size:14px;opacity:.9;margin-top:4px}
@@ -3546,12 +3547,12 @@ function giftShop(oid,c){
    if(busy)return;const bal=(me&&me.bolts)||0;
    if(bal<g.p){toast('Не хватает молний: нужно '+g.p+', у вас '+bal);return}
    busy=true;const cmt=m.querySelector('#gfc').value.trim(),ts=Date.now(),gd=ts.toString(36)+rid(),no=g.c?Math.floor(1000+Math.random()*998000):0;
+   o.remove();inf=null;sub=null;openChat(c.id);
    try{
     await setU({bolts:firebase.firestore.FieldValue.increment(-g.p)});
     try{await db.collection('gifts').doc(gd).set({from:uid,to:oid,gid:g.id,price:g.p,no,cmt,ts,chat:c.id})}catch(e){}
     await postTo(c.id,{kind:'gift',gid:g.id,price:g.p,to:oid,no,gd,text:cmt},'🎁 Подарок: '+g.n);
-    o.remove();toast('Подарок отправлен');inf=null;sub=null;openChat(c.id);
-   }catch(e){busy=false;toast('Не удалось отправить подарок')}
+   }catch(e){toast('Не удалось отправить подарок')}
   }};
  document.body.appendChild(o);draw()}
 
