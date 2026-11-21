@@ -4355,7 +4355,7 @@ function aChat(){var L=aMsgs(),l=L[L.length-1],sn=+localStorage.dn_as||0,un=AQ.f
 function aSeen(){try{localStorage.dn_as=Date.now()}catch(e){}var c=chats.find(function(x){return x.abot});if(c)c['u_'+uid]=0;try{updBadge()}catch(e){}}
 function aRefresh(){if(typeof cur!=='undefined'&&cur===aid()){msgs=aMsgs();aSeen();if(document.querySelector('.msgs'))chatView()}else{try{botSync()}catch(e){}}}
 function aBanner(d){try{var b=document.createElement('div');b.className='nb';b.innerHTML='<b>Анонимные вопросы</b><div>'+(d.r?'Вам ответили на вопрос':'Вам пришло анонимное сообщение')+'</div>';b.onclick=function(){b.remove();openChat(aid())};document.body.appendChild(b);setTimeout(function(){b.remove()},7000);try{navigator.vibrate&&navigator.vibrate(30)}catch(e){}}catch(e){}}
-setInterval(function(){if(aInit||!window.db||typeof uid==='undefined'||!uid)return;aInit=1;
+setInterval(function(){if(aInit||typeof db==='undefined'||!db||typeof uid==='undefined'||!uid)return;aInit=1;
  db.collection('anon').where('to','==',uid).onSnapshot(function(q){var sn=+localStorage.dn_as||0;
   AQ=q.docs.map(function(d){return Object.assign({id:d.id},d.data())});
   if(!aFirst)q.docChanges().forEach(function(c){if(c.type==='added'&&(c.doc.data().ts||0)>sn&&!(typeof cur!=='undefined'&&cur===aid()))aBanner(c.doc.data())});
