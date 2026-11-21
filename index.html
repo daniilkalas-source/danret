@@ -4213,4 +4213,66 @@ function row(){var A=document.getElementById('app');if(!A)return;
 var t=0;new MutationObserver(function(){if(t)return;t=requestAnimationFrame(function(){t=0;row();dress()})}).observe(document.body,{childList:true,subtree:true});
 })();
 </script>
+<style id="dn-fun">
+.dnst,.dnmd{display:inline-block;margin-left:6px;font-size:13px;font-weight:700;vertical-align:middle;padding:1px 7px;border-radius:10px;background:var(--sf);color:#ff8a3d}
+.dnmd{color:var(--tx);padding:1px 5px}
+.dnfx{position:fixed;bottom:-30px;z-index:70;font-size:26px;pointer-events:none;animation:dnFx 2s ease-out forwards}
+@keyframes dnFx{0%{opacity:0;transform:translateY(0) scale(.5)}15%{opacity:1}100%{opacity:0;transform:translateY(-85vh) rotate(var(--r)) scale(1.1)}}
+.dnmg{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0}.dnmg button{font-size:26px;width:48px;height:48px;border:0;border-radius:14px;background:var(--sf)}.dnmg .on{outline:2px solid var(--ac)}
+</style>
+<script id="dn-fun-js">
+(function(){
+var ESC=function(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+var moodOn=function(u){return u&&u.mood&&u.mood.e&&Date.now()-u.mood.ts<864e5};
+var dk=function(t){var d=new Date(t);return d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate()};
+/* 1. стрики */
+function streak(c){var o=c.members.find(function(x){return x!==uid}),D={};D[uid]={};D[o]={};
+ msgs.forEach(function(m){if(m.ts&&D[m.from]&&m.kind!=='blobpart'&&!m.ar)D[m.from][dk(m.ts)]=1});
+ var both=function(t){var k=dk(t);return D[uid][k]&&D[o][k]},t=Date.now(),today=both(t),n=0;
+ if(!today)t-=864e5;while(both(t)){n++;t-=864e5}return{n:n,today:!!today}}
+/* 2. эффекты */
+var FX=[[/ура|поздравля|congrat|🎉/i,'🎉'],[/люблю|обожаю|❤|💕/i,'❤️'],[/🔥|огонь|жара/i,'🔥'],[/хаха|ахах|лол|смешно|😂/i,'😂']];
+function burst(e){for(var i=0;i<16;i++){var d=document.createElement('div');d.className='dnfx';d.textContent=e;
+ d.style.left=(5+Math.random()*88)+'vw';d.style.setProperty('--r',(Math.random()*160-80)+'deg');d.style.animationDelay=(Math.random()*.5)+'s';d.style.fontSize=(20+Math.random()*20)+'px';
+ document.body.appendChild(d);(function(x){setTimeout(function(){x.remove()},2700)})(d)}try{navigator.vibrate&&navigator.vibrate(15)}catch(x){}}
+var lastId=null,lastCur=null;
+function fx(){var A=document.getElementById('app');if(!A)return;var l=A.querySelectorAll(':scope>.msgs .b[data-id]');if(!l.length){lastId=null;return}
+ var id=l[l.length-1].dataset.id;
+ if(lastId!==null&&lastCur===cur&&id!==lastId){var m=msgs.find(function(x){return x.id===id});
+  if(m&&m.text&&m.kind==='text'&&Date.now()-m.ts<15000)for(var i=0;i<FX.length;i++)if(FX[i][0].test(m.text)){burst(FX[i][1]);break}}
+ lastId=id;lastCur=cur}
+/* 3-4. шапка, карточки профиля, настроение */
+function head(){var A=document.getElementById('app'),t=A&&A.querySelector('.top .t');if(!t||!A.querySelector(':scope>.msgs'))return;
+ var c=chats.find(function(x){return x.id===cur});if(!c||c.type!=='dm')return;
+ var o=users[c.members.find(function(x){return x!==uid})],st=streak(c),
+  sh=st.n?'🔥 '+st.n+(st.today?'':' ⏳'):'',md=moodOn(o)?o.mood.e:'';
+ var a=t.querySelector('.dnst'),b=t.querySelector('.dnmd');
+ if(sh){if(!a){a=document.createElement('span');a.className='dnst';t.appendChild(a)}if(a.textContent!==sh)a.textContent=sh;a.title=st.today?'Стрик дружбы':'Напишите оба сегодня, чтобы стрик не сгорел'}else if(a)a.remove();
+ if(md){if(!b){b=document.createElement('span');b.className='dnmd';t.appendChild(b)}if(b.textContent!==md)b.textContent=md}else if(b)b.remove()}
+function cards(){var A=document.getElementById('app'),acts=A&&A.querySelector('.acts');if(!acts||typeof inf==='undefined')return;
+ var c=chats.find(function(x){return x.id===inf});if(!c)return;
+ if(c.type==='dm'||c.type==='saved'){var o=c.type==='saved'?me:users[c.members.find(function(x){return x!==uid})];
+  if(moodOn(o)&&!A.querySelector('#dnmood')){var d=document.createElement('div');d.className='grp';d.id='dnmood';
+   d.innerHTML='<div class="fld"><b>настроение · до конца суток</b><span>'+ESC(o.mood.e)+' '+ESC(o.mood.t||'')+'</span></div>';acts.insertAdjacentElement('afterend',d)}}
+ if(c.type==='group'&&!A.querySelector('#dnrank')){var n={};msgs.forEach(function(m){if(m.from&&m.kind!=='blobpart'&&m.kind!=='call'&&!m.ar)n[m.from]=(n[m.from]||0)+1});
+  var top=Object.keys(n).sort(function(a,b){return n[b]-n[a]}).slice(0,3);if(!top.length)return;
+  var d=document.createElement('div');d.className='grp';d.id='dnrank';
+  d.innerHTML='<div class="fld"><b>🏆 топ активных (по загруженным сообщениям)</b></div>'+top.map(function(id,i){return '<div class="row"><div class="col nm">'+['🥇','🥈','🥉'][i]+' '+ESC(uname(id))+'</div><span class="sub">'+n[id]+'</span></div>'}).join('');
+  acts.insertAdjacentElement('afterend',d)}}
+function moodSheet(){var E=['😎','🔥','😴','🎧','🥳','😭','🤔','💻','🍕','❤️','🌧','✈️'],pick=moodOn(me)?me.mood.e:'',o=document.createElement('div');o.className='sheet';
+ o.innerHTML='<div><b style="font-size:18px">Настроение</b><p class="sub">Видно собеседникам 24 часа.</p><div class="dnmg">'+E.map(function(e){return '<button data-e="'+e+'"'+(e===pick?' class="on"':'')+'>'+e+'</button>'}).join('')+'</div><input id="dnmt" maxlength="30" placeholder="Что у вас на уме? (необязательно)"><button class="btn" id="dnms" style="width:100%;margin-top:8px">Сохранить</button>'+(moodOn(me)?'<button class="btn red" id="dnmr" style="width:100%;margin-top:8px">Убрать</button>':'')+'</div>';
+ document.body.appendChild(o);o.querySelector('#dnmt').value=moodOn(me)?me.mood.t||'':'';
+ o.onclick=function(e){if(e.target===o)o.remove()};
+ o.querySelectorAll('[data-e]').forEach(function(b){b.onclick=function(){pick=b.dataset.e;o.querySelectorAll('[data-e]').forEach(function(x){x.classList.toggle('on',x===b)})}});
+ o.querySelector('#dnms').onclick=async function(){if(!pick)return toast('Выберите эмодзи');try{await setU({mood:{e:pick,t:o.querySelector('#dnmt').value.trim(),ts:Date.now()}});toast('Настроение обновлено');o.remove()}catch(e){toast('Не удалось: '+(e.code||e.message))}};
+ var r=o.querySelector('#dnmr');if(r)r.onclick=async function(){try{await setU({mood:null});o.remove()}catch(e){toast('Не удалось')}}}
+function row(){var A=document.getElementById('app');if(!A)return;var ref=A.querySelector('#s_ar')||A.querySelector('#s_acc')||A.querySelector('#s_th');if(!ref)return;
+ var txt=moodOn(me)?me.mood.e:'выбрать',ex=A.querySelector('#s_md');
+ if(ex){var s=ex.querySelector('.sub');if(s.textContent!==txt)s.textContent=txt;return}
+ var r=document.createElement('div');r.className='row k';r.id='s_md';
+ r.innerHTML='<span class="dic" style="background:#22c55e"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg></span><div class="col nm">Настроение</div><span class="sub"></span>';
+ r.querySelector('.sub').textContent=txt;r.onclick=moodSheet;ref.insertAdjacentElement('afterend',r)}
+var t=0;new MutationObserver(function(){if(t)return;t=requestAnimationFrame(function(){t=0;try{fx();head();cards();row()}catch(e){console.error(e)}})}).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
 </body></html>
