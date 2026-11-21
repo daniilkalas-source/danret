@@ -4275,4 +4275,91 @@ function row(){var A=document.getElementById('app');if(!A)return;var ref=A.query
 var t=0;new MutationObserver(function(){if(t)return;t=requestAnimationFrame(function(){t=0;try{fx();head();cards();row()}catch(e){console.error(e)}})}).observe(document.body,{childList:true,subtree:true});
 })();
 </script>
+<style id="dn-more">
+.dngm{padding:4px 2px;text-align:center}.dngm b{display:block;margin-bottom:6px}
+.dngb{display:grid;grid-template-columns:repeat(3,52px);gap:5px;justify-content:center}
+.dngb button{width:52px;height:52px;border:0;border-radius:12px;background:var(--bg);font-size:26px;color:var(--tx)}
+.dngm small{display:block;margin-top:6px;color:var(--mu)!important}
+.dncov{margin:10px 14px;height:78px;border-radius:18px}
+.dnsq{display:inline-block;width:46px;height:46px;border-radius:14px;margin:5px;border:3px solid transparent}.dnsq.on{border-color:var(--tx)}
+.dngbt{flex:none;border:0;background:var(--sf);color:var(--ac);width:38px;height:38px;border-radius:50%;font-size:18px;margin-right:6px}
+</style>
+<script id="dn-more-js">
+(function(){
+var ESC=function(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+var $$=function(q){var A=document.getElementById('app');return A&&A.querySelector(q)};
+function sh(html){var o=document.createElement('div');o.className='sheet';o.innerHTML='<div>'+html+'</div>';document.body.appendChild(o);o.onclick=function(e){if(e.target===o)o.remove()};return o}
+/* ---------- крестики-нолики ---------- */
+var L=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+function game(m){var c=chats.find(function(x){return x.id===cur});if(!c)return null;
+ var X=m.from,O=c.members.find(function(x){return x!==X}),b=[],n=0,w=null;
+ msgs.filter(function(x){return x.g==='ttt'&&x.gid===m.gid&&!x.gs}).sort(function(a,b){return a.ts-b.ts}).forEach(function(v){
+  if(w||b[v.i]||v.i<0||v.i>8)return;var p=n%2?O:X;if(v.from!==p)return;b[v.i]=n%2?'⭕':'❌';n++;
+  L.forEach(function(l){if(b[l[0]]&&b[l[0]]===b[l[1]]&&b[l[0]]===b[l[2]])w=p})});
+ return{b:b,X:X,O:O,n:n,w:w,draw:!w&&n>=9,turn:n%2?O:X}}
+function paintGame(el,m){var g=game(m);if(!g)return;var st=g.w?'🏆 Победил(а) '+ESC(uname(g.w)):g.draw?'Ничья':'Ход: '+ESC(uname(g.turn))+(g.n%2?' ⭕':' ❌');
+ el.innerHTML='<div class="dngm"><b>🎮 Крестики-нолики</b><div class="dngb">'+[0,1,2,3,4,5,6,7,8].map(function(i){return '<button data-i="'+i+'">'+(g.b[i]||'')+'</button>'}).join('')+'</div><small>'+st+'</small></div>';
+ el.querySelectorAll('[data-i]').forEach(function(b){b.onclick=async function(){var i=+b.dataset.i,g2=game(m);
+  if(g2.w||g2.draw||g2.b[i]||g2.turn!==uid)return;var ts=Date.now();
+  try{await mc(cur).doc(ts.toString(36)+rid()).set({from:uid,ts:ts,kind:'text',text:'🎮 ход',g:'ttt',gid:m.gid,i:i});await cs(cur).update({last:'🎮 Крестики-нолики',lastTs:ts})}catch(e){toast('Не удалось: '+(e.code||e.message))}}})}
+function gameBtn(){var A=document.getElementById('app'),bar=A&&A.querySelector(':scope>.send');if(!bar||bar.querySelector('.dngbt'))return;
+ var c=chats.find(function(x){return x.id===cur});if(!c||c.type!=='dm')return;
+ var b=document.createElement('button');b.type='button';b.className='dngbt';b.textContent='🎮';
+ b.onmousedown=function(e){e.preventDefault()};
+ b.onclick=function(){postMsg({text:'🎮 Крестики-нолики',g:'ttt',gs:1,gid:Date.now().toString(36)+rid(3)},'🎮 Крестики-нолики').catch(function(){})};
+ bar.insertBefore(b,bar.firstChild)}
+function games(){var A=document.getElementById('app');if(!A)return;
+ A.querySelectorAll('.b[data-id]').forEach(function(el){var m=msgs.find(function(x){return x.id===el.dataset.id});if(!m||m.g!=='ttt')return;
+  if(!m.gs){el.style.display='none';return}paintGame(el,m)})}
+/* ---------- капсула времени (себе) ---------- */
+var capBusy=false;
+function capSheet(){var D=[['Через день',864e5],['Через неделю',6048e5],['Через месяц',2592e6],['Через полгода',15552e6],['Через год',31536e6]],pick=D[2][1],
+ o=sh('<b style="font-size:18px">Капсула времени</b><p class="sub">Напишите себе в будущее. Письмо откроется, когда вы зайдёте в приложение после выбранной даты.</p><textarea id="dnct" maxlength="500" placeholder="Привет, будущий я…"></textarea><div class="seg" id="dncs" style="flex-wrap:wrap">'+D.map(function(d,i){return '<button data-v="'+d[1]+'"'+(i===2?' class="on"':'')+'>'+d[0]+'</button>'}).join('')+'</div><button class="btn" id="dncg" style="width:100%">Закопать капсулу</button>');
+ o.querySelectorAll('#dncs button').forEach(function(b){b.onclick=function(){pick=+b.dataset.v;o.querySelectorAll('#dncs button').forEach(function(x){x.classList.toggle('on',x===b)})}});
+ o.querySelector('#dncg').onclick=async function(){var t=o.querySelector('#dnct').value.trim();if(!t)return toast('Напишите текст');var ts=Date.now();
+  try{await db.collection('data/users/'+uid).doc('cap'+ts).set({t:t,open:ts+pick,ts:ts});toast('Капсула закопана 🕳');o.remove()}catch(e){toast('Не удалось: '+(e.code||e.message))}}}
+async function capCheck(){if(capBusy||typeof uid==='undefined'||!uid||!window.db)return;capBusy=true;
+ try{var q=await db.collection('data/users/'+uid).get(),now=Date.now(),due=[];q.forEach(function(d){if(d.id.slice(0,3)==='cap'&&d.data().open<=now)due.push(d)});
+  if(due.length){var d=due[0],v=d.data(),o=sh('<b style="font-size:18px">⏳ Письмо из прошлого</b><p class="sub">Вы написали это '+new Date(v.ts).toLocaleDateString('ru-RU')+'</p><div class="post" id="dncx"></div><button class="btn" id="dnck" style="width:100%;margin-top:10px">Закрыть</button>');
+   o.querySelector('#dncx').textContent=v.t;o.querySelector('#dnck').onclick=async function(){try{await d.ref.delete()}catch(e){}o.remove();capBusy=false};return}}catch(e){}
+ capBusy=false}
+setInterval(capCheck,60000);setTimeout(capCheck,6000);
+/* ---------- анонимные вопросы ---------- */
+var link=function(){return location.origin+location.pathname+'#ask-'+uid};
+async function anonSheet(){var o=sh('<b style="font-size:18px">Анонимные вопросы</b><p class="sub">Отправьте ссылку друзьям — они смогут задать вопрос, не раскрывая себя.</p><button class="btn" id="dnal" style="width:100%">Скопировать ссылку</button><div id="dnaq" style="margin-top:10px"><p class="sub">Загрузка…</p></div>');
+ o.querySelector('#dnal').onclick=function(){try{copy(link())}catch(e){navigator.clipboard&&navigator.clipboard.writeText(link())}toast('Ссылка скопирована')};
+ try{var q=await db.collection('anon').where('to','==',uid).get(),a=[];q.forEach(function(d){a.push(d)});a.sort(function(x,y){return y.data().ts-x.data().ts});
+  var box=o.querySelector('#dnaq');box.innerHTML=a.length?'':'<p class="sub">Пока нет вопросов</p>';
+  a.forEach(function(d){var r=document.createElement('div');r.className='post';r.style.marginBottom='8px';r.innerHTML='<div></div><div class="sub" style="margin-top:6px"><span style="color:var(--ac)">Удалить</span></div>';
+   r.firstChild.textContent=d.data().q;r.querySelector('span').onclick=async function(){try{await d.ref.delete();r.remove()}catch(e){toast('Не удалось')}};box.appendChild(r)})}
+ catch(e){o.querySelector('#dnaq').innerHTML='<p class="sub">Не удалось загрузить: '+ESC(e.code||e.message)+'</p>'}}
+var asked=false;
+function askCheck(){var m=/^#ask-(.+)$/.exec(location.hash);if(!m||asked||typeof me==='undefined'||!me)return;var id=m[1];
+ if(!users[id]||id===uid){if(users[id]||id===uid){asked=true;history.replaceState(null,'',location.pathname)}return}asked=true;
+ var o=sh('<b style="font-size:18px">Анонимный вопрос</b><p class="sub">для '+ESC(users[id].name||'пользователя')+' · ваше имя не передаётся</p><textarea id="dnqt" maxlength="300" placeholder="Что хотите спросить?"></textarea><button class="btn" id="dnqs" style="width:100%">Отправить</button>');
+ history.replaceState(null,'',location.pathname);
+ o.querySelector('#dnqs').onclick=async function(){var t=o.querySelector('#dnqt').value.trim();if(!t)return;
+  var last=+(localStorage.getItem('dn_aq')||0);if(Date.now()-last<30000)return toast('Подождите немного перед следующим вопросом');
+  try{await db.collection('anon').add({to:id,q:t,ts:Date.now()});localStorage.setItem('dn_aq',Date.now());toast('Вопрос отправлен 🤫');o.remove()}catch(e){toast('Не удалось: '+(e.code||e.message))}}}
+/* ---------- обложка профиля ---------- */
+var G=['linear-gradient(135deg,#8a63ff,#3fa9ff)','linear-gradient(135deg,#ff5f6d,#ffc371)','linear-gradient(135deg,#11998e,#38ef7d)','linear-gradient(135deg,#f953c6,#b91d73)','linear-gradient(135deg,#0f2027,#2c5364)','linear-gradient(135deg,#fc4a1a,#f7b733)','linear-gradient(135deg,#7f00ff,#e100ff)','linear-gradient(135deg,#00c6ff,#0072ff)'];
+function covSheet(){var cur0=me.cov,o=sh('<b style="font-size:18px">Обложка профиля</b><p class="sub">Показывается на вашей странице у собеседников.</p><div>'+G.map(function(g,i){return '<span class="dnsq'+(i===cur0?' on':'')+'" data-i="'+i+'" style="background:'+g+'"></span>'}).join('')+'</div>'+(cur0!=null?'<button class="btn red" id="dncr" style="width:100%;margin-top:10px">Убрать</button>':''));
+ o.querySelectorAll('[data-i]').forEach(function(b){b.onclick=async function(){try{await setU({cov:+b.dataset.i});toast('Обложка установлена');o.remove()}catch(e){toast('Не удалось')}}});
+ var r=o.querySelector('#dncr');if(r)r.onclick=async function(){try{await setU({cov:null});o.remove()}catch(e){}}}
+function cover(){var A=document.getElementById('app'),acts=A&&A.querySelector('.acts');if(!acts||typeof inf==='undefined'||A.querySelector('.dncov'))return;
+ var c=chats.find(function(x){return x.id===inf});if(!c||(c.type!=='dm'&&c.type!=='saved'))return;
+ var o=c.type==='saved'?me:users[c.members.find(function(x){return x!==uid})];if(!o||o.cov==null||!G[o.cov])return;
+ var d=document.createElement('div');d.className='dncov';d.style.background=G[o.cov];acts.insertAdjacentElement('beforebegin',d)}
+/* ---------- строки в настройках ---------- */
+var ROWS=[['s_cap','#0ea5e9','Капсула времени','M12 7v5l3 2M3 12a9 9 0 1018 0 9 9 0 00-18 0',function(){return 'письмо себе'},capSheet],
+ ['s_anon','#a855f7','Анонимные вопросы','M12 3a6 6 0 00-6 6v3l-2 4h16l-2-4V9a6 6 0 00-6-6zM10 20a2 2 0 004 0',function(){return '›'},anonSheet],
+ ['s_cov','#f43f5e','Обложка профиля','M3 5h18v14H3zM3 15l5-4 4 3 3-2 6 4',function(){return me.cov!=null?'есть':'выбрать'},covSheet]];
+function rows(){var A=document.getElementById('app');if(!A)return;var ref=['#s_md','#s_ar','#s_acc','#s_th'].map(function(q){return A.querySelector(q)}).find(Boolean);if(!ref)return;
+ ROWS.forEach(function(R){var ex=A.querySelector('#'+R[0]);if(ex){var s=ex.querySelector('.sub'),t=R[4]();if(s.textContent!==t)s.textContent=t;ref=ex;return}
+  var r=document.createElement('div');r.className='row k';r.id=R[0];
+  r.innerHTML='<span class="dic" style="background:'+R[1]+'"><svg class="i" viewBox="0 0 24 24"><path d="'+R[3]+'"/></svg></span><div class="col nm">'+R[2]+'</div><span class="sub"></span>';
+  r.querySelector('.sub').textContent=R[4]();r.onclick=R[5];ref.insertAdjacentElement('afterend',r);ref=r})}
+var t=0;new MutationObserver(function(){if(t)return;t=requestAnimationFrame(function(){t=0;try{games();gameBtn();cover();rows();askCheck()}catch(e){console.error(e)}})}).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
 </body></html>
