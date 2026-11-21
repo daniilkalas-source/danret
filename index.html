@@ -3204,12 +3204,12 @@ var IC=['<svg viewBox="0 0 24 24"><path d="M3 11v2a1 1 0 001 1h2l5 4V6L6 10H4a1 
 var F=[
  [0,'Больше каналов и групп','Бесплатно — до 10, с Premium — до 100',0],
  [1,'Больше закреплённых чатов','Бесплатно — до 3, с Premium — до 10',0],
- [2,'Значок рядом с именем','Эмодзи у имени, виден всем. Бесплатных значков меньше',0],
+ [2,'Эмодзи-статус','Анимированный мишка рядом с именем, виден всем',0],
  [3,'Безлимитные истории','Бесплатно — до 3 активных историй',0],
  [4,'Распознавание голоса','Голосовые превращаются в текст. Без Premium недоступно',0],
  [5,'Файлы до 150 МБ','Бесплатно — до 10 МБ',0],
  [6,'Реакции без границ','Бесплатно — одна реакция на сообщение',0],
- [7,'Премиум-значки','Эксклюзивные анимированные значки у имени',0],
+ [7,'Премиум-эмодзи','24 эксклюзивных анимированных мишки',0],
  [8,'Приветствие','Сообщение, которое видит собеседник в пустом чате («Сообщений пока нет»)',1],
  [9,'Автоответчик','Автоматический ответ, пока вы не в сети',1],
  [10,'И многое другое','Новые функции будут добавляться в Premium',1]
@@ -3367,26 +3367,72 @@ html.kbo #app:has(>.top~.msgs)>:not(.top):not(.msgs):not(.send){bottom:66px!impo
 })();
 </script>
 <style id="dn-pe">
-.pbd{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;margin-left:6px;font-size:12px;line-height:1;background:rgba(255,255,255,.14);vertical-align:middle;flex:none;font-style:normal;font-weight:400}
-.pbd.pr{background:linear-gradient(135deg,#8a63ff,#ff6ad5);box-shadow:0 0 0 1.5px rgba(255,255,255,.35),0 0 8px rgba(168,110,255,.7);animation:dnpb 2.6s ease-in-out infinite}
-@keyframes dnpb{0%,100%{box-shadow:0 0 0 1.5px rgba(255,255,255,.35),0 0 6px rgba(168,110,255,.6);transform:scale(1)}50%{box-shadow:0 0 0 1.5px rgba(255,255,255,.55),0 0 14px rgba(255,106,213,.9);transform:scale(1.1)}}
-.dhd .pbd{width:28px;height:28px;font-size:16px;margin-left:8px}
+.pbd{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;margin-left:5px;vertical-align:middle;flex:none;overflow:visible;font-style:normal}
+.bsv{width:100%;height:100%;overflow:visible;display:block}
+.bg{transform-origin:32px 58px}
+.ey{transform-origin:32px 31px;animation:dnbl 4.2s infinite}
+.a-bn{animation:dnbn 1.6s ease-in-out infinite}
+.a-wb{animation:dnwb 1.8s ease-in-out infinite alternate}
+.a-pl{animation:dnpl 1.4s ease-in-out infinite alternate}
+.a-fl{animation:dnfl 2.4s ease-in-out infinite alternate}
+.a-sk{animation:dnsk 2.2s ease-in-out infinite}
+@keyframes dnbn{0%,100%{transform:translateY(0) scale(1,1)}20%{transform:translateY(0) scale(1.07,.9)}45%{transform:translateY(-7px) scale(.95,1.06)}70%{transform:translateY(0) scale(1.04,.95)}}
+@keyframes dnwb{from{transform:rotate(-10deg)}to{transform:rotate(10deg)}}
+@keyframes dnpl{from{transform:scale(1)}to{transform:scale(1.14)}}
+@keyframes dnfl{from{transform:translateY(0) rotate(-4deg)}to{transform:translateY(-5px) rotate(4deg)}}
+@keyframes dnsk{0%,55%,100%{transform:translateX(0) rotate(0)}62%{transform:translateX(-3px) rotate(-5deg)}70%{transform:translateX(3px) rotate(5deg)}78%{transform:translateX(-2px) rotate(-3deg)}86%{transform:translateX(2px) rotate(3deg)}}
+@keyframes dnbl{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+.dhd .pbd{width:32px;height:32px;margin-left:8px}
 .pbm{cursor:pointer;-webkit-tap-highlight-color:transparent}
-.pbm.no{background:transparent;border:1.5px dashed rgba(255,255,255,.5);opacity:.85}
-.peg{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:8px 0 14px}
-.pei{aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;background:var(--sf);position:relative;border:2px solid transparent;cursor:pointer}
-.pei.pro{background:linear-gradient(135deg,rgba(138,99,255,.55),rgba(255,106,213,.45));animation:dnpb 3s ease-in-out infinite}
+.pbm.no{border:1.5px dashed rgba(255,255,255,.55);border-radius:50%;font-size:17px;opacity:.9}
+.peg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0 14px}
+.pei{aspect-ratio:1;border-radius:18px;display:flex;align-items:center;justify-content:center;padding:9px;background:var(--sf);border:2px solid transparent;cursor:pointer}
 .pei.on{border-color:var(--ac)}
-.pei.lk>span{opacity:.5}
-.pei b{position:absolute;right:-2px;bottom:-2px;font-size:12px;font-weight:400}
+.pei:active{transform:scale(.94)}
 </style>
 <script>
-var PE_FREE=['🙂','😊','😎','😉','🥳','🤓','😇','🤗','😴','🐱','🐶','🍀','❤️','👍','🌈','☕'];
-var PE_PRO=['👑','💎','🔥','⚡','🚀','🌟','🦄','🐉','🪐','🧿','🎭','🏆','🦋','🌙','☄️','💫','🔮','🦅','🐺','🎯'];
-var DNL={chat:[10,100,'групп и каналов'],pin:[3,10,'закреплённых чатов'],story:[3,1e9,'активных историй']};
+var BC={br:['#a8693a','#d9a46c'],wh:['#f4f1ea','#ffffff'],pk:['#ff9ec4','#ffd3e4'],bl:['#6aa8ff','#c4dcff'],gd:['#f5c542','#ffe493'],bk:['#4a4a55','#8a8a96'],pu:['#a78bfa','#dccfff']};
+var D='#1d1410';
+function bEyes(){return '<g class="ey"><circle cx="22" cy="31" r="3.2" fill="'+D+'"/><circle cx="42" cy="31" r="3.2" fill="'+D+'"/><circle cx="23" cy="30" r="1" fill="#fff"/><circle cx="43" cy="30" r="1" fill="#fff"/></g>'}
+var BH='<path d="M22 36c-5-3.5-6-6-4-8 1.6-1.6 3.4-.8 4 .6.6-1.4 2.4-2.2 4-.6 2 2 1 4.5-4 8z" fill="#ff3b5c"/>';
+var BS='<path d="M22 25.5l1.6 3.4 3.7.5-2.7 2.6.7 3.7-3.3-1.8-3.3 1.8.7-3.7-2.7-2.6 3.7-.5z" fill="#ffd23f"/>';
+var BA={
+ none:{e:1,f:''},
+ shades:{e:0,f:'<rect x="11" y="25" width="19" height="11" rx="5" fill="#111"/><rect x="34" y="25" width="19" height="11" rx="5" fill="#111"/><path d="M30 29h4" stroke="#111" stroke-width="2"/><path d="M15 28.5h5" stroke="#fff" opacity=".45" stroke-width="1.6" stroke-linecap="round"/><path d="M38 28.5h5" stroke="#fff" opacity=".45" stroke-width="1.6" stroke-linecap="round"/>'},
+ heart:{e:0,f:BH+'<g transform="translate(20 0)">'+BH+'</g>'},
+ star:{e:0,f:BS+'<g transform="translate(20 0)">'+BS+'</g>'},
+ sleep:{e:0,f:'<path d="M18 31q4 4 8 0M38 31q4 4 8 0" stroke="'+D+'" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M48 6h7l-7 8h7" stroke="#7aa7ff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'},
+ crown:{e:1,f:'<path d="M18 18l4-11 6 7 4-10 4 10 6-7 4 11z" fill="#ffc933" stroke="#c9962a" stroke-width="1.5" stroke-linejoin="round"/><circle cx="32" cy="15" r="1.8" fill="#ff4d6d"/>'},
+ party:{e:1,f:'<path d="M23 19L32 3l9 16z" fill="#ff5fa2"/><path d="M27 12l10 0M25 16l14 0" stroke="#fff" stroke-width="1.6" opacity=".8"/><circle cx="32" cy="3.5" r="3" fill="#ffd23f"/>'},
+ phones:{e:1,f:'<path d="M10 30c0-17 44-17 44 0" stroke="#333" stroke-width="3.5" fill="none"/><rect x="5" y="28" width="9" height="14" rx="4" fill="#ff5fa2"/><rect x="50" y="28" width="9" height="14" rx="4" fill="#ff5fa2"/>'},
+ bow:{e:1,f:'<path d="M32 58l-10-5.5v11zM32 58l10-5.5v11z" fill="#e5484d"/><circle cx="32" cy="58" r="2.6" fill="#b3262b"/>'},
+ flower:{e:1,f:'<g fill="#ff8fb8"><circle cx="46" cy="9" r="3.6"/><circle cx="51" cy="13" r="3.6"/><circle cx="49" cy="18" r="3.6"/><circle cx="43" cy="18" r="3.6"/><circle cx="41" cy="13" r="3.6"/></g><circle cx="46" cy="14" r="3" fill="#ffd23f"/>'},
+ cap:{e:1,f:'<path d="M12 23c2-13 38-13 40 0z" fill="#3b82f6"/><path d="M40 22h20c0 3.5-7 4.5-20 3z" fill="#2563eb"/><circle cx="32" cy="12" r="2" fill="#fff"/>'},
+ halo:{e:1,f:'<ellipse cx="32" cy="9" rx="13" ry="4" fill="none" stroke="#ffd23f" stroke-width="3"/>'},
+ devil:{e:1,f:'<path d="M15 16L12 3l11 6zM49 16l3-13-11 6z" fill="#e5484d"/>'},
+ tongue:{e:1,f:'<path d="M29 47.5v4.5a3 3 0 006 0v-4.5z" fill="#ff6b8a"/>'},
+ mustache:{e:1,f:'<path d="M32 44.5c-3-3.5-9-3.5-11.5 0 3 2.5 8 1.5 11.5 0 3.5 1.5 8.5 2.5 11.5 0-2.5-3.5-8.5-3.5-11.5 0z" fill="#2b1a12"/>'},
+ scarf:{e:1,f:'<path d="M12 52q20 11 40 0l1 6q-21 10-42 0z" fill="#e5484d"/><path d="M44 57l4 8" stroke="#e5484d" stroke-width="5.5" stroke-linecap="round"/>'},
+ love:{e:1,f:'<path d="M52 10c-3.5-2.4-4.5-4.6-3-6.3 1.1-1.2 2.6-.6 3 .5.4-1.1 1.9-1.7 3-.5 1.5 1.7.5 3.9-3 6.3z" fill="#ff3b5c"/><path d="M10 12c-2.5-1.7-3.2-3.3-2.1-4.5.8-.9 1.8-.4 2.1.4.3-.8 1.3-1.3 2.1-.4 1.1 1.2.4 2.8-2.1 4.5z" fill="#ff7a9a"/>'}
+};
+var BL=[['br','none','bn'],['br','shades','wb'],['br','crown','pl'],['br','heart','bn'],['wh','star','pl'],['wh','halo','fl'],['wh','party','bn'],['wh','scarf','wb'],['pk','flower','fl'],['pk','heart','pl'],['pk','bow','wb'],['pk','sleep','fl'],['bl','phones','bn'],['bl','cap','wb'],['bl','shades','pl'],['bl','tongue','sk'],['gd','crown','pl'],['gd','star','bn'],['gd','mustache','wb'],['bk','devil','sk'],['bk','shades','bn'],['bk','heart','fl'],['pu','star','fl'],['pu','love','pl']];
+var BCACHE={};
+function bearSvg(i){
+ if(BCACHE[i])return BCACHE[i];
+ var d=BL[i];if(!d)return '';
+ var k=BC[d[0]],m=k[0],l=k[1],a=BA[d[1]];
+ var x='<circle cx="14" cy="15" r="9" fill="'+m+'"/><circle cx="50" cy="15" r="9" fill="'+m+'"/><circle cx="14" cy="15" r="5" fill="'+l+'"/><circle cx="50" cy="15" r="5" fill="'+l+'"/>'
+ +'<ellipse cx="32" cy="36" rx="24" ry="21" fill="'+m+'"/>'
+ +'<circle cx="15" cy="42" r="4" fill="#ff7a9a" opacity=".35"/><circle cx="49" cy="42" r="4" fill="#ff7a9a" opacity=".35"/>'
+ +'<ellipse cx="32" cy="43" rx="10.5" ry="8" fill="'+l+'"/><ellipse cx="32" cy="39.5" rx="4" ry="3" fill="#2b1a12"/>'
+ +'<path d="M32 42.5v3M27.5 47c2 2 7 2 9 0" stroke="#2b1a12" stroke-width="1.6" fill="none" stroke-linecap="round"/>'
+ +(a.e?bEyes():'')+a.f;
+ return BCACHE[i]='<svg class="bsv" viewBox="0 0 64 64"><g class="bg a-'+d[2]+'" style="animation-delay:-'+((i*37)%17/10).toFixed(1)+'s">'+x+'</g></svg>';
+}
 function dnPrem(id){var u=id===uid?me:users[id];return !!u&&u.prem>Date.now()}
 function dnFileMax(){return (dnPrem(uid)?150:10)*1048576}
 function dnPromo(t){toast(t);if(!dnPrem(uid))setTimeout(function(){try{premPage()}catch(e){}},900)}
+var DNL={chat:[10,100,'групп и каналов'],pin:[3,10,'закреплённых чатов'],story:[3,1e9,'активных историй']};
 function dnLim(k){
  try{
   var L=DNL[k],p=dnPrem(uid),mx=p?L[1]:L[0],n=0;
@@ -3397,26 +3443,22 @@ function dnLim(k){
  }catch(e){}
  return true;
 }
+function bidx(e){var m=/^b(\d+)$/.exec(e||'');if(!m)return -1;var i=+m[1];return i>=0&&i<BL.length?i:-1}
 function pbd(id){
- var u=id===uid?me:users[id];if(!u||!u.pe)return '';
- var e=u.pe,pro=PE_PRO.indexOf(e)>-1;
- if(!pro&&PE_FREE.indexOf(e)<0)return '';
- if(pro&&!(u.prem>Date.now()))return '';
- return '<span class="pbd'+(pro?' pr':'')+'">'+e+'</span>';
+ var u=id===uid?me:users[id];if(!u)return '';
+ var i=bidx(u.pe);if(i<0||!(u.prem>Date.now()))return '';
+ return '<span class="pbd">'+bearSvg(i)+'</span>';
 }
 function pePicker(){
- var p=dnPrem(uid),cu=(me&&me.pe)||'';
- var g=function(a,pro){return '<div class="peg">'+a.map(function(e){var lk=pro&&!p;return '<div class="pei'+(pro?' pro':'')+(lk?' lk':'')+(e===cu?' on':'')+'" data-e="'+e+'" data-p="'+(pro?1:0)+'"><span>'+e+'</span>'+(lk?'<b>🔒</b>':'')+'</div>'}).join('')+'</div>'};
- var s=sheet(hd('Значок у имени')+'<div class="sub" style="padding:4px 2px">Бесплатные</div>'+g(PE_FREE,0)+'<div class="sub" style="padding:4px 2px">Premium ★ — особые, анимированные</div>'+g(PE_PRO,1)+(cu?'<button class="btn" id="pex" style="width:100%;margin-top:4px;background:var(--sf);color:var(--tx)">Убрать значок</button>':'')+(p?'':'<button class="btn" id="pep" style="width:100%;margin-top:8px">Открыть Premium</button>'));
+ var cu=bidx(me&&me.pe);
+ var g='<div class="peg">'+BL.map(function(_,i){return '<div class="pei'+(i===cu?' on':'')+'" data-i="'+i+'">'+bearSvg(i)+'</div>'}).join('')+'</div>';
+ var s=sheet(hd('Эмодзи-статус')+'<div class="sub" style="padding:2px 2px 0">Анимированные мишки Premium. Статус виден всем рядом с вашим именем.</div>'+g+(cu>-1?'<button class="btn" id="pex" style="width:100%;background:var(--sf);color:var(--tx)">Убрать статус</button>':''));
  var save=function(v){
   if(v)me.pe=v;else delete me.pe;
-  setU({pe:v||firebase.firestore.FieldValue.delete()}).then(function(){toast('Значок обновлён');s.remove()}).catch(function(){toast('Не удалось сохранить значок')});
+  setU({pe:v||firebase.firestore.FieldValue.delete()}).then(function(){toast(v?'Статус установлен':'Статус убран');s.remove()}).catch(function(){toast('Не удалось сохранить статус')});
  };
- s.querySelectorAll('.pei').forEach(function(el){el.onclick=function(){
-  if(el.dataset.p==='1'&&!p){toast('Этот значок доступен в Premium');return}
-  save(el.dataset.e)}});
+ s.querySelectorAll('.pei').forEach(function(el){el.onclick=function(){save('b'+el.dataset.i)}});
  var x=s.querySelector('#pex');if(x)x.onclick=function(){save('')};
- var b=s.querySelector('#pep');if(b)b.onclick=function(){s.remove();try{premPage()}catch(e){}};
 }
 var _drPE=drawer;
 drawer=function(){
@@ -3424,11 +3466,11 @@ drawer=function(){
  try{
   var d=document.querySelector('.dr');if(!d)return;
   var h=d.querySelector('.dhd h2');if(!h||h.querySelector('.pbm'))return;
-  var e=me&&me.pe,pro=PE_PRO.indexOf(e)>-1&&dnPrem(uid),fr=PE_FREE.indexOf(e)>-1;
+  var i=bidx(me&&me.pe),on=i>-1&&dnPrem(uid);
   var sp=document.createElement('span');
-  sp.className='pbd pbm'+(pro?' pr':'')+((pro||fr)?'':' no');
-  sp.textContent=(pro||fr)?e:'🙂';
-  sp.onclick=function(ev){ev.stopPropagation();d.remove();pePicker()};
+  sp.className='pbd pbm'+(on?'':' no');
+  if(on)sp.innerHTML=bearSvg(i);else sp.textContent='🙂';
+  sp.onclick=function(ev){ev.stopPropagation();if(!dnPrem(uid)){d.remove();dnPromo('Эмодзи-статус — только для Premium');return}d.remove();pePicker()};
   h.appendChild(sp);
  }catch(x){console.error(x)}
 };
