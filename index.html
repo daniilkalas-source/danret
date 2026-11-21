@@ -4159,4 +4159,58 @@ function inject(){
 var t=0;new MutationObserver(function(){if(t)return;t=requestAnimationFrame(function(){t=0;inject()})}).observe(document.body,{childList:true,subtree:true});
 })();
 </script>
+<style id="dn-ar">
+.b.dnar,.b.me.dnar{align-self:flex-start!important;background:var(--sf)!important;border:1px dashed var(--ac)}
+.b.dnar small{color:var(--ac)}
+#dnart{min-height:110px;resize:none}
+</style>
+<script id="dn-ar-js">
+(function(){
+var ESC=function(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+var isP=function(u){return !!u&&u.prem>Date.now()};
+/* отправка автоответа: срабатывает в приложении того, кто пишет владельцу автоответчика */
+async function auto(id){
+ var c=chats.find(function(x){return x.id===id});if(!c||c.type!=='dm'||c.secret)return;
+ var oid=c.members.find(function(x){return x!==uid});if(!oid||oid===uid)return;
+ var O=users[oid];if(!O||!O.ar||!O.ar.on||!O.ar.t||!isP(O))return;
+ if(O.ls&&Date.now()-O.ls<180000)return;                       /* владелец в сети — молчим */
+ var ls=O.ls||0;
+ if(msgs.some(function(m){return m.ar&&m.for===oid&&m.ts>ls}))return; /* уже отвечали, пока его нет */
+ var ts=Date.now()+1,t=String(O.ar.t).slice(0,300);
+ await mc(id).doc(ts.toString(36)+rid()).set({from:uid,ts:ts,kind:'text',text:t,ar:1,for:oid});
+ await cs(id).update({last:'🤖 Автоответ: '+t.slice(0,60),lastTs:ts})}
+var _pm=postMsg;
+postMsg=async function(o){var id=cur,r=await _pm.apply(this,arguments);if(!o||!o.ar)auto(id).catch(function(e){console.error('autoreply',e)});return r};
+/* оформление ответа как сообщения бота */
+function dress(){var A=document.getElementById('app');if(!A)return;
+ A.querySelectorAll('.b[data-id]:not([data-ar])').forEach(function(el){
+  var m=msgs.find(function(x){return x.id===el.dataset.id});if(!m||!m.ar)return;
+  el.dataset.ar=1;el.classList.remove('me');el.classList.add('dnar');
+  el.insertAdjacentHTML('afterbegin','<small>🤖 Автоответ · '+ESC(uname(m.for))+'</small>')})}
+/* настройки */
+function sheetAr(){
+ var cur0=me.ar||{on:false,t:''},o=document.createElement('div');o.className='sheet';
+ o.innerHTML='<div><b style="font-size:18px">Автоответчик</b><p class="sub">Если вас нет в сети больше 3 минут, собеседник в личном чате получит это сообщение от бота — один раз, пока вы не вернётесь.</p>'+
+ '<div class="row"><div class="col nm">Включить</div><button class="sw'+(cur0.on?' on':'')+'" id="dnaon"></button></div>'+
+ '<textarea id="dnart" maxlength="300" placeholder="Например: Сейчас не в сети, отвечу позже"></textarea>'+
+ '<button class="btn" id="dnasv" style="width:100%;margin-top:8px">Сохранить</button></div>';
+ document.body.appendChild(o);var t=o.querySelector('#dnart');t.value=cur0.t||'';var on=!!cur0.on;
+ o.onclick=function(e){if(e.target===o)o.remove()};
+ o.querySelector('#dnaon').onclick=function(){on=!on;this.classList.toggle('on',on)};
+ o.querySelector('#dnasv').onclick=async function(){var v=t.value.trim();
+  if(!isP(me)){o.remove();return toast('Автоответчик доступен только с Premium')}
+  if(on&&!v)return toast('Напишите текст автоответа');
+  try{await setU({ar:{on:on&&!!v,t:v}});toast(on?'Автоответчик включён ✓':'Автоответчик выключен');o.remove()}catch(e){toast('Не удалось сохранить: '+(e.code||e.message))}}}
+function row(){var A=document.getElementById('app');if(!A)return;
+ var ref=A.querySelector('#s_acc')||A.querySelector('#s_th');if(!ref)return;
+ var ex=A.querySelector('#s_ar'),txt=isP(me)?((me.ar&&me.ar.on)?'вкл':'выкл'):'Premium';
+ if(ex){var s=ex.querySelector('.sub');if(s&&s.textContent!==txt)s.textContent=txt;return}
+ var r=document.createElement('div');r.className='row k';r.id='s_ar';
+ r.innerHTML='<span class="dic" style="background:#f59e0b"><svg class="i" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg></span><div class="col nm">Автоответчик</div><span class="sub"></span>';
+ r.querySelector('.sub').textContent=txt;
+ r.onclick=function(){if(!isP(me)){toast('Автоответчик доступен только с Premium');var p=document.getElementById('s_pr');if(p)setTimeout(function(){p.click()},500);return}sheetAr()};
+ ref.insertAdjacentElement('afterend',r)}
+var t=0;new MutationObserver(function(){if(t)return;t=requestAnimationFrame(function(){t=0;row();dress()})}).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
 </body></html>
