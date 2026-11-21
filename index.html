@@ -1953,11 +1953,11 @@ function openEmojiPanel(g,sn){
  packs.forEach(pk=>pk.s.forEach(e=>{if(typeof e==='string')emoPre(e)}));
  const p=document.createElement('div');p.className='emp';
  const draw=(tab)=>{
-  p.innerHTML=`<div class="empt"><button data-t="e" class="${tab==='e'?'on':''}">Эмодзи</button><button data-t="s" class="${tab==='s'?'on':''}">Стикеры</button><button data-t="p" class="${tab==='p'?'on':''}">⭐ Premium</button><button data-t="g" class="${tab==='g'?'on':''}">GIF</button></div>
-  <div class="emps">${tab==='e'?`<div class="emg">${EMO.map(e=>`<button class="emi">${e}</button>`).join('')}</div>`:tab==='p'?(window.peTab?peTab():''):tab==='s'?`<div class="esk">${packs.map((pk,i)=>`<div class="esp"><div class="esph">${pk.cv?`<span class="pkcm">${stkEl(pk.cv)}</span>`:''}<b>${E(pk.n)}</b>${i?`<button class="esx" data-i="${i-1}">✕</button>`:''}</div><div class="esg">${pk.s.map((e,j)=>typeof e==='string'?`<button class="emi es1" data-e="${E(e)}">${E(e)}</button>`:`<button class="emi sti" data-p="${i}" data-j="${j}">${stkEl(e)}</button>`).join('')}</div></div>`).join('')}<button class="esc" id="esc">＋ Новый набор</button></div>`:`<div class="empty" style="padding:30px">GIF скоро — пока используй стикеры 😊</div>`}</div>`;
+  p.innerHTML=`<div class="empt"><button data-t="e" class="${tab==='e'?'on':''}">Эмодзи</button><button data-t="s" class="${tab==='s'?'on':''}">Стикеры</button><button data-t="g" class="${tab==='g'?'on':''}">GIF</button></div>
+  <div class="emps">${tab==='e'?`${window.peTop?peTop():''}<div class="emg">${EMO.map(e=>`<button class="emi">${e}</button>`).join('')}</div>${window.peTab?peTab():''}`:tab==='s'?`<div class="esk">${packs.map((pk,i)=>`<div class="esp"><div class="esph">${pk.cv?`<span class="pkcm">${stkEl(pk.cv)}</span>`:''}<b>${E(pk.n)}</b>${i?`<button class="esx" data-i="${i-1}">✕</button>`:''}</div><div class="esg">${pk.s.map((e,j)=>typeof e==='string'?`<button class="emi es1" data-e="${E(e)}">${E(e)}</button>`:`<button class="emi sti" data-p="${i}" data-j="${j}">${stkEl(e)}</button>`).join('')}</div></div>`).join('')}<button class="esc" id="esc">＋ Новый набор</button></div>`:`<div class="empty" style="padding:30px">GIF скоро — пока используй стикеры 😊</div>`}</div>`;
   p.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>draw(b.dataset.t));
   p.querySelectorAll('.emg .emi').forEach(b=>b.onclick=()=>{g.value+=b.textContent;g.dispatchEvent(new Event('input'));p.remove()});
-  if(tab==='p'&&window.peBind)peBind(p,g);
+  if(tab==='e'&&window.peBind)peBind(p,g);
   p.querySelectorAll('.es1').forEach(b=>b.onclick=()=>{const e=b.dataset.e;p.remove();g.value=e;g.dispatchEvent(new Event('input'));const sd=$('#sd');if(sd)sd.click()});
   p.querySelectorAll('.sti').forEach(b=>b.onclick=()=>{const it=packs[+b.dataset.p].s[+b.dataset.j];p.remove();sendSticker(it)});
   const esc=p.querySelector('#esc');if(esc)esc.onclick=()=>packCreator(pk=>{STK.push(pk);packs.push(pk);draw('s')});
@@ -3764,11 +3764,11 @@ settingsPage=function(){
 .pbn{padding:10px 12px;border-radius:14px;background:linear-gradient(90deg,rgba(124,58,237,.35),rgba(59,130,246,.3));font-size:13px;margin:2px 0 8px;line-height:1.35}
 .pet{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 8px;position:sticky;top:-6px;background:rgba(18,16,32,.97);z-index:2;scrollbar-width:none}
 .pet::-webkit-scrollbar{display:none}
-.pet button{flex:none;width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.07);border:0;padding:6px;color:#fff;font-size:20px}
+.pet button{flex:none;width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.07);border:0;padding:5px;color:#fff;font-size:20px}
 .pet button.on{background:rgba(124,92,255,.35)}
 .pch{font-size:12px;font-weight:700;letter-spacing:.6px;color:var(--mu);text-transform:uppercase;padding:12px 4px 6px}
-.pgd{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.pgd button{aspect-ratio:1;background:none;border:0;border-radius:12px;padding:4px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.pgd{display:grid;grid-template-columns:repeat(8,1fr);gap:2px}
+.pgd button{aspect-ratio:1;background:none;border:0;border-radius:10px;padding:7px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .pgd button:active{background:rgba(255,255,255,.14);transform:scale(.92)}
 .pgd button:nth-child(3n) .pa{animation-delay:-.5s}.pgd button:nth-child(3n+1) .pa{animation-delay:-1.1s}
 .peg5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:4px 0 8px}
@@ -3780,7 +3780,11 @@ settingsPage=function(){
 var PE=[],PEC=[];
 (function(){
 var U=0;
-function G(id,a,b){return '<linearGradient id="'+id+'§" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+a+'"/><stop offset="1" stop-color="'+b+'"/></linearGradient>'}
+function hx(c){if(c.length===4)c='#'+c[1]+c[1]+c[2]+c[2]+c[3]+c[3];return [1,3,5].map(function(i){return parseInt(c.substr(i,2),16)})}
+function mx(c,t,w){var a=hx(c),b=w?[255,255,255]:[0,0,0];return 'rgb('+a.map(function(v,i){return Math.round(v+(b[i]-v)*t)}).join(',')+')'}
+function G(id,a,b){return '<radialGradient id="'+id+'§" cx=".32" cy=".22" r=".95"><stop offset="0" stop-color="'+mx(a,.6,1)+'"/><stop offset=".35" stop-color="'+a+'"/><stop offset=".75" stop-color="'+b+'"/><stop offset="1" stop-color="'+mx(b,.4)+'"/></radialGradient>'}
+var GLOSS='<linearGradient id="gl§" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".6"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>';
+function GH(a,b){return G('h',a,b)+GLOSS}
 function S(inner,defs){return '<svg class="pes" viewBox="0 0 64 64"><defs>'+(defs||'')+'</defs>'+inner+'</svg>'}
 function cat(n,ic,list,nost){var s=PE.length;list.forEach(function(x){PE.push(typeof x==='string'?{s:x}:x)});PEC.push({n:n,ic:s,a:s,b:PE.length,nost:!!nost})}
 function star5(cx,cy,r){var p=[];for(var k=0;k<10;k++){var rr=k%2?r*.45:r,a=-Math.PI/2+Math.PI*k/5;p.push((cx+rr*Math.cos(a)).toFixed(1)+','+(cy+rr*Math.sin(a)).toFixed(1))}return p.join(' ')}
@@ -3790,26 +3794,26 @@ var HEART='M32 56C12 42 5 30 9 19c3-9 16-10 23-1 7-9 20-8 23 1 4 11-3 23-23 37z'
 /* --- Звёзды --- */
 cat('Звёзды',0,[['#3b82f6','#a855f7','spin'],['#22d3ee','#3b82f6','pulse'],['#ffd23f','#ff8a00','tw'],['#ff7ac8','#ff3d81','spin'],['#4ade80','#16a34a','pulse'],['#ff5a5a','#c81e4d','tw'],['#f5f7ff','#9aa6c4','spin'],['#c4a1ff','#6d28d9','pulse'],['#fde68a','#f59e0b','spin'],['#4b4b66','#1c1c2e','tw']].map(function(c){
  var sp=c[2]==='tw'?'<path class="pa pe-tw" d="M52 8v10M47 13h10" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><path class="pa pe-tw" d="M10 44v7M6.5 47.5h7" stroke="#fff" stroke-width="2.2" stroke-linecap="round" style="animation-delay:-.9s"/>':'';
- return S('<g class="pa pe-'+c[2]+'"><path d="'+STAR+'" fill="url(#s§)" stroke="url(#s§)" stroke-width="5" stroke-linejoin="round"/><path d="M30 13l4 8" stroke="#fff" opacity=".55" stroke-width="3" stroke-linecap="round" fill="none"/></g>'+sp,G('s',c[0],c[1]))}));
+ return S('<g class="pa pe-'+c[2]+'"><path d="'+STAR+'" fill="url(#s§)" stroke="url(#s§)"  stroke-width="5" stroke-linejoin="round"/><path d="'+STAR+'" fill="url(#gl§)"/><path d="M30 13l4 8" stroke="#fff" opacity=".55" stroke-width="3" stroke-linecap="round" fill="none"/></g>'+sp,G('s',c[0],c[1])+GLOSS)}));
 
 /* --- Галочки --- */
 function seal(){var p=[];for(var k=0;k<24;k++){var r=k%2?23:27,a=Math.PI*2*k/24;p.push((32+r*Math.cos(a)).toFixed(1)+','+(32+r*Math.sin(a)).toFixed(1))}return 'M'+p.join('L')+'Z'}
 var SEAL=seal();
 cat('Галочки',0,[['#4aa8ff','#1d6fe8','#fff'],['#2f7bff','#1546c9','#fff'],['#ffe08a','#e0a526','#fff'],['#3a3a44','#0d0d12','#ffd96b'],['#ffb347','#ff7a18','#fff'],['#ff6b6b','#d6204a','#fff'],['#5eead4','#16a34a','#fff'],['#c4a1ff','#7c3aed','#fff'],['#ffa6d1','#ff4f9a','#fff'],['#f1f5ff','#9aa6c4','#5b6b8a'],['#67e8f9','#0891b2','#fff']].map(function(c,i){
- return S('<g class="pa pe-'+(i%2?'wob':'pulse')+'"><path d="'+SEAL+'" fill="url(#v§)" stroke="url(#v§)" stroke-width="3.5" stroke-linejoin="round"/><path d="M20 33l8 8 16-17" stroke="'+c[2]+'" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>',G('v',c[0],c[1]))}));
+ return S('<g class="pa pe-'+(i%2?'wob':'pulse')+'"><path d="'+SEAL+'" fill="url(#v§)" stroke="url(#v§)" stroke-width="3.5" stroke-linejoin="round"/><path d="'+SEAL+'" fill="url(#gl§)"/><path d="M20 33l8 8 16-17" stroke="'+c[2]+'" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>',G('v',c[0],c[1])+GLOSS)}));
 
 /* --- Самолётики --- */
 var PLANE='M13 30L52 14 42 52 30 41 24 48 23 36z';
-function plane(bg,c1,c2,fg,circ){return S((circ?'<circle cx="32" cy="32" r="27" fill="url(#p§)"/>':'')+'<g class="pa pe-fl" transform="'+(circ?'translate(8 8) scale(.75)':'')+'"><path d="'+PLANE+'" fill="'+fg+'"/><path d="M23 36L52 14 30 41z" fill="#000" opacity=".16"/></g>',G('p',c1,c2))}
+function plane(bg,c1,c2,fg,circ){return S((circ?'<circle cx="32" cy="32" r="27" fill="url(#p§)"/><circle cx="32" cy="32" r="27" fill="url(#gl§)"/>':'')+'<g class="pa pe-fl" transform="'+(circ?'translate(8 8) scale(.75)':'')+'"><path d="'+PLANE+'" fill="'+fg+'"/><path d="M23 36L52 14 30 41z" fill="#000" opacity=".16"/></g>',G('p',c1,c2)+GLOSS)}
 cat('Самолётики',0,[plane(0,'#4fb6ff','#1d78e0','#fff',1),plane(0,'#4fb6ff','#4fb6ff','#3aa0f0',0),plane(0,'#ff8bc6','#ff3d81','#fff',1),plane(0,'#ffe08a','#e0a526','#fff',1),plane(0,'#3a3a44','#0d0d12','#ff4d6d',1),plane(0,'#c4a1ff','#7c3aed','#fff',1)]);
 
 /* --- Сердца --- */
 var HC=[['#ff6b81','#e0143c'],['#ff9ad0','#ff3d9a'],['#c4a1ff','#7c3aed'],['#6aa8ff','#1d6fe8'],['#ffe08a','#f59e0b'],['#555570','#14141f'],['#ffffff','#c9cfe0'],['#6ee7a0','#16a34a'],['#ffb347','#ff6a18'],['#e9d5ff','#a78bfa'],['#ff5fa2','#c2185b'],['#67e8f9','#0e9ab8']];
-var HL='<path d="M15 21c1-5 6-8 11-5" stroke="#fff" opacity=".6" stroke-width="3.2" fill="none" stroke-linecap="round"/>';
-var hearts=HC.map(function(c,i){return S('<g class="pa pe-beat"><path d="'+HEART+'" fill="url(#h§)"/>'+HL+'</g>',G('h',c[0],c[1]))});
-hearts.push(S('<g class="pa pe-wob"><path d="'+HEART+'" fill="url(#h§)"/>'+HL+'<path d="M35 11l-7 13 8 7-6 16" stroke="#000" opacity=".5" stroke-width="3" fill="none" stroke-linejoin="round"/></g>',G('h','#ff6b81','#9d0f2e')));
-hearts.push(S('<g class="pa pe-pulse" transform="translate(-1 8) scale(.78)"><path d="'+HEART+'" fill="url(#h§)"/>'+HL+'</g><g class="pa pe-beat" transform="translate(37 0) scale(.4)"><path d="'+HEART+'" fill="#e9d5ff"/></g>',G('h','#c4a1ff','#6d28d9')));
-hearts.push(S('<g class="pa pe-beat"><path d="'+HEART+'" fill="url(#h§)"/><path d="'+HEART+'" fill="none" stroke="#fff" stroke-width="2.2" opacity=".5" transform="translate(32 33) scale(.6) translate(-32 -33)"/>'+HL+'</g>','<linearGradient id="h§" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5f6d"/><stop offset=".5" stop-color="#ffc371"/><stop offset="1" stop-color="#7c5cff"/></linearGradient>'));
+var HL='<path d="'+HEART+'" fill="url(#gl§)"/><path d="M15 21c1-5 6-8 11-5" stroke="#fff" opacity=".6" stroke-width="3.2" fill="none" stroke-linecap="round"/>';
+var hearts=HC.map(function(c,i){return S('<g class="pa pe-beat"><path d="'+HEART+'" fill="url(#h§)"/>'+HL+'</g>',GH(c[0],c[1]))});
+hearts.push(S('<g class="pa pe-wob"><path d="'+HEART+'" fill="url(#h§)"/>'+HL+'<path d="M35 11l-7 13 8 7-6 16" stroke="#000" opacity=".5" stroke-width="3" fill="none" stroke-linejoin="round"/></g>',GH('#ff6b81','#9d0f2e')));
+hearts.push(S('<g class="pa pe-pulse" transform="translate(-1 8) scale(.78)"><path d="'+HEART+'" fill="url(#h§)"/>'+HL+'</g><g class="pa pe-beat" transform="translate(37 0) scale(.4)"><path d="'+HEART+'" fill="#e9d5ff"/></g>',GH('#c4a1ff','#6d28d9')));
+hearts.push(S('<g class="pa pe-beat"><path d="'+HEART+'" fill="url(#h§)"/><path d="'+HEART+'" fill="none" stroke="#fff" stroke-width="2.2" opacity=".5" transform="translate(32 33) scale(.6) translate(-32 -33)"/>'+HL+'</g>','<linearGradient id="h§" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5f6d"/><stop offset=".5" stop-color="#ffc371"/><stop offset="1" stop-color="#7c5cff"/></linearGradient>'+GLOSS));
 cat('Сердца',0,hearts);
 
 /* --- Статусы --- */
@@ -3875,7 +3879,7 @@ cat('Мишки',0,bears);
 var RU='АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'.split(''),LA='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),DG='0123456789!?#&@+'.split('');
 function ltr(ch,mode){var fill=mode==='w'?'#fff':'url(#a§)',st=mode==='w'?'rgba(0,0,0,.3)':(mode==='g'?'#8a5a00':'#7a2a8a');
  var d=mode==='g'?G('a','#fff0a0','#e0a000'):mode==='p'?G('a','#ffb3e0','#b05cff'):'';
- return S('<text x="32" y="50" text-anchor="middle" font-family="\'Times New Roman\',Georgia,serif" font-weight="700" font-size="52" fill="'+fill+'" stroke="'+st+'" stroke-width="'+(mode==='w'?1:1.4)+'" paint-order="stroke">'+(ch==='&'?'&amp;':ch)+'</text>',d)}
+  return S('<text x="32" y="52.5" text-anchor="middle" font-family="\'Times New Roman\',Georgia,serif" font-weight="700" font-size="52" fill="#000" opacity=".4">'+(ch==='&'?'&amp;':ch)+'</text><text x="32" y="50" text-anchor="middle" font-family="\'Times New Roman\',Georgia,serif" font-weight="700" font-size="52" fill="'+fill+'" stroke="'+st+'" stroke-width="'+(mode==='w'?1:1.4)+'" paint-order="stroke">'+(ch==='&'?'&amp;':ch)+'</text>',d)}
 cat('Буквы',0,RU.concat(DG).map(function(c){return ltr(c,'w')}),1);
 cat('Золотые',0,RU.map(function(c){return ltr(c,'g')}),1);
 cat('Розовые',0,RU.map(function(c){return ltr(c,'p')}),1);
@@ -3889,15 +3893,16 @@ bearSvg=function(i){return i>=1000?peSvg(i-1000):_bs(i)};
 bidx=function(e){var m=/^p(\d+)$/.exec(e||'');if(m){var n=+m[1];return n<PE.length?1000+n:-1}return _bx(e)};
 })();
 
-/* --- вкладка Premium в панели эмодзи --- */
+/* --- премиум-эмодзи прямо во вкладке «Эмодзи» --- */
+function peTop(){
+ return '<div class="pet">'+PEC.map(function(c,k){
+  var L={'Буквы':['Я','#fff'],'Золотые':['Я','#ffc933'],'Розовые':['Я','#ff8fd0'],'Latin':['A','#fff']}[c.n];
+  return '<button data-pc="'+k+'">'+(L?'<span style="font:700 19px serif;color:'+L[1]+'">'+L[0]+'</span>':peSvg(c.ic))+'</button>'}).join('')+'</div>';
+}
 function peTab(){
  var h='';
- if(!dnPrem(uid))h+='<div class="pbn">⭐ Премиум-эмодзи доступны с Danret Premium. Смотреть можно, отправлять — по подписке.</div>';
- h+='<div class="pet">'+PEC.map(function(c,k){
-  var L={'Буквы':['Я','#fff'],'Золотые':['Я','#ffc933'],'Розовые':['Я','#ff8fd0'],'Latin':['A','#fff']}[c.n];
-  return '<button data-pc="'+k+'">'+(L?'<span style="font:700 22px serif;color:'+L[1]+'">'+L[0]+'</span>':peSvg(c.ic))+'</button>'}).join('')+'</div>';
  PEC.forEach(function(c,k){
-  h+='<div class="pch" id="pc'+k+'">'+c.n+' · '+(c.b-c.a)+'</div><div class="pgd">';
+  h+='<div class="pch" id="pc'+k+'">'+c.n+'</div><div class="pgd">';
   for(var i=c.a;i<c.b;i++)h+='<button data-pe="'+i+'">'+peSvg(i)+'</button>';
   h+='</div>';
  });
@@ -3910,8 +3915,7 @@ function peBind(p,g){
  }});
  var box=p.querySelector('.emps');
  p.querySelectorAll('[data-pc]').forEach(function(b){b.onclick=function(){
-  var t=p.querySelector('#pc'+b.dataset.pc);if(t&&box)box.scrollTo({top:t.offsetTop-box.offsetTop-52,behavior:'smooth'});
-  p.querySelectorAll('[data-pc]').forEach(function(x){x.classList.remove('on')});b.classList.add('on');
+  var t=p.querySelector('#pc'+b.dataset.pc);if(t&&box)box.scrollTo({top:t.offsetTop-box.offsetTop-46,behavior:'smooth'});
  }});
 }
 
