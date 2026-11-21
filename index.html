@@ -4072,25 +4072,42 @@ var t=0;new MutationObserver(function(){if(t)return;t=requestAnimationFrame(func
 .dnsg .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dnsg.pl .dnsp{animation:dnPulse 1.4s ease-in-out infinite}
 @keyframes dnPulse{50%{transform:scale(1.1);box-shadow:0 0 0 7px #3b82f633}}
+#dnmp{position:fixed;z-index:4;left:12px;right:12px;max-width:596px;margin:0 auto;top:calc(env(safe-area-inset-top,0px) + 6px);height:48px;border-radius:24px;background:var(--sf);border:1px solid var(--ln);box-shadow:0 6px 24px #0006;display:flex;align-items:center;gap:10px;padding:0 8px;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);opacity:0;transform:translateY(-70px);pointer-events:none;transition:transform .3s cubic-bezier(.2,.9,.3,1),opacity .2s}
+#dnmp.on{opacity:1;transform:none;pointer-events:auto}
+#dnmp button{border:0;border-radius:50%;width:34px;height:34px;flex:none;font-size:14px;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+#dnmp .pp{background:var(--ac);color:#fff}#dnmp .xx{background:none;color:var(--mu);font-size:17px}
+#dnmp button:active{transform:scale(.88)}
+#dnmp .tt{flex:1;min-width:0;line-height:1.2}#dnmp .tt b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#dnmp .tt span{font-size:12px;color:var(--mu)}
+html.dnmp #app{padding-top:calc(env(safe-area-inset-top,0px) + 60px)!important;transition:padding-top .3s}
 </style>
 <script id="dn-song-js">
 (function(){
-var au=new Audio();au.preload='none';au.setAttribute('playsinline','');var cu='';
-function paint(){document.querySelectorAll('.dnsg[data-u]').forEach(function(r){var on=r.dataset.u===cu&&!au.paused;r.classList.toggle('pl',on);r.querySelector('.dnsp').textContent=on?'❚❚':'▶'})}
+var cn='';var au=new Audio();au.preload='none';au.setAttribute('playsinline','');var cu='';
+function paint(){mp();document.querySelectorAll('.dnsg[data-u]').forEach(function(r){var on=r.dataset.u===cu&&!au.paused;r.classList.toggle('pl',on);r.querySelector('.dnsp').textContent=on?'❚❚':'▶'})}
 ['play','pause','ended'].forEach(function(e){au.addEventListener(e,paint)});
+au.addEventListener('ended',function(){cu='';au.removeAttribute('src');paint()});
 au.addEventListener('error',function(){if(cu)toast('Не удалось воспроизвести песню')});
+
+/* мини-плеер сверху */
+var bar=document.createElement('div');bar.id='dnmp';
+bar.innerHTML='<button class="pp" aria-label="Пауза"></button><div class="tt"><b></b><span>Песня в профиле</span></div><button class="xx" aria-label="Закрыть">✕</button>';
+document.body.appendChild(bar);
+bar.querySelector('.pp').onclick=function(){if(!cu)return;au.src?(au.paused?au.play().catch(function(){}):au.pause()):0};
+bar.querySelector('.xx').onclick=function(){au.pause();cu='';au.removeAttribute('src');paint()};
+function mp(){var on=!!cu;bar.classList.toggle('on',on);document.documentElement.classList.toggle('dnmp',on);
+ if(on){bar.querySelector('b').textContent='♪ '+cn;bar.querySelector('.pp').textContent=!au.src?'…':au.paused?'▶':'❚❚'}}
 var C={};
 async function res(u){if(u.slice(0,3)!=='sg:')return u;if(C[u])return C[u];var q=u.split(':'),o=q[1],n=+q[2],mt=q[3],v=q[4],ps=[];
  toast('Загружаю песню…');
  for(var i=0;i<n;i++){var d=await db.collection('songs').doc(o+'_'+v+'_'+i).get();if(!d.exists)throw new Error('часть файла не найдена');ps.push(Uint8Array.from(atob(d.data().d),function(c){return c.charCodeAt(0)}))}
  return C[u]=URL.createObjectURL(new Blob(ps,{type:mt}))}
-function play(u){if(cu===u&&au.src){au.paused?au.play().catch(function(){}):au.pause();return}
+function play(u,nm){if(cu===u&&au.src){au.paused?au.play().catch(function(){}):au.pause();return}
  try{document.querySelectorAll('audio,video').forEach(function(m){if(m!==au)m.pause()})}catch(e){}
- cu=u;paint();
+ cu=u;cn=nm||cn||'Песня';paint();
  res(u).then(function(url){if(cu!==u)return;au.src=url;return au.play().catch(function(){toast('Нажмите ▶ ещё раз')})}).catch(function(e){cu='';au.removeAttribute('src');paint();toast('Не удалось: '+(e.code||e.message))})}
 function row(u,name,own){var d=document.createElement('div');d.className='grp dnsg';d.id='dnsong';d.dataset.u=u;
  d.innerHTML='<span class="dnsp">▶</span><div class="col"><div class="nm"></div><div class="sub">Песня в профиле</div></div>'+(own?'<span class="sub" style="font-size:13px">нажмите ▶</span>':'');
- d.querySelector('.nm').textContent='♪ '+(name||'Песня');d.onclick=function(){play(u)};
+ d.querySelector('.nm').textContent='♪ '+(name||'Песня');d.onclick=function(){play(u,name)};
  var r=d;setTimeout(paint,0);return r}
 /* загрузка: Storage, а если не отвечает — кусками в Firestore (как делает само приложение) */
 async function drop(u){try{if(!u||u.slice(0,3)!=='sg:')return;var q=u.split(':');if(q[1]!==uid)return;for(var i=0;i<+q[2];i++)await db.collection('songs').doc(uid+'_'+q[4]+'_'+i).delete()}catch(e){}}
@@ -4119,7 +4136,7 @@ function menu(){var o=document.createElement('div');o.className='sheet';var has=
  document.body.appendChild(o);if(has)o.querySelector('#dnn').textContent='♪ '+(me.songName||'Песня');
  o.onclick=function(e){if(e.target===o)o.remove()};
  o.querySelector('#dn1').onclick=function(){o.remove();pick()};
- if(has){o.querySelector('#dn2').onclick=function(){o.remove();play(me.song)};
+ if(has){o.querySelector('#dn2').onclick=function(){o.remove();play(me.song,me.songName)};
   o.querySelector('#dn3').onclick=async function(){o.remove();var od=me.song;if(cu===od){au.pause();cu=''}try{await setU({song:'',songName:''});drop(od);toast('Песня убрана')}catch(e){toast('Не удалось')}}}}
 function inject(){
  var A=document.getElementById('app');if(!A)return;
