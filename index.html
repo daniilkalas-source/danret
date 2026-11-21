@@ -4214,8 +4214,8 @@ var t=0;new MutationObserver(function(){if(t)return;t=requestAnimationFrame(func
 })();
 </script>
 <style id="dn-fun">
-.dnst,.dnmd{display:inline-block;margin-left:6px;font-size:13px;font-weight:700;vertical-align:middle;padding:1px 7px;border-radius:10px;background:var(--sf);color:#ff8a3d}
-.dnmd{color:var(--tx);padding:1px 5px}
+.dnst,.dnmd{display:inline-flex;align-items:center;flex:none;margin-left:4px;font-size:12px;font-weight:700;line-height:1;vertical-align:middle;white-space:nowrap;color:#ff8a3d}
+.dnmd{color:var(--tx);font-size:15px}
 .dnfx{position:fixed;bottom:-30px;z-index:70;font-size:26px;pointer-events:none;animation:dnFx 2s ease-out forwards}
 @keyframes dnFx{0%{opacity:0;transform:translateY(0) scale(.5)}15%{opacity:1}100%{opacity:0;transform:translateY(-85vh) rotate(var(--r)) scale(1.1)}}
 .dnmg{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0}.dnmg button{font-size:26px;width:48px;height:48px;border:0;border-radius:14px;background:var(--sf)}.dnmg .on{outline:2px solid var(--ac)}
@@ -4242,7 +4242,8 @@ function fx(){var A=document.getElementById('app');if(!A)return;var l=A.querySel
   if(m&&m.text&&m.kind==='text'&&Date.now()-m.ts<15000)for(var i=0;i<FX.length;i++)if(FX[i][0].test(m.text)){burst(FX[i][1]);break}}
  lastId=id;lastCur=cur}
 /* 3-4. шапка, карточки профиля, настроение */
-function head(){var A=document.getElementById('app'),t=A&&A.querySelector('.top .t');if(!t||!A.querySelector(':scope>.msgs'))return;
+function head(){var A=document.getElementById('app'),t=A&&A.querySelector('.top .t .tn');if(!t||!A.querySelector(':scope>.msgs'))return;
+ var stray=A.querySelectorAll('.top .t>.dnst,.top .t>.dnmd');stray.forEach(function(x){x.remove()});
  var c=chats.find(function(x){return x.id===cur});if(!c||c.type!=='dm')return;
  var o=users[c.members.find(function(x){return x!==uid})],st=streak(c),
   sh=st.n?'🔥 '+st.n+(st.today?'':' ⏳'):'',md=moodOn(o)?o.mood.e:'';
