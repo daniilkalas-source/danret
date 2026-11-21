@@ -3658,8 +3658,8 @@ function grEl(g){
  return '<img class="gst" src="'+E(emoUrl(e))+'" alt="'+E(e)+'" draggable="false" onerror="this.replaceWith(Object.assign(document.createElement(\'span\'),{className:\'gse\',textContent:this.alt}))">';
 }
 function grEmpty(em){
- var c=chats.find(function(x){return x.id===cur}),gu=null;
- if(c){if(c.type==='dm'){var o=(c.members||[]).find(function(x){return x!==uid})||uid;gu=users[o]}else if(c.owner)gu=users[c.owner]}
+ var c=chats.find(function(x){return x.id===cur}),gu=null,gid=null;
+ if(c){if(c.type==='dm'){gid=(c.members||[]).find(function(x){return x!==uid})||uid}else if(c.owner)gid=c.owner;gu=gid&&dnPrem(gid)?users[gid]:null}
  var g=gu&&gu.greet,k='e',e='🫡',s=null,t='';
  if(g&&typeof g==='object'){
   if(g.k==='s'&&g.s&&typeof g.s.u==='string'){k='s';s=g.s}else if(typeof g.e==='string'&&emoList(g.e))e=g.e;
@@ -3671,6 +3671,7 @@ function grEmpty(em){
  b.onclick=function(){if(k==='s')return sendSticker(s);var gi=$('#gi');if(gi&&$('#sd')){gi.value=e;$('#sd').click()}};
 }
 function greetPage(){
+ if(!dnPrem(uid))return dnPromo('Приветствие доступно с Danret Premium');
  var g=(me&&me.greet)||{},sel={k:'e',e:'🫡',s:null},tab='e';
  if(g.k==='s'&&g.s&&g.s.u){sel={k:'s',e:'',s:g.s};tab='s'}else if(g.e&&emoList(g.e))sel.e=g.e;
  var w=pgs(hp('Приветствие')
@@ -3718,7 +3719,7 @@ settingsPage=function(){
   var a=document.querySelectorAll('.pg'),w=a[a.length-1],r=w&&w.querySelector('#s_dt');
   if(!w||!r||w.querySelector('#s_gr'))return;
   var d=document.createElement('div');d.className='row k';d.id='s_gr';
-  d.innerHTML='<span class="dic" style="background:#ff9f0a"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5c1 1.4 2.2 2 3.5 2s2.5-.6 3.5-2M9 10v.1M15 10v.1"/></svg></span><div class="col nm">Приветствие</div><span class="sub">›</span>';
+  d.innerHTML='<span class="dic" style="background:#ff9f0a"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5c1 1.4 2.2 2 3.5 2s2.5-.6 3.5-2M9 10v.1M15 10v.1"/></svg></span><div class="col nm">Приветствие</div><span class="sub">'+(dnPrem(uid)?'':'Premium ')+'›</span>';
   r.parentNode.insertBefore(d,r.nextSibling);d.onclick=greetPage;
  }catch(e){console.warn(e)}
 };
