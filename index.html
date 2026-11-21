@@ -2934,7 +2934,9 @@ async function bgPublish(d,c){
 </script>
 <style id="dn-v9">
 /* ===== v9: клавиатура: шапка и панель не уезжают ===== */
-html.kbo body{height:var(--kbh)!important;min-height:0!important;top:var(--kbt,0px)!important;bottom:auto!important}
+html.kbo body{height:var(--kbh)!important;min-height:0!important;top:var(--kbt,0px)!important;bottom:auto!important;transform:none!important}
+html.kbo #app{height:100%!important;max-height:100%!important;padding-bottom:0!important}
+html.kbo,html.kbo.fh{height:var(--kbh)!important;min-height:0!important}
 html.kbo #app:has(>.top~.msgs)>.send{padding-bottom:8px!important}
 html.kbo #app:has(>.top~.msgs)>.msgs{padding-bottom:78px!important}
 /* ===== меню сообщения ===== */
@@ -3368,38 +3370,6 @@ drawer=function(){
 })();
 </script>
 
-<style id="dn-kb">
-/* Клавиатура в чате: область чата = видимая часть экрана (над клавиатурой) */
-html.kbo #app:has(>.top~.msgs){position:absolute!important;left:0!important;right:0!important;top:var(--vvt,0px)!important;height:var(--vvh,100%)!important;max-height:none!important;margin:0!important}
-html.kbo #app:has(>.top~.msgs)>.msgs{padding-bottom:78px!important}
-html.kbo #app:has(>.top~.msgs)>.send{padding-bottom:8px!important}
-html.kbo #app:has(>.top~.msgs)>:not(.top):not(.msgs):not(.send){bottom:66px!important}
-</style>
-<script>
-(function(){
- var vv=window.visualViewport,r=document.documentElement,tk=0;
- function typing(){var a=document.activeElement;return !!a&&(/^(INPUT|TEXTAREA)$/.test(a.tagName)||a.isContentEditable)}
- function toEnd(){var m=document.querySelector('#app>.msgs');if(m)m.scrollTop=m.scrollHeight}
- function apply(){
-  tk=0;if(!vv)return;
-  var open=typing()&&innerWidth<innerHeight&&(Math.max(screen.height,screen.width)-vv.height>150);
-  if(open){
-   r.style.setProperty('--vvh',Math.round(vv.height)+'px');
-   r.style.setProperty('--vvt',Math.round(vv.offsetTop)+'px');
-   var was=r.classList.contains('kbo');r.classList.add('kbo');
-   toEnd();if(!was)setTimeout(toEnd,60),setTimeout(toEnd,320);
-  }else if(r.classList.contains('kbo')){
-   r.classList.remove('kbo');r.style.removeProperty('--vvh');r.style.removeProperty('--vvt');
-   try{scrollTo(0,0)}catch(e){}
-  }
- }
- function sch(){if(!tk)tk=requestAnimationFrame(apply)}
- if(vv){vv.addEventListener('resize',sch);vv.addEventListener('scroll',sch)}
- document.addEventListener('focusin',function(){sch();setTimeout(sch,120);setTimeout(sch,400)});
- document.addEventListener('focusout',function(){setTimeout(sch,60);setTimeout(sch,350)});
- addEventListener('orientationchange',function(){setTimeout(sch,300)});
-})();
-</script>
 <style id="dn-pe">
 .pbd{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;margin-left:5px;vertical-align:middle;flex:none;overflow:visible;font-style:normal}
 .bsv{width:100%;height:100%;overflow:visible;display:block}
