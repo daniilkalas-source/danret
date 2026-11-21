@@ -3230,14 +3230,21 @@ function payRules(pg){
   openDM(ow).then(function(){toast('Отправьте в этот чат чек после перевода')}).catch(function(){toast('Не удалось открыть чат')});
  };
 }
+function isAdmin9(){try{return (typeof isAdm==='function'&&isAdm())||['daniilka'].indexOf(String((me&&me.username)||'').toLowerCase())>-1}catch(e){return false}}
 function adminPage(){
- var w=pgs(hp('Выдать Premium')+'<div class="grp adm9" style="padding:14px"><input id="gu" placeholder="@username" autocomplete="off" autocapitalize="off"><input id="gd" type="number" value="30" min="1" placeholder="Дней"><button class="btn" id="gg">Выдать Premium</button><button class="btn" id="gt" style="background:var(--sf);color:var(--tx)">Забрать Premium</button><div class="rs9" id="gr"></div></div><div class="sub" style="padding:8px 20px;font-size:12px">Введите username человека, который прислал чек, и число дней.</div>');
- var msg=function(t){w.querySelector('#gr').textContent=t};
- var find=function(){var u=w.querySelector('#gu').value.replace(/^@/,'').trim().toLowerCase();return Object.keys(users).find(function(i){return (users[i].username||'').toLowerCase()===u})};
- w.querySelector('#gg').onclick=function(){var id=find();if(!id)return msg('Пользователь не найден');var d=Math.max(1,+w.querySelector('#gd').value||30),t=Math.max(Date.now(),users[id].prem||0)+d*864e5;
-  db.collection('users').doc(id).update({prem:t}).then(function(){msg('Готово: @'+users[id].username+' — Premium до '+new Date(t).toLocaleDateString('ru-RU'))}).catch(function(){msg('Не удалось. Проверьте правила Firestore')})};
- w.querySelector('#gt').onclick=function(){var id=find();if(!id)return msg('Пользователь не найден');
-  db.collection('users').doc(id).update({prem:0}).then(function(){msg('Premium у @'+users[id].username+' снят')}).catch(function(){msg('Не удалось. Проверьте правила Firestore')})};
+ if(!isAdmin9())return toast('Нет доступа');
+ var gh='background:var(--sf);color:var(--tx)';
+ var w=pgs(hp('Админ-панель')+'<div class="grp adm9" style="padding:14px"><input id="gu" placeholder="@username" autocomplete="off" autocapitalize="off"><div class="rs9" id="gi">Введите username пользователя</div><div class="lbl" style="padding:8px 4px 4px">Premium, дней</div><input id="gd" type="number" value="30" min="1"><button class="btn" id="gg">Выдать Premium</button><button class="btn" id="gt" style="'+gh+'">Забрать Premium</button><div class="lbl" style="padding:8px 4px 4px">Молнии, количество</div><input id="gb" type="number" value="100" min="1"><button class="btn" id="ga">Начислить молнии</button><button class="btn" id="gs" style="'+gh+'">Списать молнии</button><div class="rs9" id="gr"></div></div>');
+ var q=function(x){return w.querySelector(x)},msg=function(t){q('#gr').textContent=t};
+ var find=function(){var u=q('#gu').value.replace(/^@/,'').trim().toLowerCase();return u?Object.keys(users).find(function(i){return (users[i].username||'').toLowerCase()===u}):null};
+ var info=function(){var id=find(),el=q('#gi');if(!id){el.textContent=q('#gu').value?'Пользователь не найден':'Введите username пользователя';return}var u=users[id];el.textContent=(u.name||'')+' · Premium: '+(u.prem>Date.now()?'до '+new Date(u.prem).toLocaleDateString('ru-RU'):'нет')+' · молний: '+(u.bolts||0)};
+ q('#gu').oninput=info;
+ var run=function(id,p,ok){db.collection('users').doc(id).update(p).then(function(){msg(ok);setTimeout(info,700)}).catch(function(){msg('Не удалось. Проверьте правила Firestore')})};
+ var num=function(x,d){return Math.max(1,Math.floor(+q(x).value||d))};
+ q('#gg').onclick=function(){var id=find();if(!id)return msg('Пользователь не найден');var d=num('#gd',30),t=Math.max(Date.now(),users[id].prem||0)+d*864e5;run(id,{prem:t},'Premium выдан до '+new Date(t).toLocaleDateString('ru-RU'))};
+ q('#gt').onclick=function(){var id=find();if(!id)return msg('Пользователь не найден');run(id,{prem:0},'Premium снят')};
+ q('#ga').onclick=function(){var id=find();if(!id)return msg('Пользователь не найден');var n=num('#gb',100);run(id,{bolts:firebase.firestore.FieldValue.increment(n)},'Начислено молний: '+n)};
+ q('#gs').onclick=function(){var id=find();if(!id)return msg('Пользователь не найден');var n=num('#gb',100);if((users[id].bolts||0)<n)return msg('У пользователя только '+(users[id].bolts||0)+' молний');run(id,{bolts:firebase.firestore.FieldValue.increment(-n)},'Списано молний: '+n)};
 }
 function boltsPage(){
  var bal=(typeof me!=='undefined'&&me&&me.bolts)||0;
@@ -3256,11 +3263,21 @@ settingsPage=function(){
   var bal=(typeof me!=='undefined'&&me&&me.bolts)||0,act=typeof me!=='undefined'&&me&&me.prem>Date.now();
   var d=document.createElement('div');d.className='grp prg9';
   d.innerHTML='<div class="row k" id="s_pm">'+ic9('linear-gradient(135deg,#8a63ff,#c04bff)','<path d="M12 2.5l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17l-5.9 3.3 1.3-6.5L2.5 9.3l6.6-.8z" fill="#fff" stroke="none"/>')+'<div class="col nm">Danret Premium</div><span class="sub">'+(act?'Активен ':'')+'›</span></div><div class="row k" id="s_bl">'+ic9('linear-gradient(135deg,#ffb020,#ff7a18)','<path d="M13 2L4 14h7l-1 8 9-12h-7z" fill="#fff" stroke="none"/>')+'<div class="col nm">Мои молнии</div><span class="sub">'+bal+' ›</span></div>';
-  if(typeof isAdm==='function'&&isAdm()){var r=document.createElement('div');r.className='row k';r.id='s_gv';r.innerHTML=ic9('#34c759','<path d="M12 5v14M5 12h14"/>')+'<div class="col nm">Выдать Premium</div><span class="sub">›</span>';d.appendChild(r);r.onclick=adminPage}
+  if(isAdmin9()){var r=document.createElement('div');r.className='row k';r.id='s_gv';r.innerHTML=ic9('#34c759','<path d="M12 5v14M5 12h14"/>')+'<div class="col nm">Админ-панель</div><span class="sub">›</span>';d.appendChild(r);r.onclick=adminPage}
   d.querySelector('#s_pm').onclick=premPage;d.querySelector('#s_bl').onclick=boltsPage;
   var grs=w.querySelectorAll('.grp'),ref=grs[2]||grs[grs.length-1];ref.parentNode.insertBefore(d,ref);
  }catch(e){console.error(e)}
 };
+function mkPrg(){
+ var ic9=function(bg,p){return '<span class="dic" style="background:'+bg+'"><svg class="i" viewBox="0 0 24 24">'+p+'</svg></span>'};
+ var bal=(me&&me.bolts)||0,act=me&&me.prem>Date.now();
+ var d=document.createElement('div');d.className='grp prg9';
+ d.innerHTML='<div class="row k" id="s_pm">'+ic9('linear-gradient(135deg,#8a63ff,#c04bff)','<path d="M12 2.5l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17l-5.9 3.3 1.3-6.5L2.5 9.3l6.6-.8z" fill="#fff" stroke="none"/>')+'<div class="col nm">Danret Premium</div><span class="sub">'+(act?'Активен ':'')+'›</span></div><div class="row k" id="s_bl">'+ic9('linear-gradient(135deg,#ffb020,#ff7a18)','<path d="M13 2L4 14h7l-1 8 9-12h-7z" fill="#fff" stroke="none"/>')+'<div class="col nm">Мои молнии</div><span class="sub">'+bal+' ›</span></div>';
+ if(isAdmin9()){var r=document.createElement('div');r.className='row k';r.id='s_gv';r.innerHTML=ic9('#34c759','<path d="M12 5v14M5 12h14"/>')+'<div class="col nm">Админ-панель</div><span class="sub">›</span>';d.appendChild(r);r.onclick=adminPage}
+ d.querySelector('#s_pm').onclick=premPage;d.querySelector('#s_bl').onclick=boltsPage;
+ return d}
+var _mn=main;
+main=function(){_mn.apply(this,arguments);try{var t=document.getElementById('s_th');if(!t)return;var g=t.closest('.grp');if(!g||(g.nextElementSibling&&g.nextElementSibling.classList.contains('prg9')))return;g.parentNode.insertBefore(mkPrg(),g.nextSibling)}catch(e){console.error(e)}};
 })();
 </script>
 
