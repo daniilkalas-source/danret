@@ -4465,4 +4465,77 @@ var t=0;new MutationObserver(function(){if(t)return;t=requestAnimationFrame(func
  var q=0;new MutationObserver(function(){if(q)return;q=1;requestAnimationFrame(function(){q=0;paint()})}).observe(document.body,{childList:true,subtree:true});
 })();
 </script>
+<style>
+.fxp{position:fixed;z-index:2147482000;display:flex;gap:6px;padding:8px;border-radius:22px;background:rgba(24,20,48,.96);border:1px solid rgba(255,255,255,.14);box-shadow:0 12px 40px rgba(0,0,0,.45);opacity:0;transform:translateY(8px) scale(.94);transition:opacity .16s,transform .16s}
+.fxp.on{opacity:1;transform:none}
+.fxp button{border:0;background:rgba(255,255,255,.08);color:#fff;border-radius:16px;padding:10px 12px;font:600 12px -apple-system,Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:66px}
+.fxp button b{font-size:26px;font-weight:400}
+.fxp button:active{background:rgba(255,255,255,.2)}
+#dnFx{position:fixed;inset:0;width:100%;height:100%;z-index:2147483000;pointer-events:none}
+</style>
+<script>
+/* Эффекты при отправке: зажмите кнопку «отправить» и выберите эффект — он сыграет на весь экран у вас и у собеседника */
+(function(){
+ var FX=[['confetti','🎉','Конфетти'],['hearts','❤️','Сердечки'],['fire','🔥','Огонь'],['stars','✨','Звёзды']];
+ var cv=null,raf=0;
+ function play(type){
+  try{if(cv)cv.remove();cancelAnimationFrame(raf);
+   cv=document.createElement('canvas');cv.id='dnFx';document.body.appendChild(cv);
+   var dpr=Math.min(2,window.devicePixelRatio||1),W=innerWidth,H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;
+   var x=cv.getContext('2d');x.scale(dpr,dpr);
+   var P=[],N=type==='confetti'?130:46,COL=['#ff5f6d','#ffc371','#7b5cff','#3b82f6','#30c85a','#f953c6','#ffd93d'];
+   for(var i=0;i<N;i++){
+    var o={d:Math.random()*.5,r:Math.random()*6.28,vr:(Math.random()-.5)*8,sw:Math.random()*6.28};
+    if(type==='confetti'){o.x=W*(.15+Math.random()*.7);o.y=H*.55;var a=-Math.PI/2+(Math.random()-.5)*2.2,v=380+Math.random()*620;o.vx=Math.cos(a)*v;o.vy=Math.sin(a)*v;o.c=COL[i%COL.length];o.w=7+Math.random()*7;o.h=o.w*.55;o.g=900}
+    else if(type==='hearts'){o.x=Math.random()*W;o.y=H+30+Math.random()*80;o.vx=0;o.vy=-(160+Math.random()*180);o.s=22+Math.random()*30;o.e='❤️';o.g=0}
+    else if(type==='fire'){o.x=Math.random()*W;o.y=H+30+Math.random()*60;o.vx=0;o.vy=-(260+Math.random()*260);o.s=26+Math.random()*34;o.e='🔥';o.g=0}
+    else{o.x=Math.random()*W;o.y=Math.random()*H*.8;o.vx=0;o.vy=-(20+Math.random()*50);o.s=18+Math.random()*28;o.e=i%3?'✨':'⭐';o.g=0;o.d=Math.random()*1.2}
+    P.push(o)}
+   var t0=performance.now(),last=t0,DUR=type==='stars'?3200:2800;
+   (function f(now){var dt=Math.min(.05,(now-last)/1000);last=now;var T=(now-t0)/1000;x.clearRect(0,0,W,H);
+    var fade=Math.min(1,Math.max(0,(DUR/1000-T)/.6));
+    P.forEach(function(o){if(T<o.d)return;o.vy+=o.g*dt;o.x+=o.vx*dt+(type==='hearts'?Math.sin(T*3+o.sw)*.8:0);o.y+=o.vy*dt;o.r+=o.vr*dt;
+     if(type==='confetti')o.vx*=.992;
+     x.save();x.globalAlpha=type==='stars'?fade*(.35+.65*Math.abs(Math.sin(T*3+o.sw))):fade;x.translate(o.x,o.y);
+     if(type==='confetti'){x.rotate(o.r);x.scale(1,Math.abs(Math.cos(T*6+o.sw)));x.fillStyle=o.c;x.fillRect(-o.w/2,-o.h/2,o.w,o.h)}
+     else{x.rotate(type==='fire'?Math.sin(T*8+o.sw)*.2:Math.sin(T*2+o.sw)*.15);x.font=o.s+'px -apple-system,"Apple Color Emoji","Noto Color Emoji",sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(o.e,0,0)}
+     x.restore()});
+    if(T<DUR/1000)raf=requestAnimationFrame(f);else{cv.remove();cv=null}
+   })(t0);
+   try{navigator.vibrate&&navigator.vibrate(type==='confetti'?[15,40,15]:15)}catch(e){}
+  }catch(e){console.error(e)}}
+ window.__dnFxPlay=play;
+ /* отправка */
+ window.__fx=null;
+ var _pm=postMsg;postMsg=function(o){if(window.__fx&&o&&o.text){var f=window.__fx;window.__fx=null;o.fx=f;setTimeout(function(){play(f)},120)}return _pm.apply(this,arguments)};
+ /* получение */
+ function played(){try{return JSON.parse(localStorage.getItem('dn_fxp')||'[]')}catch(e){return []}}
+ function scan(){try{if(typeof msgs==='undefined'||!msgs)return;var pl=played(),ch=0;
+  msgs.forEach(function(m){if(m&&m.fx&&m.from!==uid&&m.ts>Date.now()-60000&&pl.indexOf(m.id)<0){pl.push(m.id);ch=1;setTimeout(function(){play(m.fx)},350)}});
+  if(ch)localStorage.setItem('dn_fxp',JSON.stringify(pl.slice(-60)))}catch(e){}}
+ /* зажатие кнопки отправки */
+ function picker(sd){
+  var old=document.querySelector('.fxp');if(old)old.remove();
+  var g=document.getElementById('gi');if(!g||!g.value.trim()){try{toast('Сначала напишите сообщение')}catch(e){}return false}
+  var r=sd.getBoundingClientRect(),p=document.createElement('div');p.className='fxp';
+  p.innerHTML=FX.map(function(f){return '<button type="button" data-f="'+f[0]+'"><b>'+f[1]+'</b>'+f[2]+'</button>'}).join('');
+  document.body.appendChild(p);
+  var w=p.offsetWidth;p.style.left=Math.max(8,Math.min(innerWidth-w-8,r.right-w))+'px';p.style.top=(r.top-p.offsetHeight-12)+'px';
+  requestAnimationFrame(function(){p.classList.add('on')});
+  var t0=Date.now();
+  var close=function(){p.remove();document.removeEventListener('touchstart',away,true);document.removeEventListener('mousedown',away,true)};
+  var away=function(e){if(Date.now()-t0<400)return;if(!p.contains(e.target))close()};
+  document.addEventListener('touchstart',away,true);document.addEventListener('mousedown',away,true);
+  p.querySelectorAll('button').forEach(function(b){b.onclick=function(e){e.stopPropagation();if(Date.now()-t0<400)return;var f=b.dataset.f;close();window.__fx=f;var s=document.getElementById('sd');if(s)s.click();setTimeout(function(){window.__fx=null},2500)}});
+  return true}
+ var _cx=chatX;chatX=function(c){_cx(c);
+  try{scan();var sd=document.getElementById('sd');if(!sd||!c||c.abot)return;
+   var tm=0,orig=null,fired=false;
+   var start=function(){fired=false;clearTimeout(tm);tm=setTimeout(function(){orig=sd.onclick;if(picker(sd)){fired=true;sd.onclick=function(){};setTimeout(function(){sd.onclick=orig},700)}},480)};
+   var stop=function(){clearTimeout(tm)};
+   sd.addEventListener('touchstart',start,{passive:true});sd.addEventListener('touchend',stop,{passive:true});sd.addEventListener('touchmove',stop,{passive:true});sd.addEventListener('touchcancel',stop,{passive:true});
+   sd.addEventListener('contextmenu',function(e){e.preventDefault();if(picker(sd)){orig=sd.onclick;sd.onclick=function(){};setTimeout(function(){sd.onclick=orig},700)}});
+  }catch(e){}};
+})();
+</script>
 </body></html>
