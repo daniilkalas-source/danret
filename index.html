@@ -4430,4 +4430,27 @@ var t=0;new MutationObserver(function(){if(t)return;t=requestAnimationFrame(func
  if(document.body)init();else addEventListener('DOMContentLoaded',init);
 })();
 </script>
+<script>
+/* Черновики: недописанное сообщение сохраняется в каждом чате и видно в списке чатов */
+(function(){
+ var DRF=null,K=function(){return 'dn_dr_'+(typeof uid!=='undefined'?uid:'')};
+ function ld(){try{return JSON.parse(localStorage.getItem(K())||'{}')}catch(e){return {}}}
+ function sv(o){try{localStorage.setItem(K(),JSON.stringify(o))}catch(e){}}
+ function set(id,t){var o=ld();if(t&&t.trim())o[id]={t:t,ts:Date.now()};else delete o[id];sv(o);paint()}
+ var _oc=openChat;openChat=function(id){DRF=id;return _oc.apply(this,arguments)};
+ var _cx=chatX;chatX=function(c){_cx(c);
+  try{var g=document.getElementById('gi');if(!g||!c||c.abot||c.type==='saved'&&0)return;
+   if(DRF===c.id){DRF=null;var d=ld()[c.id];if(d&&!g.value&&!(typeof ed!=='undefined'&&ed)){g.value=d.t;g.style.height='auto';g.style.height=Math.min(g.scrollHeight,140)+'px'}}
+   g.addEventListener('input',function(){if(typeof ed!=='undefined'&&ed)return;set(c.id,g.value)});
+   var done=function(){setTimeout(function(){var x=document.getElementById('gi');if(x&&!x.value.trim())set(c.id,'')},150)};
+   g.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey)done()},true);
+   var sd=document.getElementById('sd');if(sd)sd.addEventListener('click',done,true);
+  }catch(e){}};
+ function paint(){try{var o=ld();document.querySelectorAll('[data-c]').forEach(function(r){var id=r.getAttribute('data-c'),col=r.querySelector('.col'),sub=col&&col.querySelector('.sub'),d=o[id];
+   if(!sub||!col.querySelector('.nm'))return;
+   if(d&&!(typeof cur!=='undefined'&&cur===id&&document.getElementById('gi'))){var t=d.t.replace(/\s+/g,' ').slice(0,80);if(sub.dataset.dr===t)return;sub.dataset.dr=t;sub.textContent='';var b=document.createElement('span');b.style.cssText='color:#ef4444;font-weight:600';b.textContent='Черновик: ';sub.appendChild(b);sub.appendChild(document.createTextNode(t))}
+  })}catch(e){}}
+ var q=0;new MutationObserver(function(){if(q)return;q=1;requestAnimationFrame(function(){q=0;paint()})}).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
 </body></html>
