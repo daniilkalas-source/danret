@@ -4416,4 +4416,18 @@ function rows(){var A=document.getElementById('app');if(!A)return;var ref=['#s_m
 var t=0;new MutationObserver(function(){if(t)return;t=requestAnimationFrame(function(){t=0;try{games();gameBtn();cover();rows();askCheck()}catch(e){console.error(e)}})}).observe(document.body,{childList:true,subtree:true});
 })();
 </script>
+<style>#dnPill{position:fixed;top:16px;left:50%;transform:translateX(-50%);height:26px;padding:0 11px 0 5px;border-radius:13px;display:none;align-items:center;gap:6px;background:linear-gradient(135deg,#7b5cff,#3b82f6);color:#fff;font:700 13px/26px -apple-system,Roboto,sans-serif;letter-spacing:.6px;z-index:2147483000;pointer-events:none;user-select:none;-webkit-user-select:none;white-space:nowrap}#dnPill i{width:18px;height:18px;border-radius:6px;background:#fff;color:#5b4bff;font:900 12px/18px -apple-system,Roboto,sans-serif;text-align:center;font-style:normal;letter-spacing:0}</style>
+<script>
+/* Плашка «DANRET» вверху: видна на скриншотах iPhone с Dynamic Island (вживую её закрывает «остров») */
+(function(){
+ var ios=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+ if(!ios)return;
+ var el=document.createElement('div');el.id='dnPill';el.innerHTML='<i>D</i>DANRET';
+ function inset(){var p=document.createElement('div');p.style.cssText='position:fixed;top:0;left:0;width:0;height:env(safe-area-inset-top,0px);visibility:hidden';document.body.appendChild(p);var h=p.getBoundingClientRect().height;p.remove();return h}
+ function upd(force){var h=typeof force==='number'?force:inset(),land=innerWidth>innerHeight;el.style.display=(h>=54&&!land)?'flex':'none'}
+ window.__dnPill=upd;
+ function init(){document.body.appendChild(el);upd();addEventListener('resize',function(){upd()});addEventListener('orientationchange',function(){setTimeout(upd,300)})}
+ if(document.body)init();else addEventListener('DOMContentLoaded',init);
+})();
+</script>
 </body></html>
