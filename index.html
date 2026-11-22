@@ -1,4 +1,12 @@
-<!doctype html><html lang="ru"><head><script>var __FS=new URLSearchParams(location.search).get("fs");var __IN=__FS!==null&&window.top!==window;var __SLOT=__IN?__FS:(function(){try{return localStorage.dn_slot||""}catch(e){return ""}})();</script><meta charset="utf-8"><title>Danret</title>
+<!doctype html><html lang="ru"><head><script>
+/* Меню сообщения: клик, который iOS шлёт при отпускании пальца после долгого нажатия, больше не закрывает меню и не съедает нажатия */
+(function(){window.__tc=0;
+ document.addEventListener('touchstart',function(e){window.__tc=e.touches.length},{capture:true,passive:true});
+ document.addEventListener('touchend',function(e){window.__tc=e.touches.length;if(window.__mnuHold&&e.touches.length===0){window.__mnuHold=false;window.__mnuIg=Date.now()+450}},{capture:true,passive:true});
+ document.addEventListener('touchcancel',function(e){window.__tc=e.touches.length;window.__mnuHold=false},{capture:true,passive:true});
+})();
+</script>
+<script>var __FS=new URLSearchParams(location.search).get("fs");var __IN=__FS!==null&&window.top!==window;var __SLOT=__IN?__FS:(function(){try{return localStorage.dn_slot||""}catch(e){return ""}})();</script><meta charset="utf-8"><title>Danret</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0e0b1f">
@@ -3053,9 +3061,9 @@ msgMenu=function(id,el){
  var safeB=doc.createElement('div');safeB.style.cssText='position:absolute;left:0;bottom:0;width:1px;height:env(safe-area-inset-bottom,0px);visibility:hidden';
  ov.appendChild(safe);ov.appendChild(safeB);
 
- var closed=false,orig=el;
+ window.__mnuHold=(window.__tc||0)>0;var closed=false,orig=el;
  var close=function(){if(closed)return;closed=true;ov.classList.remove('on');ov.classList.add('out');setTimeout(function(){ov.remove();try{orig.style.visibility=''}catch(e){}},240)};
- var guard=function(f){return function(e){e.stopPropagation();if(Date.now()-t0<250)return;f(e)}};
+ var guard=function(f){return function(e){e.stopPropagation();if(Date.now()-t0<250||Date.now()<(window.__mnuIg||0))return;f(e)}};
  var fillBar=function(list,big){
   bar.className='rb9'+(big?' big':'');
   bar.innerHTML=list.map(function(e){return '<button type="button" data-e="'+e+'" class="'+((m.re&&m.re[e]||[]).includes(uid)?'on':'')+'">'+e+'</button>'}).join('')+(big?'':'<button type="button" class="mx9" aria-label="Ещё">'+SV('<path d="M6 9l6 6 6-6"/>')+'</button>');
@@ -3065,7 +3073,7 @@ msgMenu=function(id,el){
  fillBar(rxList,false);
  mm.innerHTML=it.map(function(x,i){return '<button type="button" data-i="'+i+'" style="--i:'+i+'" class="'+(x[3]?'dg':'')+(i===it.length-1&&i>0?' msp':'')+'"><span>'+x[0]+'</span>'+x[1]+'</button>'}).join('');
  mm.querySelectorAll('[data-i]').forEach(function(b){b.onclick=guard(function(){close();it[+b.dataset.i][2]()})});
- ov.onclick=function(){if(Date.now()-t0<250)return;close()};
+ ov.onclick=function(){if(Date.now()-t0<250||Date.now()<(window.__mnuIg||0))return;close()};
  ov.addEventListener('touchmove',function(e){e.preventDefault()},{passive:false});
  ov.appendChild(bar);ov.appendChild(mm);
  doc.body.appendChild(ov);
@@ -4073,7 +4081,7 @@ function tr(){
  b.innerHTML='<span>🌐</span>Перевести';b.onclick=function(){var ov=document.querySelector('.mo9');
   window.open('https://translate.google.com/?sl=auto&tl='+(navigator.language||'ru').slice(0,2)+'&op=translate&text='+encodeURIComponent(m.text),'_blank');if(ov)ov.click()};
  f.parentNode.insertBefore(b,f.parentNode.lastElementChild)}
-var t=0;new MutationObserver(function(){if(t)return;t=requestAnimationFrame(function(){t=0;folders();tr()})}).observe(document.body,{childList:true,subtree:true});
+var t=0;new MutationObserver(function(){if(t)return;t=requestAnimationFrame(function(){t=0;folders()})}).observe(document.body,{childList:true,subtree:true});
 })();
 </script>
 <style id="dn-song">
