@@ -1,4 +1,87 @@
 <!doctype html><html lang="ru"><head><script>
+/* ===== ANDROID PERF v1: включается только на Android (или ?lite=1). iOS/ПК не затрагиваются ===== */
+(function(){
+ var ua=navigator.userAgent||'',on=false;
+ try{on=/Android/i.test(ua)||/[?&]lite=1/.test(location.search)||localStorage.dn_lite==='1';if(/[?&]lite=0/.test(location.search))on=false}catch(e){on=/Android/i.test(ua)}
+ if(!on){window.winM=function(a){return a};return}
+ window.__apf=1;document.documentElement.classList.add('apf');
+
+ /* 1) Наблюдатели DOM: десятки сканов на каждое изменение -> один пакетный вызов раз в ~90мс (записи не теряются) */
+ var NM=window.MutationObserver;
+ if(NM){
+  window.MutationObserver=function(cb){
+   var buf=[],t=0,self;
+   self=new NM(function(r){
+    for(var i=0;i<r.length;i++)buf.push(r[i]);
+    if(t)return;
+    t=setTimeout(function(){t=0;var b=buf;buf=[];try{cb.call(self,b,self)}catch(e){console.error(e)}},90)
+   });
+   return self
+  };
+  window.MutationObserver.prototype=NM.prototype
+ }
+
+ /* 2) Чат рисуем не весь, а последние сообщения; старые подгружаются при прокрутке вверх */
+ var LIM=60,STEP=40,lim={},last=null;
+ window.winM=function(a){
+  var id=a&&a._cid;if(!id)return a;
+  if(id!==last){last=id;lim[id]=LIM}
+  window.__apCid=id;window.__apTot=a.length;
+  var n=lim[id]||LIM;
+  return a.length<=n+10?a:a.slice(a.length-n)
+ };
+ var busy=0;
+ document.addEventListener('scroll',function(e){
+  var s=e.target;
+  if(busy||!s||!s.classList||!s.classList.contains('msgs')||s.classList.contains('cmm')||s.scrollTop>150)return;
+  var id=window.__apCid,n=lim[id]||LIM;
+  if(!id||!window.__apTot||n+10>=window.__apTot)return;
+  busy=1;
+  var before=s.scrollHeight-s.scrollTop;
+  lim[id]=n+STEP;
+  try{if(typeof window.chatView==='function')window.chatView()}catch(er){console.error(er)}
+  requestAnimationFrame(function(){
+   var s2=document.querySelector('.msgs:not(.cmm)');
+   if(s2)s2.scrollTop=s2.scrollHeight-before;
+   setTimeout(function(){busy=0},250)
+  })
+ },true);
+
+ /* 3) Бесконечные анимации (анимированные эмодзи и т.п.) ставим на паузу, пока элемент вне экрана */
+ var SEL='.pe-spin,.pe-pulse,.pe-beat,.pe-tw,.pe-fl,.pe-wob,.pe-rot,.pe-flap,.pe-bl,.pe-swing,.pe-flick,.pe-blink,.pe-glow,.a-bn,.a-wb,.a-pl,.a-fl,.a-sk,.ey';
+ if(window.IntersectionObserver){
+  var io=new IntersectionObserver(function(es){
+   es.forEach(function(e){
+    var el=e.target;
+    if(!el.isConnected){io.unobserve(el);return}
+    el.style.animationPlayState=e.isIntersecting?'':'paused'
+   })
+  },{rootMargin:'120px'});
+  var scan=function(){try{document.querySelectorAll(SEL).forEach(function(n){if(n.__apo)return;n.__apo=1;io.observe(n)})}catch(e){}};
+  var start=function(){scan();new MutationObserver(scan).observe(document.documentElement,{childList:true,subtree:true})};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start()
+ }
+})();
+</script>
+<style id="apf-css">
+/* ANDROID PERF v1 — тяжёлое размытие (backdrop-filter) на пузырях и панелях убивает FPS на Android: отключаем */
+html.apf *{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;-webkit-tap-highlight-color:transparent}
+html.apf :is(#_,*):is(#_,*):is(#_,*),
+html.apf :is(#_,*):is(#_,*):is(#_,*)::before,
+html.apf :is(#_,*):is(#_,*):is(#_,*)::after{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+/* без размытия плавающие панели делаем плотными, чтобы текст читался */
+html.apf :is(#_,*):is(#_,*):is(.tabs,.pop,.toast,.nb,.sbn,.chh,.pl2,.pin,.pinbar){background-color:var(--sf)!important}
+/* тени на каждом пузыре — лишняя нагрузка при скролле */
+html.apf :is(#_,*):is(#_,*) .msgs :is(.b,.post,.chip,.av){box-shadow:none!important}
+/* постоянные пульсации и размытые «пятна» */
+html.apf :is(#_,*):is(#_,*) .avo::after,
+html.apf :is(#_,*):is(#_,*) .dnsg.pl .dnsp{animation:none!important}
+html.apf :is(#_,*):is(#_,*) #dsp .dsa{display:none!important}
+html.apf :is(#_,*):is(#_,*) .cn2 .cbg{filter:none!important}
+/* плавный нативный скролл без «резинки» поверх списка */
+html.apf .msgs,html.apf .main{overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch}
+</style>
+<script>
 /* Меню сообщения: клик, который iOS шлёт при отпускании пальца после долгого нажатия, больше не закрывает меню и не съедает нажатия */
 (function(){window.__tc=0;
  document.addEventListener('touchstart',function(e){window.__tc=e.touches.length},{capture:true,passive:true});
@@ -1546,7 +1629,7 @@ function healDm(id){try{const c=chats.find(x=>x.id===id);if(!c||c.type!=='dm'||!
 function chatView(){
  if(inf)return infoPage();if(ibCid){ibStop();ibCid=null}
  const c=chats.find(x=>x.id===cur);if(!c){cur=null;return main()}
- const fv=!!dmCh&&c.type==='dm',ML=fv?msgs.filter(m=>m.chn===dmCh):msgs.filter(m=>!isChm(m)&&!(m.from!==uid&&(me.blk||[]).includes(m.from)&&(m.ts||0)>((me.blkTs||{})[m.from]||Infinity)));if(fv)rdU(cur);
+ const fv=!!dmCh&&c.type==='dm',ML=fv?winM(msgs).filter(m=>m.chn===dmCh):winM(msgs).filter(m=>!isChm(m)&&!(m.from!==uid&&(me.blk||[]).includes(m.from)&&(m.ts||0)>((me.blkTs||{})[m.from]||Infinity)));if(fv)rdU(cur);
  const pinBar=c.pin?`<div class="pinbar" id="pinb"><span class="pi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 17v5M9 4v6l-3 5h12l-3-5V4M7 4h10"/></svg></span><div class="pc"><b>Закреплённое сообщение</b><span>${E((uname(c.pin.from)||'')+': '+(c.pin.text||''))}</span></div><button class="px" id="pinx" type="button" aria-label="Открепить"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`:'';
  const selBar=selMode?`<div class="selbar"><button class="ib" id="selx"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button><b>${selMode.size} сообщ.</b><button class="ib" id="seldel" style="color:#ff6b6b"><svg class="i" viewBox="0 0 24 24"><path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13"/></svg></button></div>`:'';
 
