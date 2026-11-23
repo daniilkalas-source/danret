@@ -4674,4 +4674,9 @@ var t=0;new MutationObserver(function(){if(t)return;t=requestAnimationFrame(func
  window.addEventListener('load',function(){setTimeout(wrap,0)});
 })();
 </script>
+<style id="dn-fix-clist">
+/* ФИКС 3 (главный): .clist глотал жест прокрутки (overscroll-behavior:contain + overflow:hidden/auto),
+   из-за чего .main не получал свайп. Делаем .clist обычной обёрткой, прокручивается .main */
+html .clist,html.dnand .clist,html.apf .clist{overflow:visible!important;overflow:clip!important;overscroll-behavior:auto!important;max-height:none!important;height:auto!important}
+</style>
 </body></html>
