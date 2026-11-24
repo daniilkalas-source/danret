@@ -1683,7 +1683,7 @@ let stPin=[],mpD=null,stRaw=[],usg='',T0=0,cmDraw=null;const NT={},NTm={};
 
 /* Official Danret animated stickers (10) — large emoji stickers */
 const OFF_STK=['👋','❤️','🔥','😂','👍','🎉','😮','😢','🫡','🚀'];
-const APP_VER='202611211200',OFFC=['danretofficial','danretconru'];
+const APP_VER='202611241500',OFFC=['danretofficial','danretconru'];
 const PRD={msg:1,media:1,add:1,pin:0,prof:0},PRM=[['msg','Отправка сообщений'],['media','Отправка фото и видео'],['add','Добавление участников'],['pin','Закрепление сообщений'],['prof','Изменение профиля группы']],ADR=[['del','Удаление сообщений'],['pin','Закрепление сообщений'],['add','Добавление участников'],['prof','Изменение профиля']];
 const isAd=(c,u,r)=>{if(!c||!u)return false;if(c.owner===u)return true;const a=c.am&&c.am[u];return !!a&&(!r||!a.r||a.r[r]!==0)};
 const pm=(c,k)=>(c.perm&&c.perm[k]!==undefined)?c.perm[k]:PRD[k];
@@ -1966,8 +1966,8 @@ function privPage(){const d=document.createElement('div');d.className='srv';
  document.body.appendChild(d);draw();prD=draw}
 let prD=null;
 function myProfile(){const d=document.createElement('div');d.className='srv pf';
- let mpt='s';const draw=()=>{d.innerHTML=`${phs(uid)}<div class="main"><div class="phd" style="${pcBg(uid)}"><div class="top" style="background:none"><button class="ib" id="mpx"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="t"></div><button class="pill" id="mpe">Изм.</button></div><div class="hero" style="padding:0 20px 16px">${avH(me.name,uid,110,'mp')}<h1>${E(me.name)}</h1><div class="sub">в сети</div></div></div><div class="grp" style="margin-top:14px">${myPh?`<div class="fld"><b>мобильный</b><span style="color:var(--ac)">${E(myPh)}</span></div>`:''}<div class="fld"><b>имя пользователя</b><span style="color:var(--ac)">@${E(me.username)}</span></div>${me.bd?`<div class="fld"><b>день рождения</b><span>${fmtBd(me.bd)}</span></div>`:''}${me.bio?`<div class="fld"><b>о себе</b><span>${E(me.bio)}</span></div>`:''}</div><div class="seg" style="margin:14px"><button data-mt="s" class="${mpt==='s'?'on':''}">Публикации</button><button data-mt="g" class="${mpt==='g'?'on':''}">Подарки</button></div><div style="display:flex;gap:10px;justify-content:center;padding:0 14px 10px"><button class="pill" id="mpv" style="color:var(--tx)">Все истории</button><button class="pill" id="mpa" style="color:var(--tx)">+ История</button><button class="pill" id="mpc" style="color:var(--tx)">Цвет</button></div>${mpt==='g'?giftGrid(uid):pubGrid(uid)}</div>`;
-  d.querySelector('#mpx').onclick=()=>d.remove();d.querySelector('#mpe').onclick=editProfile;d.querySelector('#mpa').onclick=addStory;d.querySelector('#mpv').onclick=()=>stl.some(x=>x.uid===uid)?openStory(uid):toast('У вас пока нет активных историй');d.querySelector('#mpc').onclick=colorPage;pullAva(d);pubX(d);d.querySelectorAll('[data-mt]').forEach(b=>b.onclick=()=>{mpt=b.dataset.mt;draw()});if(mpt==='g')giftLoad(d,uid)};
+ let mpt='s';const draw=()=>{d.innerHTML=`${phs(uid)}<div class="main"><div class="phd" style="${pcBg(uid)}"><div class="top" style="background:none"><button class="ib" id="mpx"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="t"></div><button class="pill" id="mpe">Изм.</button></div><div class="hero" style="padding:0 20px 16px">${avH(me.name,uid,110,'mp')}<h1>${E(me.name)}</h1><div class="sub">в сети</div></div></div><div class="grp" style="margin-top:14px">${myPh?`<div class="fld"><b>мобильный</b><span style="color:var(--ac)">${E(myPh)}</span></div>`:''}<div class="fld"><b>имя пользователя</b><span style="color:var(--ac)">@${E(me.username)}</span></div>${me.bd?`<div class="fld"><b>день рождения</b><span>${fmtBd(me.bd)}</span></div>`:''}${me.bio?`<div class="fld"><b>о себе</b><span>${E(me.bio)}</span></div>`:''}</div><div class="seg" style="margin:14px"><button data-mt="s" class="${mpt==='s'?'on':''}">Публикации</button><button data-mt="g" class="${mpt==='g'?'on':''}">Подарки</button></div><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:0 14px 10px"><button class="pill" id="mpv" style="color:var(--tx)">Все истории</button><button class="pill" id="mpa" style="color:var(--tx)">+ История</button><button class="pill" id="mpc" style="color:var(--tx)">Цвет</button><button class="pill" id="mpq" style="color:var(--tx)">Визитка</button><button class="pill" id="mpg" style="color:var(--tx)">Аукцион</button></div>${mpt==='g'?giftGrid(uid):pubGrid(uid)}</div>`;
+  d.querySelector('#mpx').onclick=()=>d.remove();d.querySelector('#mpe').onclick=editProfile;d.querySelector('#mpa').onclick=addStory;d.querySelector('#mpv').onclick=()=>stl.some(x=>x.uid===uid)?openStory(uid):toast('У вас пока нет активных историй');d.querySelector('#mpc').onclick=colorPage;d.querySelector('#mpq').onclick=cardPage;d.querySelector('#mpg').onclick=gfAuctionPage;pullAva(d);pubX(d);d.querySelectorAll('[data-mt]').forEach(b=>b.onclick=()=>{mpt=b.dataset.mt;draw()});if(mpt==='g')giftLoad(d,uid)};
  document.body.appendChild(d);draw();mpD=()=>{if(!document.body.contains(d)){mpD=null;return}draw()}}
 function editProfile(){const d=document.createElement('div');d.className='srv';const st={n:me.name,b:me.bio||'',d:me.bd||''},BV={all:'виден всем',contacts:'виден контактам',none:'скрыт от всех'},sh=v=>{const [y,m,x]=v.split('-').map(Number);return x+' '+MON[m-1]+' '+y},ic=(bg,p)=>`<span style="background:${bg};color:#fff;width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none"><svg class="i" viewBox="0 0 24 24">${p}</svg></span>`;
  const draw=()=>{d.innerHTML=`<div class="top" style="background:none"><button class="ib" id="epx"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="t"></div><button class="ib" id="eps" style="background:var(--ac);color:#fff"><svg class="i" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></button></div><div class="main"><div class="bnw"><div class="bnb" id="ebn" style="${me.bn?`background-image:url('${me.bn}')`:''}"><span class="bt">${me.bn?'Изменить баннер':'＋ Загрузить баннер'}</span></div><div class="bna" id="epa">${av(me.name,uid,110)}</div></div><div style="text-align:center;padding:0 0 14px"><div id="epc" style="color:var(--ac);font-size:20px;cursor:pointer">Изменить фотографию</div>${me.bn?'<div id="ebr" style="color:#ff453a;font-size:15px;margin-top:10px;cursor:pointer">Убрать баннер</div>':''}</div>
@@ -3632,13 +3632,13 @@ function giftShop(oid,c){
   o.querySelectorAll('[data-g]').forEach(k=>k.onclick=()=>pick(GF[k.dataset.g]))};
  const pick=g=>{
   const m=document.createElement('div');m.className='gfm';const nm=uname(oid);
-  m.innerHTML='<div class="gfmc"><button class="gfx2">✕</button><div class="gfbig" style="'+gfBg(g)+'">'+g.e+'</div><h3>'+E(g.n)+'</h3><div class="gfsub2">Подарок для '+E(nm)+'. '+E(nm)+' сможет добавить его в профиль или обменять на '+gfBack(g.p)+' молний.</div><input id="gfc" maxlength="120" placeholder="Подпись к подарку (необязательно)"><button class="gfsend">Отправить за ⚡ '+g.p+'</button></div>';
-  o.appendChild(m);m.onclick=e=>{if(e.target===m)m.remove()};m.querySelector('.gfx2').onclick=()=>m.remove();
+  m.innerHTML='<div class="gfmc"><button class="gfx2">✕</button>'+gfStage(g)+'<h3>'+E(g.n)+'</h3><div class="gfsub2">Подарок для '+E(nm)+'. '+E(nm)+' сможет добавить его в профиль или обменять на '+gfBack(g.p)+' молний.</div><input id="gfc" maxlength="120" placeholder="Подпись к подарку (необязательно)"><button class="gfsend">Отправить за ⚡ '+g.p+'</button></div>';
+  o.appendChild(m);gfMount(m,g);m.onclick=e=>{if(e.target===m)m.remove()};m.querySelector('.gfx2').onclick=()=>m.remove();
   m.querySelector('.gfsend').onclick=async()=>{
    if(busy)return;const bal=(me&&me.bolts)||0;
    if(bal<g.p){toast('Не хватает молний: нужно '+g.p+', у вас '+bal);return}
    busy=true;const cmt=m.querySelector('#gfc').value.trim(),ts=Date.now(),gd=ts.toString(36)+rid(),no=g.c?Math.floor(1000+Math.random()*998000):0;
-   o.remove();inf=null;sub=null;openChat(c.id);
+   o.remove();inf=null;sub=null;openChat(c.id);gfFly(g);
    try{
     await setU({bolts:firebase.firestore.FieldValue.increment(-g.p)});
     try{await db.collection('gifts').doc(gd).set({from:uid,to:oid,gid:g.id,price:g.p,no,cmt,ts,chat:c.id})}catch(e){}
@@ -3650,7 +3650,7 @@ function giftShop(oid,c){
 function giftH(m){
  const g=GF[m.gid]||{e:'🎁',n:'Подарок',p:m.price||0,c:0},mine=m.from===uid,rc=mine?m.to:uid,nm=uname(rc),p=m.price||g.p;
  return '<div class="gfl">'+(mine?'Вы отправили подарок за '+p+' молний':E(uname(m.from))+' отправил(а) вам подарок за '+p+' молний')+'</div>'+
- '<div class="gfc" style="'+(g.c?gfBg(g):'')+'">'+(g.c&&m.no?'<i class="gfr">#'+m.no+'</i>':'')+'<div class="gfce">'+g.e+'</div>'+
+ '<div class="gfc'+(g.c?' col':'')+'" style="'+(g.c?gfBg(g):'')+'">'+(g.c&&m.no?'<i class="gfr">#'+m.no+'</i>':'')+'<div class="gfce">'+g.e+'</div>'+
  '<div class="gfct">Подарок для '+E(nm)+'</div>'+(m.text?'<div class="gfcm">«'+E(m.text)+'»</div>':'')+
  '<div class="gfcs">'+E(nm)+' может добавить этот подарок в профиль или обменять на '+gfBack(p)+' молний.</div>'+
  '<button class="gfcv" data-gv="'+m.id+'">Посмотреть</button></div>'}
@@ -3658,11 +3658,12 @@ function giftH(m){
 async function giftView(m){
  const g=GF[m.gid]||{e:'🎁',n:'Подарок',p:m.price||0,c:0},p=m.price||g.p,mine=m.to===uid;let st={};
  try{if(m.gd){const d=await db.collection('gifts').doc(m.gd).get();if(d.exists)st=d.data()}}catch(e){}
- const w=sheet(hd(E(g.n))+'<div class="gfbig" style="margin:6px auto 12px;'+gfBg(g)+'">'+g.e+'</div>'+
+ const w=sheet(hd(E(g.n))+gfStage(g)+
  '<div class="gfinf"><div><span>От</span><b>'+E(uname(m.from))+'</b></div><div><span>Кому</span><b>'+E(uname(m.to))+'</b></div><div><span>Дата</span><b>'+gfDate(m.ts)+'</b></div><div><span>Стоимость</span><b>⚡ '+p+'</b></div>'+(m.no?'<div><span>Номер</span><b>#'+m.no+'</b></div>':'')+'</div>'+
  (m.text?'<div class="gfcm" style="text-align:center;margin:8px 0">«'+E(m.text)+'»</div>':'')+
  (mine&&!st.conv?'<button class="btn" id="gh" style="width:100%;margin-top:10px">'+(st.hide?'Показывать в профиле':'Скрыть из профиля')+'</button><button class="btn" id="gx2" style="width:100%;margin-top:8px;background:var(--sf);color:var(--tx)">Обменять на ⚡ '+gfBack(p)+'</button>':'')+
  (st.conv?'<div class="sub" style="text-align:center;margin-top:10px">Подарок обменян на молнии</div>':''));
+ gfMount(w,g,1);
  if(!mine||st.conv)return;
  w.querySelector('#gh').onclick=async()=>{try{await db.collection('gifts').doc(m.gd).update({hide:!st.hide});toast(st.hide?'Подарок снова в профиле':'Подарок скрыт из профиля');w.remove()}catch(e){toast('Не удалось')}};
  w.querySelector('#gx2').onclick=()=>{w.remove();ask('Обменять подарок на '+gfBack(p)+' молний? Он исчезнет из профиля.',async()=>{try{await db.collection('gifts').doc(m.gd).update({conv:true,hide:true});await setU({bolts:firebase.firestore.FieldValue.increment(gfBack(p))});toast('Получено молний: '+gfBack(p))}catch(e){toast('Не удалось обменять')}},'Обменять')}}
@@ -3686,10 +3687,9 @@ async function giftLoad(A,oid){
  const draw=()=>{box._f=f;
   const V=(f==='col'?L.filter(isC):L.slice().sort((a,b)=>isC(b)-isC(a)));
   box.innerHTML='<div class="gfch"><button data-f="all" class="'+(f==='all'?'on':'')+'">Все подарки '+L.length+'</button><button data-f="col" class="'+(f==='col'?'on':'')+'">Коллекционные '+nC+'</button></div>'+
-  (V.length?'<div class="gfpg">'+V.map(x=>{const g=GF[x.gid]||{e:'🎁',n:'Подарок',c:0};return '<div class="gfpk'+(g.c?' col':'')+'" data-gi="'+x.id+'" style="'+gfBg(g)+'"><span class="gfav">'+av(uname(x.from),x.from,22)+'</span>'+(g.c&&x.no?'<i class="gfr">#'+x.no+'</i>':'')+'<div class="gfe">'+g.e+'</div></div>'}).join('')+'</div>':'<div class="empty" style="padding:30px">Коллекционных подарков пока нет</div>');
+  (V.length?'<div class="gfpg">'+V.map(x=>{const g=GF[x.gid]||{e:'🎁',n:'Подарок',c:0};return '<div class="gfpk'+(g.c?' col':'')+(gfRar(g)>1?' r'+gfRar(g):'')+'" data-gi="'+x.id+'" style="'+gfBg(g)+'"><span class="gfav">'+av(uname(x.from),x.from,22)+'</span>'+(g.c&&x.no?'<i class="gfr">#'+x.no+'</i>':'')+'<div class="gfe">'+g.e+'</div></div>'}).join('')+'</div>':'<div class="empty" style="padding:30px">Коллекционных подарков пока нет</div>');
   box.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{f=b.dataset.f;draw()});
-  box.querySelectorAll('[data-gi]').forEach(k=>k.onclick=()=>{const x=L.find(y=>y.id===k.dataset.gi),g=GF[x.gid]||{e:'🎁',n:'Подарок',c:0};
-   sheet(hd(E(g.n))+'<div class="gfbig" style="margin:6px auto 12px;'+gfBg(g)+'">'+g.e+'</div><div class="gfinf"><div><span>От</span><b>'+E(uname(x.from))+'</b></div><div><span>Дата</span><b>'+gfDate(x.ts)+'</b></div>'+(x.no?'<div><span>Номер</span><b>#'+x.no+'</b></div>':'')+'</div>'+(x.cmt?'<div class="gfcm" style="text-align:center;margin-top:8px">«'+E(x.cmt)+'»</div>':''))})};
+  box.querySelectorAll('[data-gi]').forEach(k=>k.onclick=()=>{const x=L.find(y=>y.id===k.dataset.gi),g=GF[x.gid]||{e:'🎁',n:'Подарок',c:0,id:x.gid};gfDetail(x,g,oid)})};
  draw()
 }
 
@@ -4713,4 +4713,331 @@ html.apf .main,html.apf .msgs{scroll-behavior:auto;-webkit-overflow-scrolling:to
 #app:has(>.top~.msgs)>.top.chh>#hd{overflow:visible!important;line-height:1.25!important}
 #app:has(>.top~.msgs)>.top.chh>#hd #sbt{line-height:1.3!important;padding-bottom:1px}
 </style>
+<style id="dn-v2-css">
+/* ===== DANRET v2: визитка, подарки (анимации, 3D, обмен, аукцион) ===== */
+.vcd{padding:6px 14px 24px;text-align:center}
+.vct{border-radius:22px;padding:22px 14px 16px;background:linear-gradient(135deg,#2a6bd6,#6a3fd1);color:#fff;display:flex;flex-direction:column;align-items:center;gap:4px}
+.vct h2{margin:8px 0 0;font-size:22px}.vcu{opacity:.85;font-size:15px}
+.vcq{background:#fff;border-radius:20px;padding:10px;width:240px;max-width:78%;margin:-14px auto 0;position:relative;box-shadow:0 8px 28px rgba(0,0,0,.35)}
+.vcq svg{display:block;width:100%;height:auto;border-radius:12px}
+.vcl{margin:14px 6px 4px;color:var(--mu);font-size:13px;word-break:break-all;-webkit-user-select:text;user-select:text}
+.vcb{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.gfin{width:100%;box-sizing:border-box;padding:13px 14px;border-radius:12px;border:0;outline:0;background:var(--sf);color:var(--tx);font-size:16px}
+.gfac{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.gfst{position:relative;overflow:hidden;transition:width .3s,height .3s}
+.gfst .gfem{display:inline-block;animation:gfFloat 3.2s ease-in-out infinite}
+.gfst.col::after,.gfpk.col::after,.gfk.col::after{content:"";position:absolute;top:-20%;bottom:-20%;left:-60%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.38),transparent);transform:skewX(-18deg);animation:gfShine 3.4s ease-in-out infinite;pointer-events:none}
+.gfst.r1{box-shadow:0 0 22px rgba(255,255,255,.18)}
+.gfst.r2{animation:gfGlow 2.4s ease-in-out infinite}
+.gfst.r3{animation:gfGlow 1.8s ease-in-out infinite;box-shadow:0 0 34px rgba(255,220,120,.5)}
+.gfpk.r2,.gfpk.r3{box-shadow:0 0 14px rgba(255,210,100,.35)}
+.gf3b{position:absolute;right:6px;top:6px;z-index:3;border:0;border-radius:10px;padding:3px 9px;font-size:12px;font-weight:700;background:rgba(0,0,0,.35);color:#fff;cursor:pointer}
+.gf3m{position:absolute;left:6px;bottom:6px;z-index:3;border:0;border-radius:10px;padding:3px 9px;font-size:11px;background:rgba(0,0,0,.35);color:#fff;cursor:pointer}
+.gfst.on3{width:100%;max-width:320px;height:260px;border-radius:28px}
+.gf3v{position:absolute;inset:0;perspective:700px;display:flex;align-items:center;justify-content:center;cursor:grab}
+.gf3c{position:relative;width:110px;height:110px;transform-style:preserve-3d}
+.gf3c span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:92px;line-height:1}
+.gfbu{position:fixed;z-index:100002;width:0;height:0;pointer-events:none}
+.gfbu i{position:absolute;left:0;top:0;font-style:normal;font-size:20px;animation:gfOut 1.1s cubic-bezier(.15,.8,.3,1) both}
+.gffl{position:fixed;inset:0;z-index:100001;pointer-events:none;display:flex;align-items:center;justify-content:center}
+.gffl span{font-size:120px;animation:gfLaunch 1.7s cubic-bezier(.3,.7,.2,1) both}
+.gfal{display:flex;align-items:center;gap:12px;padding:10px;border-radius:16px;background:var(--sf);margin-bottom:8px;cursor:pointer}
+.gfae{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:34px;flex:none;background:rgba(255,255,255,.06)}
+.gfal .gfmid{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.gfal .gfmid span{color:var(--mu);font-size:13px}
+.gfal .gfap{background:rgba(255,190,40,.18);color:#ffc83d;border-radius:14px;padding:4px 10px;font-weight:700;font-size:14px;white-space:nowrap}
+.gfrow2{display:flex;gap:8px;margin-top:8px}.gfrow2 .btn{flex:1}
+@keyframes gfFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-7px) rotate(3deg)}}
+@keyframes gfShine{0%,55%{left:-60%}100%{left:140%}}
+@keyframes gfGlow{0%,100%{box-shadow:0 0 14px rgba(255,210,100,.25)}50%{box-shadow:0 0 36px rgba(255,210,100,.6)}}
+@keyframes gfOut{0%{transform:translate(0,0) scale(.3);opacity:1}100%{transform:translate(var(--x),var(--y)) scale(1.1) rotate(200deg);opacity:0}}
+@keyframes gfLaunch{0%{transform:scale(.2) translateY(30vh);opacity:0}25%{transform:scale(1.25) translateY(0);opacity:1}55%{transform:scale(1) translateY(0);opacity:1}100%{transform:scale(.35) translateY(-45vh);opacity:0}}
+@keyframes gfPop{0%{transform:scale(.3);opacity:0}70%{transform:scale(1.18)}100%{transform:scale(1);opacity:1}}
+.gfc .gfce{display:inline-block;animation:gfFloat 3.2s ease-in-out infinite}
+.gfc{position:relative;overflow:hidden}
+.gfc.col::after{content:"";position:absolute;top:-20%;bottom:-20%;left:-60%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.3),transparent);transform:skewX(-18deg);animation:gfShine 3.6s ease-in-out infinite;pointer-events:none}
+html.apf .gfpk.col::after,html.apf .gfk.col::after,html.apf .gfc.col::after,html.apf .gfst.r2,html.apf .gfst.r3{animation:none}
+html.apf .gfc .gfce{animation:none}
+@media (prefers-reduced-motion:reduce){.gfst .gfem,.gfc .gfce,.gfst.col::after,.gfpk.col::after,.gfc.col::after{animation:none!important}}
+</style>
+<script id="dn-v2-js">
+function dnQR(text){
+ var data=Array.from(new TextEncoder().encode(text));
+ var T=[null,[10,[[1,16]]],[16,[[1,28]]],[26,[[1,44]]],[18,[[2,32]]],[24,[[2,43]]],[16,[[4,27]]],[18,[[4,31]]],[22,[[2,38],[2,39]]],[22,[[3,36],[2,37]]],[26,[[4,43],[1,44]]]];
+ var AL=[null,[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50]];
+ var cap=function(v){return T[v][1].reduce(function(s,b){return s+b[0]*b[1]},0)};
+ var v=1;while(v<=10&&data.length+(v<10?2:3)>cap(v))v++;
+ if(v>10)return null;
+ var bits=[],put=function(x,l){for(var i=l-1;i>=0;i--)bits.push((x>>i)&1)};
+ put(4,4);put(data.length,v<10?8:16);data.forEach(function(b){put(b,8)});
+ var cb=cap(v)*8;for(var i=0;i<4&&bits.length<cb;i++)bits.push(0);
+ while(bits.length%8)bits.push(0);
+ var cw=[];for(i=0;i<bits.length;i+=8){var x=0;for(var j=0;j<8;j++)x=x<<1|bits[i+j];cw.push(x)}
+ for(var p=0;cw.length<cap(v);p^=1)cw.push(p?0x11:0xEC);
+ var EXP=[],LOG=[];x=1;for(i=0;i<255;i++){EXP[i]=x;LOG[x]=i;x<<=1;if(x&256)x^=0x11D}for(i=255;i<512;i++)EXP[i]=EXP[i-255];
+ var mul=function(a,b){return a&&b?EXP[LOG[a]+LOG[b]]:0};
+ var ec=T[v][0],g=[1];
+ for(i=0;i<ec;i++){var ng=new Array(g.length+1).fill(0);for(j=0;j<g.length;j++){ng[j]^=g[j];ng[j+1]^=mul(g[j],EXP[i])}g=ng}
+ var rs=function(d){var r=new Array(ec).fill(0);d.forEach(function(b){var f=b^r[0];r.shift();r.push(0);for(var k=0;k<ec;k++)r[k]^=mul(g[k+1],f)});return r};
+ var blocks=[],pos=0;T[v][1].forEach(function(a){for(var k=0;k<a[0];k++){blocks.push(cw.slice(pos,pos+a[1]));pos+=a[1]}});
+ var ecs=blocks.map(rs),out=[],md=Math.max.apply(null,blocks.map(function(b){return b.length}));
+ for(i=0;i<md;i++)blocks.forEach(function(b){if(i<b.length)out.push(b[i])});
+ for(i=0;i<ec;i++)ecs.forEach(function(e){out.push(e[i])});
+ var n=17+4*v,M=[],F=[];for(i=0;i<n;i++){M.push(new Array(n).fill(0));F.push(new Array(n).fill(false))}
+ var set=function(r,c,val){M[r][c]=val?1:0;F[r][c]=true};
+ var finder=function(r,c){for(var a=-1;a<=7;a++)for(var b=-1;b<=7;b++){var rr=r+a,cc=c+b;if(rr<0||cc<0||rr>=n||cc>=n)continue;set(rr,cc,(a>=0&&a<=6&&(b==0||b==6))||(b>=0&&b<=6&&(a==0||a==6))||(a>=2&&a<=4&&b>=2&&b<=4))}};
+ finder(0,0);finder(0,n-7);finder(n-7,0);
+ var al=AL[v];al.forEach(function(r){al.forEach(function(c){if(F[r][c])return;for(var a=-2;a<=2;a++)for(var b=-2;b<=2;b++)set(r+a,c+b,Math.max(Math.abs(a),Math.abs(b))!=1)})});
+ for(i=8;i<n-8;i++){if(!F[6][i])set(6,i,i%2==0);if(!F[i][6])set(i,6,i%2==0)}
+ set(n-8,8,1);
+ for(i=0;i<9;i++){F[8][i]=true;F[i][8]=true}
+ for(i=0;i<8;i++){F[8][n-1-i]=true;F[n-1-i][8]=true}
+ if(v>=7)for(i=0;i<6;i++)for(j=0;j<3;j++){F[i][n-11+j]=true;F[n-11+j][i]=true}
+ var MK=[function(r,c){return(r+c)%2==0},function(r,c){return r%2==0},function(r,c){return c%3==0},function(r,c){return(r+c)%3==0},function(r,c){return(Math.floor(r/2)+Math.floor(c/3))%2==0},function(r,c){return(r*c)%2+(r*c)%3==0},function(r,c){return((r*c)%2+(r*c)%3)%2==0},function(r,c){return((r*c)%3+(r+c)%2)%2==0}];
+ var build=function(mk){
+  var G=M.map(function(r){return r.slice()}),inc=-1,row=n-1,bi=7,by=0;
+  for(var col=n-1;col>0;col-=2){if(col==6)col--;
+   for(;;){for(var c=0;c<2;c++){var cc=col-c;if(!F[row][cc]){var d=by<out.length?((out[by]>>bi)&1)==1:false;if(MK[mk](row,cc))d=!d;G[row][cc]=d?1:0;if(--bi<0){by++;bi=7}}}
+    row+=inc;if(row<0||row>=n){row-=inc;inc=-inc;break}}}
+  var d0=mk,r0=d0<<10;for(var k=14;k>=10;k--)if((r0>>k)&1)r0^=0x537<<(k-10);var fm=((d0<<10)|r0)^0x5412;
+  for(k=0;k<15;k++){var bt=(fm>>k)&1;
+   if(k<6)G[k][8]=bt;else if(k<8)G[k+1][8]=bt;else G[n-15+k][8]=bt;
+   if(k<8)G[8][n-k-1]=bt;else if(k<9)G[8][15-k]=bt;else G[8][14-k]=bt}
+  G[n-8][8]=1;
+  if(v>=7){var vd=v<<12;for(k=17;k>=12;k--)if((vd>>k)&1)vd^=0x1F25<<(k-12);var vi=(v<<12)|vd;
+   for(k=0;k<18;k++){var b2=(vi>>k)&1;G[Math.floor(k/3)][k%3+n-11]=b2;G[k%3+n-11][Math.floor(k/3)]=b2}}
+  return G};
+ var pen=function(G){var s=0,a,b,run,dark=0;
+  for(var t=0;t<2;t++){for(a=0;a<n;a++){run=1;for(b=1;b<n;b++){var p1=t?G[b][a]:G[a][b],p0=t?G[b-1][a]:G[a][b-1];if(p1==p0){run++;if(run==5)s+=3;else if(run>5)s++}else run=1}
+    for(b=0;b<=n-11;b++){var q=[];for(var z=0;z<11;z++)q.push(t?G[b+z][a]:G[a][b+z]);var qs=q.join('');if(qs=='10111010000'||qs=='00001011101')s+=40}}}
+  for(a=0;a<n-1;a++)for(b=0;b<n-1;b++){var h=G[a][b];if(h==G[a][b+1]&&h==G[a+1][b]&&h==G[a+1][b+1])s+=3}
+  for(a=0;a<n;a++)for(b=0;b<n;b++)dark+=G[a][b];
+  s+=Math.floor(Math.abs(dark*100/(n*n)-50)/5)*10;return s};
+ var best=null,bs=1e9;for(var m=0;m<8;m++){var G=build(m),sc=pen(G);if(sc<bs){bs=sc;best=G}}
+ return best}
+function dnQRsvg(text,fg,bg){var G=dnQR(text);if(!G)return '';var n=G.length,q=3,d='';
+ for(var r=0;r<n;r++){var c=0;while(c<n){if(G[r][c]){var s=c;while(c<n&&G[r][c])c++;d+='M'+(s+q)+' '+(r+q)+'h'+(c-s)+'v1h-'+(c-s)+'z'}else c++}}
+ return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+(n+q*2)+' '+(n+q*2)+'" shape-rendering="crispEdges"><rect width="100%" height="100%" fill="'+(bg||'#fff')+'"/><path fill="'+(fg||'#000')+'" d="'+d+'"/></svg>'}
+/* ===== 1. ПРОФИЛЬ-ВИЗИТКА ===== */
+function dnLink(){return location.origin+location.pathname+(me&&me.username?'#u/'+me.username:'')}
+function cardPage(){
+ if(!me.username)return toast('Сначала задайте имя пользователя в профиле');
+ var link=dnLink(),bg='';try{bg=pcBg(uid)||''}catch(e){}
+ var svg=dnQRsvg(link,'#0b1220','#fff');
+ var w=sheet(hd('Моя визитка')+'<div class="vcd"><div class="vct" style="'+bg+'">'+av(me.name,uid,88)+'<h2>'+E(me.name)+'</h2><div class="vcu">@'+E(me.username)+'</div><div style="height:22px"></div></div><div class="vcq">'+svg+'</div><div class="vcl">'+E(link)+'</div><div class="vcb"><button class="btn" id="vcc">Скопировать ссылку</button><button class="btn" id="vcs" style="background:var(--sf);color:var(--tx)">Поделиться</button><button class="btn" id="vcp" style="background:var(--sf);color:var(--tx)">Сохранить QR-код</button></div></div>');
+ w.querySelector('#vcc').onclick=function(){copy(link);toast('Ссылка скопирована')};
+ w.querySelector('#vcs').onclick=function(){if(navigator.share)navigator.share({title:'Danret',text:me.name+' в Danret',url:link}).catch(function(){});else{copy(link);toast('Ссылка скопирована')}};
+ w.querySelector('#vcp').onclick=function(){
+  try{var im=new Image();im.onload=function(){var c=document.createElement('canvas');c.width=c.height=720;var x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,720,720);x.drawImage(im,0,0,720,720);
+   c.toBlob(function(b){var f=new File([b],'danret-'+me.username+'.png',{type:'image/png'});
+    if(navigator.canShare&&navigator.canShare({files:[f]}))navigator.share({files:[f]}).catch(function(){});
+    else{var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=f.name;document.body.appendChild(a);a.click();a.remove();toast('QR-код сохранён')}},'image/png')};
+   im.onerror=function(){toast('Не удалось сохранить QR')};
+   im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg.replace('<svg ','<svg width="720" height="720" '))}catch(e){toast('Не удалось сохранить QR')}};
+}
+/* открытие ссылки вида  сайт/#u/username  */
+setInterval(function(){
+ var m=/^#u\/(.+)$/.exec(location.hash);if(!m)return;
+ if(typeof me==='undefined'||!me||typeof cmReady==='undefined'||!cmReady||typeof users==='undefined')return;
+ var nm=decodeURIComponent(m[1]).toLowerCase();history.replaceState(null,'',location.pathname+location.search);
+ var id=Object.keys(users).find(function(i){return users[i]&&(users[i].username||'').toLowerCase()===nm});
+ if(!id)return toast('Пользователь @'+nm+' не найден');
+ if(id===uid)return toast('Это ваша визитка');
+ openDM(id)},800);
+
+/* ===== 2. АНИМИРОВАННЫЕ ПОДАРКИ ===== */
+var GFLT={};            /* id подарка -> ссылка на Lottie .json, например GFLT.g4='https://.../rose.json' */
+var GF3GLB={};          /* id подарка -> ссылка на 3D-модель .glb, например GF3GLB.c15='https://.../crystal.glb' */
+function gfRar(g){return g.c?(g.p>=1500?3:g.p>=999?2:g.p>=746?1:0):0}
+function gfCol(g){return g.g?g.g:['#ffc83d','#b8761a']}
+function gfLite(){return document.documentElement.classList.contains('apf')||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)}
+function gfStage(g){var r=gfRar(g);return '<div class="gfbig gfst'+(g.c?' col':'')+(r?' r'+r:'')+'" data-gst="'+g.id+'" style="margin:6px auto 12px;'+gfBg(g)+'"><span class="gfem">'+g.e+'</span><button class="gf3b" type="button">3D</button></div>'}
+function gfBurst(el,g){
+ try{var lite=gfLite(),n=lite?6:16,r=el.getBoundingClientRect(),h=document.createElement('div');h.className='gfbu';h.style.left=(r.left+r.width/2)+'px';h.style.top=(r.top+r.height/2)+'px';
+ var ch=g.c?['✨','⭐','💫',g.e]:['✨',g.e,'💖'];
+ for(var i=0;i<n;i++){var s=document.createElement('i'),a=Math.PI*2*i/n+Math.random()*.4,d=60+Math.random()*80;s.textContent=ch[i%ch.length];s.style.cssText='--x:'+(Math.cos(a)*d).toFixed(0)+'px;--y:'+(Math.sin(a)*d).toFixed(0)+'px;animation-delay:'+(Math.random()*.12).toFixed(2)+'s';h.appendChild(s)}
+ document.body.appendChild(h);setTimeout(function(){h.remove()},1400)}catch(e){}}
+function gfFly(g){
+ try{var o=document.createElement('div');o.className='gffl';o.innerHTML='<span>'+g.e+'</span>';document.body.appendChild(o);
+ setTimeout(function(){gfBurst(o.firstChild,g)},350);setTimeout(function(){o.remove()},1800)}catch(e){}}
+var _lt;function gfLottieLib(){return _lt||(_lt=new Promise(function(ok,no){if(window.lottie)return ok();var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js';s.onload=ok;s.onerror=function(){_lt=null;no()};document.head.appendChild(s)}))}
+function gfLottie(st,g){gfLottieLib().then(function(){var h=document.createElement('div');h.style.cssText='position:absolute;inset:8px';st.insertBefore(h,st.firstChild);var an=lottie.loadAnimation({container:h,renderer:'svg',loop:true,autoplay:true,path:GFLT[g.id]});an.addEventListener('DOMLoaded',function(){var e=st.querySelector('.gfem');if(e)e.style.display='none'});an.addEventListener('data_failed',function(){h.remove()})},function(){})}
+function gfMount(root,g,open){
+ try{var st=root.querySelector('[data-gst]');if(!st)return;if(open)gfBurst(st,g);
+ var b=st.querySelector('.gf3b');b.onclick=function(e){e.stopPropagation();gf3dToggle(st,g)};
+ if(GFLT[g.id])gfLottie(st,g);
+ if(g.c&&(GF3M[g.id]||GF3GLB[g.id])&&gf3dMode()==='full')gf3dToggle(st,g)}catch(e){console.error(e)}}
+
+/* ===== 3. 3D-ПОДАРКИ ===== */
+function gf3dMode(){try{var s=localStorage.dn_3d;if(s==='lite'||s==='full')return s}catch(e){}
+ var weak=(navigator.deviceMemory&&navigator.deviceMemory<=3)||(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4);return weak?'lite':'full'}
+function gfDrag(el,cb){var d=0,x=0,y=0;el.style.touchAction='none';
+ el.addEventListener('pointerdown',function(e){d=1;x=e.clientX;y=e.clientY;try{el.setPointerCapture(e.pointerId)}catch(_){}cb(0,0,0,1)});
+ el.addEventListener('pointermove',function(e){if(!d)return;cb(e.clientX-x,e.clientY-y,0,0);x=e.clientX;y=e.clientY});
+ var up=function(){if(d){d=0;cb(0,0,1,0)}};el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up)}
+function gf3dToggle(st,g){
+ if(st._off){st._off();return}
+ st.classList.add('on3');var em=st.querySelector('.gfem'),b3=st.querySelector('.gf3b');em.style.display='none';b3.textContent='✕';
+ var box=document.createElement('div');box.className='gf3v';st.insertBefore(box,st.firstChild);
+ var mode=gf3dMode(),stop=function(){},dead=0;
+ var chip=document.createElement('button');chip.className='gf3m';chip.type='button';chip.textContent=mode==='full'?'Полный режим':'Простой режим';st.appendChild(chip);
+ chip.onclick=function(e){e.stopPropagation();try{localStorage.dn_3d=mode==='full'?'lite':'full'}catch(_){}st._off();gf3dToggle(st,g)};
+ var useLite=function(){if(!dead)stop=gf3dCss(box,g)};
+ if(mode==='lite')useLite();else gf3dGL(box,g).then(function(f){if(dead)f();else stop=f},function(){toast('3D не запустилось, включён простой режим');useLite()});
+ st._off=function(){dead=1;stop();box.remove();chip.remove();em.style.display='';b3.textContent='3D';st.classList.remove('on3');st._off=null}}
+/* простой режим: слои смайлика даёт объём, без WebGL, для слабых телефонов */
+function gf3dCss(box,g){
+ var w=document.createElement('div');w.className='gf3c';var L='';for(var i=-3;i<=3;i++)L+='<span style="transform:translateZ('+(i*3)+'px)">'+g.e+'</span>';w.innerHTML=L;box.appendChild(w);
+ var rx=-10,ry=20,vy=.7,drag=0,raf=0;
+ gfDrag(box,function(dx,dy,end,start){if(start){drag=1;return}if(end){drag=0;return}ry+=dx*.6;rx=Math.max(-60,Math.min(60,rx-dy*.4));vy=dx*.15||vy});
+ var tick=function(){if(!w.isConnected)return;if(!drag){ry+=vy;vy+=(.7-vy)*.03}w.style.transform='rotateX('+rx+'deg) rotateY('+ry+'deg)';raf=requestAnimationFrame(tick)};tick();
+ return function(){cancelAnimationFrame(raf)}}
+var _th;function gfThree(){return _th||(_th=new Promise(function(ok,no){if(window.THREE)return ok();var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';s.onload=ok;s.onerror=function(){_th=null;no(new Error('three'))};document.head.appendChild(s);setTimeout(function(){no(new Error('timeout'))},12000)}))}
+var _gl;function gfGltfLib(){return _gl||(_gl=new Promise(function(ok,no){if(window.THREE&&THREE.GLTFLoader)return ok();var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js';s.onload=ok;s.onerror=function(){_gl=null;no()};document.head.appendChild(s)}))}
+/* готовые 3D-модели, собранные кодом (файлы .glb не нужны) */
+var GF3M={
+ c15:function(T,g){var geo=new T.OctahedronGeometry(1.5);var m=new T.Mesh(geo,new T.MeshStandardMaterial({color:0x59f0ff,emissive:0x1a6a88,metalness:.25,roughness:.08,flatShading:true}));m.scale.set(.9,1.45,.9);
+  var e=new T.LineSegments(new T.EdgesGeometry(geo),new T.LineBasicMaterial({color:0xffffff}));m.add(e);return m},
+ c8:function(T){var r=new T.Group(),b=new T.Mesh(new T.SphereGeometry(1.5,40,20),new T.MeshStandardMaterial({color:0xb9c4d0,metalness:.85,roughness:.25}));b.scale.y=.3;r.add(b);
+  var d=new T.Mesh(new T.SphereGeometry(.75,32,16,0,Math.PI*2,0,Math.PI/2),new T.MeshStandardMaterial({color:0x2fd5c4,transparent:true,opacity:.75,metalness:.3,roughness:.1}));d.position.y=.2;r.add(d);
+  for(var i=0;i<8;i++){var a=i/8*Math.PI*2,l=new T.Mesh(new T.SphereGeometry(.12,12,8),new T.MeshBasicMaterial({color:0xffe066}));l.position.set(Math.cos(a)*1.25,-.05,Math.sin(a)*1.25);r.add(l)}
+  r.rotation.x=.35;return r},
+ c9:function(T,g){var m=new T.Mesh(new T.TorusGeometry(1.2,.36,24,64,Math.PI*1.5),new T.MeshStandardMaterial({color:0xf3e6a0,metalness:.6,roughness:.3,emissive:0x2a2408}));m.rotation.z=Math.PI*.6;return m},
+ c11:function(T){var r=new T.Group(),mt=new T.MeshStandardMaterial({color:0xffd34d,metalness:.9,roughness:.25,emissive:0x3a2a00});
+  [[.62,.62],[-.62,.62],[.62,-.62],[-.62,-.62]].forEach(function(p){var s=new T.Mesh(new T.SphereGeometry(.62,32,16),mt);s.scale.z=.35;s.position.set(p[0],p[1]+.2,0);r.add(s)});
+  var st=new T.Mesh(new T.CylinderGeometry(.07,.09,1.6,12),mt);st.position.set(.25,-1.2,0);st.rotation.z=.35;r.add(st);return r},
+ c1:function(T,g){var r=new T.Group(),c=new T.Mesh(new T.ConeGeometry(.75,1.9,32),new T.MeshStandardMaterial({color:0xe0a85c,roughness:.7}));c.rotation.x=Math.PI;c.position.y=-.85;r.add(c);
+  var s=new T.Mesh(new T.SphereGeometry(.95,32,24),new T.MeshStandardMaterial({color:0xff8fc4,roughness:.5}));s.position.y=.35;r.add(s);
+  var s2=new T.Mesh(new T.SphereGeometry(.3,16,12),new T.MeshStandardMaterial({color:0xd8202f,roughness:.3}));s2.position.y=1.35;r.add(s2);return r},
+ c3:function(T){var r=new T.Group(),d=new T.Mesh(new T.CylinderGeometry(1.1,1.1,.28,48),new T.MeshStandardMaterial({color:0xff5fa2,roughness:.3}));d.rotation.x=Math.PI/2;d.position.y=.5;r.add(d);
+  [.35,.7].forEach(function(rad){var t=new T.Mesh(new T.TorusGeometry(rad,.07,8,40),new T.MeshStandardMaterial({color:0xffffff}));t.position.set(0,.5,.16);r.add(t)});
+  var s=new T.Mesh(new T.CylinderGeometry(.07,.07,1.9,12),new T.MeshStandardMaterial({color:0xf5f5f5}));s.position.y=-1;r.add(s);return r}
+};
+/* любой подарок без отдельной модели: объёмная монета со смайликом на обеих сторонах */
+function gfCoin(T,g){
+ var c=gfCol(g),r=new T.Group();
+ var body=new T.Mesh(new T.CylinderGeometry(1.5,1.5,.3,56),new T.MeshStandardMaterial({color:new T.Color(c[0]),metalness:.75,roughness:.3}));body.rotation.x=Math.PI/2;r.add(body);
+ var rim=new T.Mesh(new T.TorusGeometry(1.5,.1,12,56),new T.MeshStandardMaterial({color:new T.Color(c[1]).offsetHSL(0,0,.2),metalness:.9,roughness:.2}));r.add(rim);
+ var cv=document.createElement('canvas');cv.width=cv.height=256;var x=cv.getContext('2d');x.font='170px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(g.e,128,140);
+ var tx=new T.CanvasTexture(cv),mt=new T.MeshBasicMaterial({map:tx,transparent:true}),f1=new T.Mesh(new T.CircleGeometry(1.2,48),mt),f2=f1.clone();
+ f1.position.z=.17;f2.position.z=-.17;f2.rotation.y=Math.PI;r.add(f1);r.add(f2);return r}
+function gf3dGL(box,g){
+ return gfThree().then(function(){
+  var T=THREE,cv=document.createElement('canvas'),R=new T.WebGLRenderer({canvas:cv,alpha:true,antialias:true});
+  var W=box.clientWidth||280,H=box.clientHeight||240;R.setPixelRatio(Math.min(window.devicePixelRatio||1,2));R.setSize(W,H,false);cv.style.cssText='width:100%;height:100%;display:block';box.appendChild(cv);
+  var sc=new T.Scene(),cam=new T.PerspectiveCamera(40,W/H,.1,50),c=gfCol(g);cam.position.set(0,0,5.6);
+  sc.add(new T.AmbientLight(0xffffff,.75));var dl=new T.DirectionalLight(0xffffff,1);dl.position.set(3,4,5);sc.add(dl);var pl=new T.PointLight(new T.Color(c[0]),1.3,20);pl.position.set(-3,-2,3);sc.add(pl);
+  var root=new T.Group();sc.add(root);var obj=(GF3M[g.id]||gfCoin)(T,g);root.add(obj);
+  if(GF3GLB[g.id])gfGltfLib().then(function(){new T.GLTFLoader().load(GF3GLB[g.id],function(gl){var bx=new T.Box3().setFromObject(gl.scene),sz=bx.getSize(new T.Vector3()),k=3/Math.max(sz.x,sz.y,sz.z||1),ct=bx.getCenter(new T.Vector3());gl.scene.scale.setScalar(k);gl.scene.position.sub(ct.multiplyScalar(k));root.remove(obj);root.add(gl.scene)})},function(){});
+  var rx=.25,ry=0,vy=.012,drag=0,raf=0,dead=0,t0=performance.now();
+  gfDrag(box,function(dx,dy,end,start){if(start){drag=1;return}if(end){drag=0;return}ry+=dx*.012;rx=Math.max(-1.2,Math.min(1.2,rx+dy*.01));vy=dx*.004||vy});
+  var stop=function(){if(dead)return;dead=1;cancelAnimationFrame(raf);try{R.dispose();R.forceContextLoss&&R.forceContextLoss()}catch(e){}sc.traverse(function(o){if(o.geometry)o.geometry.dispose();if(o.material)[].concat(o.material).forEach(function(m){if(m.map)m.map.dispose();m.dispose()})})};
+  var loop=function(){if(dead)return;if(!box.isConnected){stop();return}raf=requestAnimationFrame(loop);if(document.hidden)return;if(!drag){ry+=vy;vy+=(.012-vy)*.02}root.rotation.set(rx,ry,0);root.position.y=Math.sin((performance.now()-t0)/700)*.08;R.render(sc,cam)};
+  loop();return stop})}
+
+/* ===== 4. УМНЫЕ ПОДАРКИ: передача, обмен, аукцион номеров ===== */
+function gfDetail(x,g,oid){
+ var own=oid===uid&&x.to===uid;
+ var w=sheet(hd(E(g.n))+gfStage(g)+'<div class="gfinf"><div><span>От</span><b>'+E(uname(x.from))+'</b></div><div><span>Дата</span><b>'+gfDate(x.ts)+'</b></div>'+(x.no?'<div><span>Номер</span><b>#'+x.no+'</b></div>':'')+'</div>'+(x.cmt?'<div class="gfcm" style="text-align:center;margin-top:8px">«'+E(x.cmt)+'»</div>':'')+
+  (own?'<div class="gfac"><button class="btn" id="gA1">Передать</button><button class="btn" id="gA2" style="background:var(--sf);color:var(--tx)">Обменять с пользователем</button>'+(g.c?'<button class="btn" id="gA3" style="background:var(--sf);color:var(--tx)">Выставить на аукцион</button>':'')+'</div>':''));
+ gfMount(w,g,1);
+ if(!own)return;
+ w.querySelector('#gA1').onclick=function(){w.remove();gfTransfer(x,g)};
+ w.querySelector('#gA2').onclick=function(){w.remove();gfTradeStart(x,g)};
+ var a3=w.querySelector('#gA3');if(a3)a3.onclick=function(){w.remove();gfAucCreate(x,g)}}
+function gfPickUser(title,sub,cb){
+ var w=sheet(hd(title)+'<div class="sub" style="padding:2px 2px 10px">'+sub+'</div><input id="gu" class="gfin" placeholder="@username" autocomplete="off" autocapitalize="off"><div class="sub" id="gi" style="min-height:22px;padding:6px 2px"></div><button class="btn" id="go" style="width:100%">Далее</button>');
+ var inp=w.querySelector('#gu'),info=w.querySelector('#gi');
+ var find=function(){var q=inp.value.trim().replace(/^@/,'').toLowerCase();return q&&Object.keys(users).find(function(i){return i!==uid&&users[i]&&!users[i].deleted&&(users[i].username||'').toLowerCase()===q})};
+ inp.oninput=function(){var id=find();info.textContent=id?users[id].name:(inp.value?'Пользователь не найден':'')};
+ w.querySelector('#go').onclick=function(){var id=find();if(!id)return toast('Пользователь не найден');if((me.blk||[]).includes(id))return toast('Вы заблокировали этого пользователя');w.remove();cb(id)}}
+/* старый подарок скрывается, новому владельцу создаётся такой же с тем же номером */
+function gfGive(b,x,to,via){
+ var ts=Date.now(),nid=ts.toString(36)+rid();
+ b.set(db.collection('gifts').doc(x.id),{from:x.from,to:x.to,gid:x.gid,price:x.price||0,no:x.no||0,cmt:x.cmt||'',ts:x.ts||ts,hide:true,xfer:to,xts:ts},{merge:true});
+ b.set(db.collection('gifts').doc(nid),{from:x.to,to:to,gid:x.gid,price:x.price||0,no:x.no||0,cmt:'',ts:ts,orig:x.orig||x.id,via:via});return nid}
+function gfTransfer(x,g){
+ gfPickUser('Передать подарок','Подарок «'+E(g.n)+(x.no?' #'+x.no:'')+'» перейдёт другому пользователю. Вернуть его можно только если он передаст обратно.',function(id){
+  ask('Передать «'+g.n+'» пользователю '+uname(id)+'?',async function(){
+   try{var b=db.batch();gfGive(b,x,id,'gift');await b.commit();toast('Подарок передан');if(typeof mpD==='function'&&mpD)mpD()}catch(e){toast('Не удалось передать подарок')}},'Передать')})}
+async function gfTradeStart(x,g){
+ gfPickUser('Обмен','С кем хотите обменяться? Он увидит ваше предложение в разделе «Аукцион и обмены».',async function(oid){
+  var L=[];try{var s=await db.collection('gifts').where('to','==',oid).get();L=s.docs.map(function(d){return Object.assign({id:d.id},d.data())}).filter(function(y){return !y.hide&&!y.conv})}catch(e){}
+  if(!L.length)return toast('У '+uname(oid)+' пока нет подарков');
+  var w=sheet(hd('Что хотите получить')+'<div class="gfpg">'+L.map(function(y){var h=GF[y.gid]||{e:'🎁',n:'Подарок',c:0};return '<div class="gfpk'+(h.c?' col':'')+'" data-w="'+y.id+'" style="'+gfBg(h)+'">'+(h.c&&y.no?'<i class="gfr">#'+y.no+'</i>':'')+'<div class="gfe">'+h.e+'</div></div>'}).join('')+'</div>');
+  w.querySelectorAll('[data-w]').forEach(function(k){k.onclick=function(){var y=L.find(function(z){return z.id===k.dataset.w}),h=GF[y.gid]||{n:'Подарок'};w.remove();
+   ask('Предложить обмен: ваш «'+g.n+'» на «'+h.n+'»?',async function(){
+    try{await db.collection('gift_trades').add({from:uid,to:oid,offer:x.id,offerGid:x.gid,offerNo:x.no||0,want:y.id,wantGid:y.gid,wantNo:y.no||0,status:'open',ts:Date.now()});toast('Предложение отправлено')}catch(e){toast('Не удалось отправить предложение')}},'Предложить')}})})}
+async function gfTradeList(box,w){
+ var inc=[],out=[],mp=function(d){return Object.assign({id:d.id},d.data())};
+ try{var a=await db.collection('gift_trades').where('to','==',uid).get(),b=await db.collection('gift_trades').where('from','==',uid).get();inc=a.docs.map(mp).filter(function(t){return t.status==='open'});out=b.docs.map(mp).filter(function(t){return t.status==='open'})}
+ catch(e){box.innerHTML='<div class="empty" style="padding:30px">Не удалось загрузить</div>';return}
+ var nm=function(gid,no){var h=GF[gid]||{e:'🎁',n:'Подарок'};return h.e+' '+E(h.n)+(no?' #'+no:'')};
+ var row=function(t,mine){return '<div class="gfal" style="cursor:default"><div class="gfmid"><b>'+(mine?'Вы предлагаете '+E(uname(t.to)):E(uname(t.from))+' предлагает')+'</b><span>'+nm(t.offerGid,t.offerNo)+' ⇄ '+nm(t.wantGid,t.wantNo)+'</span><div class="gfrow2">'+(mine?'<button class="btn" data-c="'+t.id+'" style="background:var(--sf);color:var(--tx)">Отменить</button>':'<button class="btn" data-y="'+t.id+'">Принять</button><button class="btn" data-n="'+t.id+'" style="background:var(--sf);color:var(--tx)">Отклонить</button>')+'</div></div></div>'};
+ box.innerHTML=(inc.length||out.length)?inc.map(function(t){return row(t,0)}).join('')+out.map(function(t){return row(t,1)}).join(''):'<div class="empty" style="padding:30px">Предложений обмена пока нет.<br>Откройте свой подарок в профиле и нажмите «Обменять с пользователем».</div>';
+ var set=async function(id,st){try{await db.collection('gift_trades').doc(id).update({status:st})}catch(e){toast('Не удалось')}gfTradeList(box,w)};
+ box.querySelectorAll('[data-c]').forEach(function(k){k.onclick=function(){set(k.dataset.c,'canceled')}});
+ box.querySelectorAll('[data-n]').forEach(function(k){k.onclick=function(){set(k.dataset.n,'declined')}});
+ box.querySelectorAll('[data-y]').forEach(function(k){k.onclick=async function(){var t=inc.find(function(z){return z.id===k.dataset.y});k.disabled=true;
+  try{var og=await db.collection('gifts').doc(t.offer).get(),wg=await db.collection('gifts').doc(t.want).get();
+   var o=og.exists&&og.data(),d=wg.exists&&wg.data();
+   if(!o||!d||o.to!==t.from||d.to!==uid||o.hide||o.conv||d.hide||d.conv)throw 'Один из подарков уже недоступен';
+   var b=db.batch();gfGive(b,Object.assign({id:t.offer},o),uid,'trade');gfGive(b,Object.assign({id:t.want},d),t.from,'trade');b.update(db.collection('gift_trades').doc(t.id),{status:'done'});await b.commit();toast('Обмен выполнен')}
+  catch(e){toast(typeof e==='string'?e:'Не удалось обменять');if(typeof e==='string')db.collection('gift_trades').doc(t.id).update({status:'failed'}).catch(function(){})}
+  gfTradeList(box,w)}})}
+/* --- аукцион номеров: лот = коллекционный подарок с номером --- */
+function gfLeft(ms){if(ms<=0)return 'завершён';var s=Math.floor(ms/1000),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60);return d?d+' д '+h+' ч':h?h+' ч '+m+' мин':m+' мин '+(s%60)+' с'}
+function gfAucCreate(x,g){
+ var w=sheet(hd('Аукцион')+'<div class="sub" style="padding:2px 2px 10px">«'+E(g.n)+(x.no?' #'+x.no:'')+'». Пока идут торги, подарок скрыт из профиля. После продажи вы получите 90% последней ставки.</div><div class="sub" style="padding:0 2px 4px">Стартовая цена, молний</div><input id="ap" class="gfin" type="number" min="1" value="'+(g.p||100)+'"><div class="sub" style="padding:10px 2px 4px">Длительность</div><div class="gftb" id="ad" style="margin:0 0 12px"><button data-h="1">1 час</button><button data-h="6">6 часов</button><button data-h="24" class="on">24 часа</button><button data-h="72">3 дня</button></div><button class="btn" id="ao" style="width:100%">Выставить на аукцион</button>');
+ var hh=24;w.querySelectorAll('[data-h]').forEach(function(b){b.onclick=function(){hh=+b.dataset.h;w.querySelectorAll('[data-h]').forEach(function(z){z.classList.toggle('on',z===b)})}});
+ w.querySelector('#ao').onclick=async function(){var st=Math.floor(+w.querySelector('#ap').value);if(!(st>=1))return toast('Укажите цену');var ts=Date.now();
+  try{var b=db.batch();
+   b.set(db.collection('gifts').doc(x.id),{from:x.from,to:x.to,gid:x.gid,price:x.price||0,no:x.no||0,cmt:x.cmt||'',ts:x.ts||ts,hide:true,lock:'auction'},{merge:true});
+   b.set(db.collection('gift_auctions').doc(ts.toString(36)+rid()),{seller:uid,gd:x.id,gid:x.gid,no:x.no||0,price:x.price||0,from:x.from,ts0:x.ts||ts,start:st,step:Math.max(1,Math.round(st*.05)),end:ts+hh*3600000,bid:0,bidder:null,nb:0,status:'live',ts:ts});
+   await b.commit();w.remove();toast('Лот выставлен');if(typeof mpD==='function'&&mpD)mpD()}catch(e){toast('Не удалось выставить лот')}}}
+async function gfAucFinish(id){
+ var F=firebase.firestore.FieldValue;
+ try{await db.runTransaction(async function(tx){
+  var ar=db.collection('gift_auctions').doc(id),as=await tx.get(ar);if(!as.exists)return;var a=as.data();if(a.status!=='live'||a.end>Date.now())return;
+  var gr=db.collection('gifts').doc(a.gd),gs=await tx.get(gr),g0=gs.exists?gs.data():{from:a.from,to:a.seller,gid:a.gid,price:a.price||0,no:a.no||0,ts:a.ts0||Date.now()};
+  if(a.bidder){var ts=Date.now(),nid=id+'w';
+   tx.set(gr,Object.assign({},g0,{hide:true,xfer:a.bidder,xts:ts}),{merge:true});
+   tx.set(db.collection('gifts').doc(nid),{from:a.seller,to:a.bidder,gid:a.gid,price:a.price||0,no:a.no||0,cmt:'',ts:ts,orig:a.gd,via:'auction'});
+   tx.update(db.collection('users').doc(a.seller),{bolts:F.increment(Math.floor(a.bid*.9))});
+   tx.update(ar,{status:'done',won:nid})}
+  else{tx.set(gr,{hide:false,lock:false},{merge:true});tx.update(ar,{status:'ended'})}})}catch(e){console.error(e)}}
+async function gfAucList(box,w){
+ var L=[];try{var s=await db.collection('gift_auctions').where('status','==','live').get();L=s.docs.map(function(d){return Object.assign({id:d.id},d.data())})}
+ catch(e){box.innerHTML='<div class="empty" style="padding:30px">Не удалось загрузить аукцион</div>';return}
+ var now=Date.now();L.filter(function(a){return a.end<=now}).forEach(function(a){gfAucFinish(a.id)});
+ L=L.filter(function(a){return a.end>now}).sort(function(a,b){return a.end-b.end});
+ if(!L.length){box.innerHTML='<div class="empty" style="padding:30px">Лотов пока нет.<br>Откройте коллекционный подарок в профиле и нажмите «Выставить на аукцион».</div>';return}
+ box.innerHTML=L.map(function(a){var g=GF[a.gid]||{e:'🎁',n:'Подарок',c:0};return '<div class="gfal" data-a="'+a.id+'"><div class="gfae" style="'+gfBg(g)+'">'+g.e+'</div><div class="gfmid"><b>'+E(g.n)+(a.no?' #'+a.no:'')+'</b><span>Продавец: '+E(uname(a.seller))+'</span><span data-end="'+a.end+'"></span></div><div class="gfap">⚡ '+(a.bid||a.start)+'</div></div>'}).join('');
+ var tk=function(){box.querySelectorAll('[data-end]').forEach(function(e){e.textContent='Осталось: '+gfLeft(+e.dataset.end-Date.now())})};tk();
+ var iv=setInterval(function(){if(!box.isConnected){clearInterval(iv);return}tk()},1000);
+ box.querySelectorAll('[data-a]').forEach(function(k){k.onclick=function(){gfAucOpen(L.find(function(a){return a.id===k.dataset.a}),function(){gfAucList(box,w)})}})}
+function gfAucOpen(a,back){
+ var g=GF[a.gid]||{e:'🎁',n:'Подарок',c:0,id:a.gid},mine=a.seller===uid,min=a.bid?a.bid+a.step:a.start;
+ var w=sheet(hd(E(g.n))+gfStage(g)+'<div class="gfinf"><div><span>Продавец</span><b>'+E(uname(a.seller))+'</b></div>'+(a.no?'<div><span>Номер</span><b>#'+a.no+'</b></div>':'')+'<div><span>'+(a.bid?'Текущая ставка':'Стартовая цена')+'</span><b>⚡ '+(a.bid||a.start)+'</b></div>'+(a.bid?'<div><span>Лидер</span><b>'+E(uname(a.bidder))+'</b></div>':'')+'<div><span>Осталось</span><b id="al"></b></div></div>'+
+  (mine?(a.bid?'<div class="sub" style="text-align:center;margin-top:10px">Ставки уже есть, лот нельзя снять</div>':'<button class="btn" id="ax" style="width:100%;margin-top:12px;background:var(--sf);color:var(--tx)">Снять с аукциона</button>'):
+  '<input id="ab" class="gfin" type="number" min="'+min+'" value="'+min+'" style="margin-top:12px"><div class="sub" style="padding:4px 2px">Минимум ⚡ '+min+'. Ваш баланс ⚡ '+((me&&me.bolts)||0)+'. Если вас перебьют, молнии вернутся.</div><button class="btn" id="ar" style="width:100%">Сделать ставку</button>'));
+ gfMount(w,g,1);var tk=function(){var e=w.querySelector('#al');if(e)e.textContent=gfLeft(a.end-Date.now())};tk();var iv=setInterval(function(){if(!w.isConnected){clearInterval(iv);return}tk()},1000);
+ var ax=w.querySelector('#ax');if(ax)ax.onclick=async function(){try{var b=db.batch();b.update(db.collection('gift_auctions').doc(a.id),{status:'canceled'});b.set(db.collection('gifts').doc(a.gd),{hide:false,lock:false},{merge:true});await b.commit();w.remove();toast('Лот снят');back&&back()}catch(e){toast('Не удалось снять лот')}};
+ var ar=w.querySelector('#ar');if(ar)ar.onclick=async function(){var amt=Math.floor(+w.querySelector('#ab').value),F=firebase.firestore.FieldValue;ar.disabled=true;
+  try{await db.runTransaction(async function(tx){
+    var r1=db.collection('gift_auctions').doc(a.id),r2=db.collection('users').doc(uid),s1=await tx.get(r1),s2=await tx.get(r2);
+    if(!s1.exists)throw 'Лот не найден';var c=s1.data();
+    if(c.status!=='live'||c.end<=Date.now())throw 'Аукцион завершён';if(c.seller===uid)throw 'Нельзя ставить на свой лот';
+    var mn=c.bid?c.bid+c.step:c.start;if(!(amt>=mn))throw 'Минимальная ставка: '+mn;
+    var rf=c.bidder===uid?c.bid:0;if((((s2.data()||{}).bolts)||0)+rf<amt)throw 'Не хватает молний';
+    tx.update(r2,{bolts:F.increment(-(amt-rf))});
+    if(c.bidder&&c.bidder!==uid)tx.update(db.collection('users').doc(c.bidder),{bolts:F.increment(c.bid)});
+    var up={bid:amt,bidder:uid,nb:F.increment(1)};if(c.end-Date.now()<60000)up.end=Date.now()+60000;tx.update(r1,up)});
+   w.remove();toast('Ставка принята');back&&back()}
+  catch(e){ar.disabled=false;toast(typeof e==='string'?e:'Не удалось сделать ставку')}}}
+function gfAuctionPage(){
+ var w=sheet(hd('Аукцион и обмены')+'<div class="gftb" style="margin:0 0 10px"><button data-t="a" class="on">Аукцион</button><button data-t="t">Обмены</button></div><div id="gab"><div class="empty" style="padding:30px">Загрузка…</div></div>');
+ var tab='a',box=w.querySelector('#gab'),load=function(){box.innerHTML='<div class="empty" style="padding:30px">Загрузка…</div>';return tab==='a'?gfAucList(box,w):gfTradeList(box,w)};
+ w.querySelectorAll('[data-t]').forEach(function(b){b.onclick=function(){tab=b.dataset.t;w.querySelectorAll('[data-t]').forEach(function(z){z.classList.toggle('on',z===b)});load()}});load()}
+
+</script>
 </body></html>
