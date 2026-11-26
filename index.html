@@ -5482,8 +5482,6 @@ html.apf body .msgs,html.apf body .main{background-attachment:scroll!important}
 /* 2) Пузыри больше не «выпрыгивают» заново при каждом новом сообщении (весь чат перерисовывается) */
 html.apf body .b,html.apf body .post,html.apf body .msgs>*{animation:none!important}
 /* 3) Не рисуем и не раскладываем то, что за экраном */
-html.apf body .msgs>.b,html.apf body .msgs>.post{content-visibility:auto;contain-intrinsic-size:auto 64px}
-html.apf body .clist .row,html.apf body .main>.row{content-visibility:auto;contain-intrinsic-size:auto 68px}
 html.apf body .msgs{contain:layout style;will-change:scroll-position}
 /* 4) Без задержки тапа, без плавной (медленной) программной прокрутки */
 html.apf,html.apf body,html.apf *{scroll-behavior:auto!important}
@@ -5493,7 +5491,6 @@ html.apf body .msgs,html.apf body .main,html.apf body .clist{touch-action:pan-y}
 html.apf body :is(.tabs,.pop,.sheet>div,.toast,.nb,.chh,.pl2,.sbn,.cvo,.pkv,.lpm){box-shadow:none!important}
 html.apf body .tabs{transform:translateX(-50%) translateZ(0)}
 /* 6) Картинки не блокируют прокрутку */
-html.apf body .msgs img{content-visibility:auto}
 /* 7) Режим «ультра»: включается сам, если кадры всё равно проседают */
 html.apf2 body *:not(#spl):not(#spl *):not(#dsp):not(#dsp *):not(.tyb i):not(.rd):not(.vd){animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
 html.apf2 body *{text-shadow:none!important;box-shadow:none!important;filter:none!important}
@@ -5872,6 +5869,40 @@ blockquote.fq{display:block;margin:3px 0;padding:3px 10px;border-left:3px solid 
  if(typeof _info==='function')window.infoPage=function(){var r=_info.apply(this,arguments);try{statsInfo()}catch(e){console.error(e)}return r};
  var _cv=window.chatView;
  if(typeof _cv==='function')window.chatView=function(){var r=_cv.apply(this,arguments);try{snapSub(curChat())}catch(e){}return r};
+})();
+</script>
+<script>
+(function(){
+ /* ===== ФИКС: прыжок канала вверх при реакции + «не с первого раза» кнопка назад ===== */
+ function msgsEl(){return document.querySelector('#app>.msgs:not(.cmm)')||document.querySelector('.msgs:not(.cmm)')}
+
+ /* 1) Пока палец на экране — не перерисовываем чат (иначе кнопка под пальцем исчезает, и нажатие теряется) */
+ var touching=0,tms=0,pend=0;
+ document.addEventListener('touchstart',function(){touching=1;tms=Date.now()},{capture:true,passive:true});
+ ['touchend','touchcancel'].forEach(function(n){document.addEventListener(n,function(e){
+  if(e.touches&&e.touches.length)return;touching=0;
+  if(pend){pend=0;setTimeout(function(){try{if(typeof cur!=='undefined'&&cur)window.chatView()}catch(er){console.error(er)}},180)}
+ },{capture:true,passive:true})});
+
+ /* 2) Перерисовка чата сохраняет место, где вы читали (раньше — прыжок вниз/вверх) */
+ var _cv=window.chatView;
+ if(typeof _cv==='function')window.chatView=function(){
+  if(touching&&Date.now()-tms<2500&&typeof cur!=='undefined'&&cur&&!inf){pend=1;return}
+  var ms=msgsEl(),keep=null;
+  if(ms&&ms.__cid===cur&&!inf){keep=ms.scrollHeight-ms.scrollTop-ms.clientHeight}
+  var r=_cv.apply(this,arguments);
+  try{var nm=msgsEl();if(nm&&!inf){nm.__cid=cur;if(keep!==null&&keep>120){nm.scrollTop=nm.scrollHeight-nm.clientHeight-keep}}}catch(e){}
+  return r};
+
+ /* 3) Кнопка «назад» срабатывает сразу при касании, без ожидания click */
+ var bs=null;
+ document.addEventListener('touchstart',function(e){var b=e.target.closest&&e.target.closest('#bk');bs=b&&e.touches.length===1?{b:b,x:e.touches[0].clientX,y:e.touches[0].clientY,t:Date.now()}:null},{capture:true,passive:true});
+ document.addEventListener('touchend',function(e){
+  var s=bs;bs=null;if(!s||!s.b.isConnected)return;var t=e.changedTouches[0];
+  if(!t||Math.abs(t.clientX-s.x)>12||Math.abs(t.clientY-s.y)>12||Date.now()-s.t>600)return;
+  var h=s.b.onclick;if(typeof h!=='function')return;
+  e.preventDefault();e.stopPropagation();h.call(s.b,e)
+ },{capture:true,passive:false});
 })();
 </script>
 </body></html>
