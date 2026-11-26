@@ -22,7 +22,7 @@
  }
 
  /* 2) Чат рисуем не весь, а последние сообщения; старые подгружаются при прокрутке вверх */
- var LIM=60,STEP=40,lim={},last=null;
+ var LIM=40,STEP=30,lim={},last=null;
  window.winM=function(a){
   var id=a&&a._cid;if(!id)return a;
   if(id!==last){last=id;lim[id]=LIM}
@@ -5473,6 +5473,64 @@ span.mn.me{background:rgba(250,204,21,.28);border-radius:4px;padding:0 2px}
  if(typeof _cv==='function')window.chatView=function(){var r=_cv.apply(this,arguments);try{inject2()}catch(e){console.error(e)}return r};
  var T2=0;try{new MutationObserver(function(){if(T2)return;T2=setTimeout(function(){T2=0;try{mentionScan();gcMsgScan()}catch(e){}},250)}).observe(document.querySelector('#app')||document.body,{childList:true,subtree:true})}catch(e){}
  try{inject2()}catch(e){}
+})();
+</script>
+<style id="apf2-css">
+/* ===== ANDROID PERF v2 (только Android / WebView / ?lite=1) ===== */
+/* 1) Фон чата: узор+градиент с background-attachment:local перерисовывался на каждом кадре скролла */
+html.apf body .msgs,html.apf body .main{background-attachment:scroll!important}
+/* 2) Пузыри больше не «выпрыгивают» заново при каждом новом сообщении (весь чат перерисовывается) */
+html.apf body .b,html.apf body .post,html.apf body .msgs>*{animation:none!important}
+/* 3) Не рисуем и не раскладываем то, что за экраном */
+html.apf body .msgs>.b,html.apf body .msgs>.post{content-visibility:auto;contain-intrinsic-size:auto 64px}
+html.apf body .clist .row,html.apf body .main>.row{content-visibility:auto;contain-intrinsic-size:auto 68px}
+html.apf body .msgs{contain:layout style;will-change:scroll-position}
+/* 4) Без задержки тапа, без плавной (медленной) программной прокрутки */
+html.apf,html.apf body,html.apf *{scroll-behavior:auto!important}
+html.apf body *{touch-action:manipulation}
+html.apf body .msgs,html.apf body .main,html.apf body .clist{touch-action:pan-y}
+/* 5) Размытые «пятна» и тени-свечения */
+html.apf body :is(.tabs,.pop,.sheet>div,.toast,.nb,.chh,.pl2,.sbn,.cvo,.pkv,.lpm){box-shadow:none!important}
+html.apf body .tabs{transform:translateX(-50%) translateZ(0)}
+/* 6) Картинки не блокируют прокрутку */
+html.apf body .msgs img{content-visibility:auto}
+/* 7) Режим «ультра»: включается сам, если кадры всё равно проседают */
+html.apf2 body *:not(#spl):not(#spl *):not(#dsp):not(#dsp *):not(.tyb i):not(.rd):not(.vd){animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
+html.apf2 body *{text-shadow:none!important;box-shadow:none!important;filter:none!important}
+html.apf2 body .sheet{transition:none!important}
+</style>
+<script>
+(function(){
+ var h=document.documentElement,ua=navigator.userAgent||'',on=false;
+ try{on=/Android/i.test(ua)||/[?&]lite=[12]/.test(location.search)||localStorage.dn_lite==='1';if(/[?&]lite=0/.test(location.search))on=false}catch(e){on=/Android/i.test(ua)}
+ if(!on)return;
+ h.classList.add('apf');
+ try{if(/[?&]lite=2/.test(location.search)||localStorage.dn_apf2==='1')h.classList.add('apf2')}catch(e){}
+
+ /* картинки: декодируем вне основного потока, не грузим то, чего не видно */
+ var Tm=0;
+ function imgs(){Tm=0;try{document.querySelectorAll('.msgs img:not([data-ad]),.clist img').forEach(function(i){if(i.__ad)return;i.__ad=1;i.decoding='async';if(!i.closest('.stkm'))i.loading='lazy'})}catch(e){}}
+ try{new MutationObserver(function(){if(!Tm)Tm=setTimeout(imgs,200)}).observe(document.querySelector('#app')||document.body,{childList:true,subtree:true})}catch(e){}
+
+ /* автоматическая подстройка: меряем реальные кадры при прокрутке; если тормозит — включаем «ультра» */
+ var samp=0,bad=0,tot=0,last=0,run=0,done=false;
+ function frame(t){
+  if(!run)return;
+  if(last){var d=t-last;tot++;if(d>26)bad++}
+  last=t;
+  if(tot<45){requestAnimationFrame(frame);return}
+  run=0;last=0;samp++;
+  var ratio=bad/tot;bad=0;tot=0;
+  if(ratio>.35&&!h.classList.contains('apf2')){h.classList.add('apf2');try{localStorage.dn_apf2='1'}catch(e){}}
+  if(samp>=3)done=true;
+ }
+ document.addEventListener('scroll',function(e){
+  if(done||run)return;var s=e.target;if(!s||!s.classList||!(s.classList.contains('msgs')||s.classList.contains('main')||s.classList.contains('clist')))return;
+  run=1;requestAnimationFrame(frame)
+ },{capture:true,passive:true});
+ /* ручной переключатель из консоли/настроек: dnPerf('ultra'|'normal') */
+ window.dnPerf=function(m){try{if(m==='ultra'){h.classList.add('apf2');localStorage.dn_apf2='1'}else{h.classList.remove('apf2');localStorage.dn_apf2='0'}}catch(e){}return m};
+ imgs();
 })();
 </script>
 </body></html>
